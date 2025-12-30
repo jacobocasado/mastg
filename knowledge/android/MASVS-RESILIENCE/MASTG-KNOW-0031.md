@@ -8,44 +8,62 @@ In the context of anti-reversing, the goal of emulator detection is to increase 
 
 There are several indicators that the device in question is being emulated. Although all these API calls can be hooked, these indicators provide a modest first line of defense.
 
-The first set of indicators are in the file `build.prop`.
+## Build characteristics
 
-```default
-API Method          Value           Meaning
-Build.ABI           armeabi         possibly emulator
-BUILD.ABI2          unknown         possibly emulator
-Build.BOARD         unknown         emulator
-Build.Brand         generic         emulator
-Build.DEVICE        generic         emulator
-Build.FINGERPRINT   generic         emulator
-Build.Hardware      goldfish        emulator
-Build.Host          android-test    possibly emulator
-Build.ID            FRF91           emulator
-Build.MANUFACTURER  unknown         emulator
-Build.MODEL         sdk             emulator
-Build.PRODUCT       sdk             emulator
-Build.RADIO         unknown         possibly emulator
-Build.SERIAL        null            emulator
-Build.USER          android-build   emulator
-```
+Apps can read build properties through [`android.os.Build`](https://developer.android.com/reference/android/os/Build). Emulators often ship with default or vendor-specific values.
 
-You can edit the file `build.prop` on a rooted Android device or modify it while compiling AOSP from source. Both techniques will allow you to bypass the static string checks above.
+| Field | Example emulator values or patterns |
+| --- | --- |
+| `Build.FINGERPRINT` | starts with `generic`, contains `test-keys`, contains `generic/sdk/generic`, `generic x86`, `vbox86p`, `ttvm` |
+| `Build.MODEL` | `sdk`, `google_sdk`, `emulator`, `android sdk built for x86`, `android sdk built for x86_64`, `droid4x`, `tiantianvm`, `genymotion`, `andy`, `nox` |
+| `Build.MANUFACTURER` | `unknown`, `genymotion`, `droid4x`, `tiantianvm`, `andy` |
+| `Build.HARDWARE` | `goldfish`, `ranchu`, `vbox86`, `nox`, `ttvm` |
+| `Build.PRODUCT` | `sdk`, `google_sdk`, `sdk_x86`, `sdk_google`, `vbox86p`, `droid4x`, `andy`, `ttvm`, `nox`, starts with `itoolsavm` |
+| `Build.BRAND` / `Build.DEVICE` | start with `generic`, include `generic x86`, `vbox86p`, `ttvm`, `andy`, `nox` |
+| `Build.BOARD` | `unknown`, contains `nox` |
+| `Build.SERIAL` | `null`, `unknown`, contains `nox` |
+| `Build.ID` | `frf91` |
+| `Build.RADIO` | `unknown` |
+| `Build.TAGS` | `test-keys` |
+| `Build.USER` | `android-build` |
 
-The next set of static indicators utilize the Telephony manager. All Android emulators have fixed values that this API can query.
+Notes: normalize to lowercase and compare; vendors can change these values on rooted devices or custom ROMs. You can also edit `build.prop` on a rooted device or rebuild AOSP with custom values to bypass static string checks.
 
-```default
-API                                                     Value                   Meaning
-TelephonyManager.getDeviceId()                          0's                     emulator
-TelephonyManager.getLine1 Number()                      155552155               emulator
-TelephonyManager.getNetworkCountryIso()                 us                      possibly emulator
-TelephonyManager.getNetworkType()                       3                       possibly emulator
-TelephonyManager.getNetworkOperator().substring(0,3)    310                     possibly emulator
-TelephonyManager.getNetworkOperator().substring(3)      260                     possibly emulator
-TelephonyManager.getPhoneType()                         1                       possibly emulator
-TelephonyManager.getSimCountryIso()                     us                      possibly emulator
-TelephonyManager.getSimSerial Number()                  89014103211118510720    emulator
-TelephonyManager.getSubscriberId()                      310260000000000         emulator
-TelephonyManager.getVoiceMailNumber()                   15552175049             emulator
-```
+## Telephony characteristics
 
-Keep in mind that a hooking framework, such as Xposed or Frida, can hook this API to provide false data.
+Check telephony only when the device reports [`FEATURE_TELEPHONY`](https://developer.android.com/reference/android/content/pm/PackageManager#FEATURE_TELEPHONY). Emulators often return fixed identifiers through [`TelephonyManager`](https://developer.android.com/reference/android/telephony/TelephonyManager).
+
+| Method | Example emulator values |
+| --- | --- |
+| `getLine1Number()` | `15555215554` ... `15555215584` (even suffixes) |
+| `getNetworkOperatorName()` | `android` |
+| `getVoiceMailNumber()` | `15552175049` |
+
+Permission notes:
+
+- `getLine1Number()` requires `READ_PHONE_NUMBERS` or `READ_SMS`.
+- `getVoiceMailNumber()` requires `READ_PHONE_STATE`.
+
+Hooking frameworks such as Frida or Xposed can hook these APIs and return false values. These are common indicators, but you may encounter different indicators and values in practice.
+
+## Package name indicators
+
+Use [`PackageManager`](https://developer.android.com/reference/android/content/pm/PackageManager) to inspect installed packages or launcher activities for known emulator prefixes:
+
+`com.vphone.`, `com.bignox.`, `com.nox.mopen.app`, `me.haima.`, `com.bluestacks`, `cn.itools.`, `com.kop.`, `com.kaopu.`, `com.microvirt.`, `com.bignox.app`, and the exact package `com.google.android.launcher.layouts.genymotion`. Some checks also flag `Build.PRODUCT` starting with `iToolsAVM`.
+
+Android 11+ filters package visibility. Declare `<queries>` for specific packages or intents, or use `QUERY_ALL_PACKAGES` only when justified; see [package visibility](https://developer.android.com/training/package-visibility).
+
+## Available activities and services
+
+You can query launcher activities with [`Intent.ACTION_MAIN`](https://developer.android.com/reference/android/content/Intent#ACTION_MAIN) and [`Intent.CATEGORY_LAUNCHER`](https://developer.android.com/reference/android/content/Intent#CATEGORY_LAUNCHER) and look for emulator package prefixes (often `com.bluestacks.`). [`ActivityManager.getRunningServices`](https://developer.android.com/reference/android/app/ActivityManager#getRunningServices(int)) is restricted on API 26+ and usually only returns the app's own services.
+
+## OpenGL renderer
+
+Create an EGL context and read [`GLES20.glGetString(GL_RENDERER)`](https://developer.android.com/reference/android/opengl/GLES20#glGetString(int)). Renderer strings that contain `Bluestacks` or `Translator` can indicate emulators.
+
+## Deprecated or advanced techniques
+
+Non-resettable identifiers (IMEI/MEID, SIM serial, subscriber ID) are restricted for third-party apps targeting Android 10+ and typically require privileged or carrier permissions. In practice, `TelephonyManager.getDeviceId()`, `getSimSerialNumber()`, and `getSubscriberId()` return empty values or fail for regular apps. See [Android 10 privacy changes](https://developer.android.com/about/versions/10/privacy/changes#non-resettable-device-ids).
+
+`netcfg`-based IP detection no longer works on modern Android (deprecated since API 23). Vectorization-based detection requires NDK code and per-architecture assembly and is rarely used in apps.
