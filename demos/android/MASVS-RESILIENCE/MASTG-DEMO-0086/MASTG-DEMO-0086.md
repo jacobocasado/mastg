@@ -85,3 +85,4 @@ The test passes because Frida confirms that the app executes emulator detection 
 - Android: 16 (API 36)
 - Device: Android Emulator (model `sdk_gphone64_arm64`)
 - IDE: Android Studio (optional; demo built with Gradle 8.10.2)
+- Frida: 17.5.2
