@@ -67,7 +67,7 @@ Note: the demo avoids calling the `PackageManager.getInstalledPackages()` functi
 1. Install the app on the device (@MASTG-TECH-0005).
 2. Make sure you have @MASTG-TOOL-0001 installed and the frida-server running on the device.
 3. Run `run.sh` to spawn the app with Frida.
-4. Open the app and tap **Start**. When prompted, grant `READ_PHONE_STATE` and `READ_PHONE_NUMBERS`, then tap **Start** again.
+4. Open the app and grant `READ_PHONE_STATE` and `READ_PHONE_NUMBERS` when prompted, then tap **Start**.
 5. Stop the Frida session by pressing `Ctrl+C`.
 
 {{ run.sh # script.js }}
