@@ -9,7 +9,7 @@ tools: [MASTG-TOOL-0001, MASTG-TOOL-0004]
 
 ### Sample
 
-This sample app queries emulator indicators from `android.os.Build`, `TelephonyManager`, installed packages, and the `OpenGL` renderer. It logs the raw values and then reports which values match known emulator artifacts. The comparisons are performed on lowercased values to avoid case mismatches. The demo uses Frida to trace the runtime API calls while the checks execute to verify that the application perform such checks at runtime.
+This sample app queries emulator indicators from `android.os.Build`, `TelephonyManager`, launcher packages, and the `OpenGL` renderer. It logs the raw values and then reports which values match known emulator artifacts. The comparisons are performed on lowercased values to avoid case mismatches. The demo uses Frida to trace the runtime API calls while the checks execute to verify that the application perform such checks at runtime.
 
 Indicators and comparisons included in the sample:
 
@@ -43,7 +43,7 @@ Packages and services
 
 | Indicator | Exact match | Prefix match | Contains |
 | --- | --- | --- | --- |
-| Installed/launcher packages | `com.google.android.launcher.layouts.genymotion`, `com.nox.mopen.app`, `com.bignox.app`, `com.microvirt` | `com.vphone.`, `com.bignox.`, `com.nox.mopen.app`, `me.haima.`, `com.bluestacks`, `cn.itools.`, `com.kop.`, `com.kaopu.`, `com.microvirt.`, `com.bignox.app` |  |
+| Launcher packages | `com.google.android.launcher.layouts.genymotion`, `com.nox.mopen.app`, `com.bignox.app`, `com.microvirt` | `com.vphone.`, `com.bignox.`, `com.nox.mopen.app`, `me.haima.`, `com.bluestacks`, `cn.itools.`, `com.kop.`, `com.kaopu.`, `com.microvirt.`, `com.bignox.app` |  |
 | Running services |  | `com.bluestacks.` |  |
 
 OpenGL properties
@@ -57,6 +57,8 @@ Checks that leverage Play Integrity are intentionally not included because it re
 {{ MastgTest.kt # MastgTest_reversed.java }}
 
 The manifest declares `READ_PHONE_STATE` and `READ_PHONE_NUMBERS` so the runtime permission prompts can be shown before querying telephony values, and it includes `<queries>` entries for package visibility checks.
+
+Note: the demo avoids calling the `PackageManager.getInstalledPackages()` function because Android 11+ requires the `QUERY_ALL_PACKAGES` permission to see the full installed app inventory. Google Play treats that inventory as sensitive and allows the permission only when broad visibility is core to the app's purpose, with additional declaration requirements. You could add it to capture full installed package lists, but only if you have a strong justification. In this demo, a explicit query to common emulator package names and packages that are installed and have a launcher is performed instead (this approach does not need any particular permission).
 
 {{ AndroidManifest.xml # AndroidManifest_reversed.xml }}
 

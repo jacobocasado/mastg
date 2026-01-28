@@ -159,15 +159,6 @@ class MastgTest(private val context: Context) {
         val results = mutableListOf<QueryResult>()
         val prefixes = emulatorPackagePrefixes()
 
-        val installedPackages = getInstalledPackages(pm)
-        results.add(QueryResult(
-            "PackageManager.getInstalledPackages.count",
-            installedPackages.size.toString(),
-            installedPackages.size.toString()
-        ))
-        val installedNames = installedPackages.map { it.packageName }
-        results.addAll(buildPrefixResults("InstalledPackagePrefix", prefixes, installedNames))
-
         val launcherPackages = queryLauncherPackages(pm)
         results.add(QueryResult(
             "PackageManager.queryIntentActivities(MAIN/LAUNCHER).count",
@@ -243,15 +234,6 @@ class MastgTest(private val context: Context) {
             true
         } catch (e: Exception) {
             false
-        }
-    }
-
-    private fun getInstalledPackages(pm: PackageManager): List<android.content.pm.PackageInfo> {
-        return if (Build.VERSION.SDK_INT >= 33) {
-            pm.getInstalledPackages(PackageManager.PackageInfoFlags.of(0))
-        } else {
-            @Suppress("DEPRECATION")
-            pm.getInstalledPackages(0)
         }
     }
 
@@ -459,7 +441,6 @@ class MastgTest(private val context: Context) {
     private fun packageIndicators(packageQueries: List<QueryResult>): List<String> {
         return packageQueries.filter {
             it.rawValue == "true" && (
-                it.name.startsWith("InstalledPackagePrefix:") ||
                     it.name.startsWith("LauncherPackagePrefix:") ||
                     it.name.startsWith("PackageManager.hasPackage:") ||
                     it.name.startsWith("RunningServicePrefix:")

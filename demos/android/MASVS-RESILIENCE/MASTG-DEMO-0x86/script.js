@@ -91,30 +91,6 @@ Java.perform(() => {
         }
 
         try {
-            const getInstalledPackages = PackageManager.getInstalledPackages.overload("int");
-            getInstalledPackages.implementation = function (flags) {
-                const result = getInstalledPackages.call(this, flags);
-                const count = result ? result.size() : 0;
-                logIfApp(`[PackageManager.getInstalledPackages] count=${count}`);
-                return result;
-            };
-        } catch (err) {
-            console.log(`[-] Unable to hook PackageManager.getInstalledPackages(int): ${err}`);
-        }
-
-        try {
-            const getInstalledPackages = PackageManager.getInstalledPackages.overload("android.content.pm.PackageManager$PackageInfoFlags");
-            getInstalledPackages.implementation = function (flags) {
-                const result = getInstalledPackages.call(this, flags);
-                const count = result ? result.size() : 0;
-                logIfApp(`[PackageManager.getInstalledPackages] count=${count}`);
-                return result;
-            };
-        } catch (err) {
-            console.log(`[-] Unable to hook PackageManager.getInstalledPackages(PackageInfoFlags): ${err}`);
-        }
-
-        try {
             const queryIntentActivities = PackageManager.queryIntentActivities.overload("android.content.Intent", "int");
             queryIntentActivities.implementation = function (intent, flags) {
                 const result = queryIntentActivities.call(this, intent, flags);
