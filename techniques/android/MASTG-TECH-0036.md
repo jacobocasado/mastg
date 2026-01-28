@@ -12,3 +12,5 @@ emulator -show-kernel -avd Nexus_4_API_19 -snapshot default-boot -no-snapshot-sa
 ```
 
 Unfortunately, generating a complete guest instruction trace with QEMU is impossible because code blocks are written to the log only at the time they are translated, not when they're taken from the cache. For example, if a block is repeatedly executed in a loop, only the first iteration will be printed to the log. There's no way to disable TB caching in QEMU (besides hacking the source code). Nevertheless, the functionality is sufficient for basic tasks, such as reconstructing the disassembly of a natively executed cryptographic algorithm.
+
+Note that performing emulation can leave indicators that apps detect at runtime (for example, `Build` values, telephony identifiers, package names, or graphics renderer strings). See @MASTG-KNOW-0031 for common emulator indicators can be detected by applications.

@@ -67,3 +67,7 @@ Create an EGL context and read [`GLES20.glGetString(GL_RENDERER)`](https://devel
 Non-resettable identifiers (IMEI/MEID, SIM serial, subscriber ID) are restricted for third-party apps targeting Android 10+ and typically require privileged or carrier permissions. In practice, `TelephonyManager.getDeviceId()`, `getSimSerialNumber()`, and `getSubscriberId()` return empty values or fail for regular apps. See [Android 10 privacy changes](https://developer.android.com/about/versions/10/privacy/changes#non-resettable-device-ids).
 
 `netcfg`-based IP detection no longer works on modern Android (deprecated since API 23). Vectorization-based detection requires NDK code and per-architecture assembly and is rarely used in apps.
+
+## Google Play Integrity API
+
+The app can also use Google Play Integrity API to obtain details of the device integrity. This API performs checks, including emulation detection. See @MASTG-KNOW-0035 for more details on the Google Play Integrity API.
