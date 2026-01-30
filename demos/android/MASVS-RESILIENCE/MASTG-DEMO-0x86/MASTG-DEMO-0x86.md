@@ -24,7 +24,7 @@ Notes about the checks performed:
 ### Steps
 
 1. Install the app on the device (@MASTG-TECH-0005). It does not need to be an emulated device.
-2. Start Frida (@MASTG-TOOL-0001) on the device and run `run.sh` to spawn the app.
+2. Start Frida (@MASTG-TOOL-0031) on the device and run `run.sh` to spawn the app.
 3. Open the app and grant `READ_PHONE_STATE` and `READ_PHONE_NUMBERS` when prompted, then tap **Start**.
 4. Stop the Frida session by pressing `Ctrl+C`.
 
