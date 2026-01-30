@@ -2,38 +2,30 @@
 platform: android
 title: Emulator Detection Checks
 id: MASTG-TEST-0x49
-type: [static, dynamic]
+type: [dynamic]
 weakness: MASWE-0099
-mitigations: []
-prerequisites: []
+best-practices: []
 profiles: [R]
-knowledge: [MASTG-KNOW-0031, MASTG-KNOW-0035]
+knowledge: [MASTG-KNOW-0031]
 ---
 
 ## Overview
 
-This test verifies that the app runs emulator detection checks on Android and modifies its behavior when it detects an emulated device. It focuses on code and runtime checks that look for emulator indicators and how the app reacts to such indicators.
-It does not attempt to bypass these checks; it only verifies that the application executes them.
+This test verifies that the app implements emulator detection checks and that it executes them at runtime.
 
-Common checks use [`android.os.Build`](https://developer.android.com/reference/android/os/Build) fields, [`TelephonyManager`](https://developer.android.com/reference/android/telephony/TelephonyManager) identifiers, package visibility via [`PackageManager`](https://developer.android.com/reference/android/content/pm/PackageManager), or OpenGL renderer values from [`GLES20.glGetString`](https://developer.android.com/reference/android/opengl/GLES20#glGetString(int)). If the app uses Play Integrity for emulator detection, it should evaluate `deviceRecognitionVerdict` values such as `MEETS_VIRTUAL_INTEGRITY`. See @MASTG-KNOW-0031 for more detail on common emulation indicators.
+This test verifies if the application performs emulation detection by gathering dynamic evidence via hooking. See @MASTG-KNOW-0031 for a detailed overview about emulation detection indicators and patterns performed by applications.
 
-Threat model: an attacker runs the app on an emulator and can instrument or hook the process.
+Threat model: an attacker can instrument or hook the process.
 
 ## Steps
 
-1. Use @MASTG-TECH-0014 with a tool such as @MASTG-TOOL-0110 to search for emulator indicators from @MASTG-KNOW-0031, such as:
-   - `Build` property checks for emulator values (`Build.FINGERPRINT`, `Build.MODEL`, `Build.HARDWARE`, `Build.PRODUCT`, `Build.TAGS`).
-   - `TelephonyManager` calls like `getLine1Number`, `getNetworkOperatorName`, or `getVoiceMailNumber` ([TelephonyManager](https://developer.android.com/reference/android/telephony/TelephonyManager)).
-   - Package checks using `PackageManager` (installed packages, `queryIntentActivities` with `MAIN/LAUNCHER`, `getRunningServices`) and `Build.PRODUCT` prefixes like `iToolsAVM` ([PackageManager](https://developer.android.com/reference/android/content/pm/PackageManager), [package visibility](https://developer.android.com/training/package-visibility)).
-   - OpenGL renderer checks using `GLES20.glGetString(GL_RENDERER)` or EGL context creation ([GLES20](https://developer.android.com/reference/android/opengl/GLES20#glGetString(int))).
-   - If the app uses Play Integrity, verify that it evaluates `deviceRecognitionVerdict` and handles `MEETS_VIRTUAL_INTEGRITY` responses ([Play Integrity](https://developer.android.com/google/play/integrity/overview)).
-2. Obtain the AndroidManifest.xml using @MASTG-TECH-0117 and verify that package visibility declarations (`<queries>` or `QUERY_ALL_PACKAGES`) and telephony permissions (`READ_PHONE_STATE`, `READ_PHONE_NUMBERS`) match the checks you found.
-3. Use @MASTG-TECH-0033 with a tool such as @MASTG-TOOL-0001 to trace runtime calls to emulator detection APIs while running the app on a device and on an emulator. Verify that the declared emulation indicators in the code are dynamically performed and that the application responds to emulator signals (ending its execution, restricting access to certain features, or just informing the user).
+1. Start the device.
+2. Use runtime method hooking (see @MASTG-TECH-0043) and look for usages of emulator detection APIs (see @MASTG-KNOW-0031 to obtain a detailed list of emulation methods) while running the app on a device.
 
 ## Observation
 
-The output should contain evidence of emulator detection checks, such as code locations, method traces, or logs, and show the app response to emulator signals (warning, restriction, termination, or telemetry).
+The output should contain evidence of emulator detection checks.
 
 ## Evaluation
 
-The test case fails if the app does not implement emulator detection checks or if those checks never execute at runtime.
+The test case fails if the hooking output does not show any evidence of emulator detection checks.
