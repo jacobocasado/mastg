@@ -4,7 +4,7 @@ title: Detecting Emulator Detection checks with Frida
 id: MASTG-DEMO-0x86
 code: [kotlin]
 test: MASTG-TEST-0x49
-tools: [MASTG-TOOL-0001]
+tools: [MASTG-TOOL-0031]
 ---
 
 ### Sample
