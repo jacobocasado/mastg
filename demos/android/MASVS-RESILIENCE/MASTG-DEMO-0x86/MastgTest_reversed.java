@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.opengl.EGL14;
@@ -36,7 +35,7 @@ import kotlin.text.StringsKt;
 import org.owasp.mastestapp.MastgTest;
 
 /* compiled from: MastgTest.kt */
-@Metadata(d1 = {"\u0000N\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0016\b\u0007\u0018\u00002\u00020\u0001:\u00019B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005J\u0006\u0010\u0006\u001a\u00020\u0007J\u0006\u0010\b\u001a\u00020\tJ\u000e\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001a\u0010\r\u001a\u00020\f2\u0006\u0010\u000e\u001a\u00020\t2\b\u0010\u000f\u001a\u0004\u0018\u00010\tH\u0002J\u000e\u0010\u0010\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J0\u0010\u0011\u001a\u00020\f2\b\u0010\u0012\u001a\u0004\u0018\u00010\u00132\u0006\u0010\u000e\u001a\u00020\t2\u0014\u0010\u0014\u001a\u0010\u0012\u0004\u0012\u00020\u0013\u0012\u0006\u0012\u0004\u0018\u00010\t0\u0015H\u0002J.\u0010\u0016\u001a\u00020\f2\b\u0010\u0012\u001a\u0004\u0018\u00010\u00132\u0006\u0010\u000e\u001a\u00020\t2\u0012\u0010\u0014\u001a\u000e\u0012\u0004\u0012\u00020\u0013\u0012\u0004\u0012\u00020\u00170\u0015H\u0002J\u000e\u0010\u0018\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J2\u0010\u0019\u001a\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u001a\u001a\u00020\t2\f\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0016\u0010\u001d\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\u0006\u0010\u001e\u001a\u00020\u001fH\u0002J\u000e\u0010 \u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0018\u0010!\u001a\u00020\u00072\u0006\u0010\u001e\u001a\u00020\u001f2\u0006\u0010\"\u001a\u00020\tH\u0002J\u0016\u0010#\u001a\b\u0012\u0004\u0012\u00020$0\u000b2\u0006\u0010\u001e\u001a\u00020\u001fH\u0002J\u000e\u0010%\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u000e\u0010&\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u000e\u0010'\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u000e\u0010(\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010)\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010*\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010+\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010,\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010-\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010.\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010/\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u00100\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001e\u00101\u001a\u00020\u00072\u0006\u0010\u000f\u001a\u00020\t2\f\u00102\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\n\u00103\u001a\u0004\u0018\u00010\tH\u0002J\u001a\u00104\u001a\u00020\t*\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u000e\u001a\u00020\tH\u0002J\u001a\u00105\u001a\u00020\t*\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u000e\u001a\u00020\tH\u0002J\u000e\u00106\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0016\u00107\u001a\u00020\t2\f\u00108\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002R\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004¢\u0006\u0002\n\u0000¨\u0006:"}, d2 = {"Lorg/owasp/mastestapp/MastgTest;", "", "context", "Landroid/content/Context;", "<init>", "(Landroid/content/Context;)V", "shouldRunInMainThread", "", "mastgTest", "", "queryBuildProperties", "", "Lorg/owasp/mastestapp/MastgTest$QueryResult;", "queryBuildValue", HintConstants.AUTOFILL_HINT_NAME, "value", "queryTelephonyProperties", "queryTelephonyValue", "telephonyManager", "Landroid/telephony/TelephonyManager;", "block", "Lkotlin/Function1;", "queryTelephonyIntValue", "", "queryPackageChecks", "buildPrefixResults", "label", "prefixes", "packages", "queryLauncherPackages", "pm", "Landroid/content/pm/PackageManager;", "queryRunningServices", "isPackageInstalled", "packageName", "getInstalledPackages", "Landroid/content/pm/PackageInfo;", "emulatorPackagePrefixes", "emulatorPackageExact", "queryOpenGlProperties", "openGlUnavailableResults", "buildIndicators", "buildQueries", "telephonyIndicators", "telephonyQueries", "packageIndicators", "packageQueries", "openGlIndicators", "openGlQueries", "containsAny", "tokens", "safeBuildSerial", "findValue", "findDisplayValue", "ensureTelephonyPermissions", "telephonyPermissionNote", "missingPermissions", "QueryResult", "app_debug"}, k = 1, mv = {2, 0, 0}, xi = 48)
+@Metadata(d1 = {"\u0000F\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0019\b\u0007\u0018\u00002\u00020\u0001:\u00017B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005J\u0006\u0010\u0006\u001a\u00020\u0007J\u0006\u0010\b\u001a\u00020\tJ\u000e\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001a\u0010\r\u001a\u00020\f2\u0006\u0010\u000e\u001a\u00020\t2\b\u0010\u000f\u001a\u0004\u0018\u00010\tH\u0002J\u000e\u0010\u0010\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J0\u0010\u0011\u001a\u00020\f2\b\u0010\u0012\u001a\u0004\u0018\u00010\u00132\u0006\u0010\u000e\u001a\u00020\t2\u0014\u0010\u0014\u001a\u0010\u0012\u0004\u0012\u00020\u0013\u0012\u0006\u0012\u0004\u0018\u00010\t0\u0015H\u0002J.\u0010\u0016\u001a\u00020\f2\b\u0010\u0012\u001a\u0004\u0018\u00010\u00132\u0006\u0010\u000e\u001a\u00020\t2\u0012\u0010\u0014\u001a\u000e\u0012\u0004\u0012\u00020\u0013\u0012\u0004\u0012\u00020\u00170\u0015H\u0002J\u000e\u0010\u0018\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J2\u0010\u0019\u001a\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u001a\u001a\u00020\t2\f\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0016\u0010\u001d\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\u0006\u0010\u001e\u001a\u00020\u001fH\u0002J\u000e\u0010 \u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0018\u0010!\u001a\u00020\u00072\u0006\u0010\u001e\u001a\u00020\u001f2\u0006\u0010\"\u001a\u00020\tH\u0002J\u000e\u0010#\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u000e\u0010$\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u000e\u0010%\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u000e\u0010&\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010'\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010(\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010)\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010*\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010+\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010,\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010-\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010.\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001e\u0010/\u001a\u00020\u00072\u0006\u0010\u000f\u001a\u00020\t2\f\u00100\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\n\u00101\u001a\u0004\u0018\u00010\tH\u0002J\u001a\u00102\u001a\u00020\t*\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u000e\u001a\u00020\tH\u0002J\u001a\u00103\u001a\u00020\t*\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u000e\u001a\u00020\tH\u0002J\u000e\u00104\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0016\u00105\u001a\u00020\t2\f\u00106\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002R\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004¢\u0006\u0002\n\u0000¨\u00068"}, d2 = {"Lorg/owasp/mastestapp/MastgTest;", "", "context", "Landroid/content/Context;", "<init>", "(Landroid/content/Context;)V", "shouldRunInMainThread", "", "mastgTest", "", "queryBuildProperties", "", "Lorg/owasp/mastestapp/MastgTest$QueryResult;", "queryBuildValue", HintConstants.AUTOFILL_HINT_NAME, "value", "queryTelephonyProperties", "queryTelephonyValue", "telephonyManager", "Landroid/telephony/TelephonyManager;", "block", "Lkotlin/Function1;", "queryTelephonyIntValue", "", "queryPackageChecks", "buildPrefixResults", "label", "prefixes", "packages", "queryLauncherPackages", "pm", "Landroid/content/pm/PackageManager;", "queryRunningServices", "isPackageInstalled", "packageName", "emulatorPackagePrefixes", "emulatorPackageExact", "queryOpenGlProperties", "openGlUnavailableResults", "buildIndicators", "buildQueries", "telephonyIndicators", "telephonyQueries", "packageIndicators", "packageQueries", "openGlIndicators", "openGlQueries", "containsAny", "tokens", "safeBuildSerial", "findValue", "findDisplayValue", "ensureTelephonyPermissions", "telephonyPermissionNote", "missingPermissions", "QueryResult", "app_debug"}, k = 1, mv = {2, 0, 0}, xi = 48)
 /* loaded from: classes3.dex */
 public final class MastgTest {
     public static final int $stable = 8;
@@ -298,16 +297,6 @@ public final class MastgTest {
         List results = new ArrayList();
         List prefixes = emulatorPackagePrefixes();
         Intrinsics.checkNotNull(pm);
-        List installedPackages = getInstalledPackages(pm);
-        results.add(new QueryResult("PackageManager.getInstalledPackages.count", String.valueOf(installedPackages.size()), String.valueOf(installedPackages.size())));
-        List $this$map$iv = installedPackages;
-        Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
-        for (Object item$iv$iv : $this$map$iv) {
-            PackageInfo it = (PackageInfo) item$iv$iv;
-            destination$iv$iv.add(it.packageName);
-        }
-        List installedNames = (List) destination$iv$iv;
-        results.addAll(buildPrefixResults("InstalledPackagePrefix", prefixes, installedNames));
         List launcherPackages = queryLauncherPackages(pm);
         results.add(new QueryResult("PackageManager.queryIntentActivities(MAIN/LAUNCHER).count", String.valueOf(launcherPackages.size()), String.valueOf(launcherPackages.size())));
         results.addAll(buildPrefixResults("LauncherPackagePrefix", prefixes, launcherPackages));
@@ -318,20 +307,18 @@ public final class MastgTest {
         List runningServices = queryRunningServices();
         results.add(new QueryResult("ActivityManager.getRunningServices.count", String.valueOf(runningServices.size()), String.valueOf(runningServices.size())));
         List $this$filter$iv = runningServices;
-        Collection destination$iv$iv2 = new ArrayList();
+        Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
-            String it2 = (String) element$iv$iv;
+            String it = (String) element$iv$iv;
             PackageManager pm2 = pm;
             List prefixes2 = prefixes;
-            List installedPackages2 = installedPackages;
-            if (StringsKt.startsWith$default(it2, "com.bluestacks.", false, 2, (Object) null)) {
-                destination$iv$iv2.add(element$iv$iv);
+            if (StringsKt.startsWith$default(it, "com.bluestacks.", false, 2, (Object) null)) {
+                destination$iv$iv.add(element$iv$iv);
             }
             pm = pm2;
             prefixes = prefixes2;
-            installedPackages = installedPackages2;
         }
-        List serviceMatches = (List) destination$iv$iv2;
+        List serviceMatches = (List) destination$iv$iv;
         String strJoinToString$default = CollectionsKt.joinToString$default(serviceMatches, ", ", null, null, 0, null, null, 62, null);
         if (strJoinToString$default.length() == 0) {
             strJoinToString$default = "<none>";
@@ -438,17 +425,6 @@ public final class MastgTest {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    private final List<PackageInfo> getInstalledPackages(PackageManager pm) {
-        if (Build.VERSION.SDK_INT >= 33) {
-            List<PackageInfo> installedPackages = pm.getInstalledPackages(PackageManager.PackageInfoFlags.of(0L));
-            Intrinsics.checkNotNull(installedPackages);
-            return installedPackages;
-        }
-        List<PackageInfo> installedPackages2 = pm.getInstalledPackages(0);
-        Intrinsics.checkNotNull(installedPackages2);
-        return installedPackages2;
     }
 
     private final List<String> emulatorPackagePrefixes() {
@@ -562,7 +538,7 @@ public final class MastgTest {
         for (Object element$iv$iv : $this$filter$iv) {
             QueryResult it = (QueryResult) element$iv$iv;
             boolean z = false;
-            if (Intrinsics.areEqual(it.getRawValue(), "true") && (StringsKt.startsWith$default(it.getName(), "InstalledPackagePrefix:", false, 2, (Object) null) || StringsKt.startsWith$default(it.getName(), "LauncherPackagePrefix:", false, 2, (Object) null) || StringsKt.startsWith$default(it.getName(), "PackageManager.hasPackage:", false, 2, (Object) null) || StringsKt.startsWith$default(it.getName(), "RunningServicePrefix:", false, 2, (Object) null))) {
+            if (Intrinsics.areEqual(it.getRawValue(), "true") && (StringsKt.startsWith$default(it.getName(), "LauncherPackagePrefix:", false, 2, (Object) null) || StringsKt.startsWith$default(it.getName(), "PackageManager.hasPackage:", false, 2, (Object) null) || StringsKt.startsWith$default(it.getName(), "RunningServicePrefix:", false, 2, (Object) null))) {
                 z = true;
             }
             if (z) {
