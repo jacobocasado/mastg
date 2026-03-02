@@ -12,4 +12,4 @@ Defending against emulated and virtual devices involves a layered approach that 
 
 - **Detective controls**: Scan for common device emulator indicators and properties (@MASTG-KNOW-0031) and perform Google Play API integrity checks (@MASTG-KNOW-0035) to detect the presence of custom device builds.
 - **Deterrent controls**: Obfuscate this detection logic (@MASTG-KNOW-0033), scatter checks throughout the app, and vary their timing to increase the cost and effort require to bypass these checks.
-- **Hardening against runtime hooking**: Implement detection of reverse engineering tools (@MASTG-KNOW-0030), as custom builds are often combined with the usage of such tools.
+- **Hardening against reverse engineering tools**: Implement detection of reverse engineering tools (@MASTG-KNOW-0030), as custom builds are often combined with the usage of such tools.
