@@ -64,7 +64,8 @@ You should have a jailbroken iPhone or iPad for running tests. These devices all
 
 ### Testing on the iOS Simulator
 
-Unlike the Android emulator, which fully emulates the hardware of an actual Android device, the iOS SDK simulator offers a higher-level _simulation_ of an iOS device. Most importantly, emulator binaries are compiled to x86 code instead of ARM code. Apps compiled for a real device don't run, making the simulator useless for black box analysis and reverse engineering.
+Unlike the Android emulator, which fully emulates the hardware of an actual Android device, the iOS Simulator offers a higher-level _simulation_ of an iOS device. Most importantly, emulator binaries are compiled to x86 or ARM-based architecture for the macOS operating system, whereas apps compiled for a physical device are compiled for the ARM-based iOS operating system. This means that
+apps compiled for a real device can't run in the simulator.
 
 ### Testing on an Emulator
 
