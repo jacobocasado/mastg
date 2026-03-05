@@ -38,7 +38,7 @@ Swift compiler directives can be used so that the compiler adds specific code to
 #endif 
 ```
 
-It is important to note that the compile-time selection performed by #if targetEnvironment(simulator) cannot be changed at runtime, because the condition is resolved by the compiler and does not exist as a runtime check.
+It is important to note that the compile-time selection performed by `#if targetEnvironment(simulator)` cannot be changed at runtime, because the condition is resolved by the compiler and does not exist as a runtime check.
 
 However, even though the directive itself is not runtime-evaluable, it is not recommended to expose its result through a reusable boolean function/property (e.g., `isRunningOnSimulator() -> Bool`) when it is used as a security decision point.
 
