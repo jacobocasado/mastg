@@ -34,10 +34,37 @@ Swift compiler directives can be used so that the compiler adds specific code to
 
 ```swift
 #if targetEnvironment(simulator)
-    return true // If this is true, app is an iOS simulator binary.
+    // If code logic enters here, app is an iOS simulator binary.
+#endif 
+```
+
+It is important to note that the compile-time selection performed by #if targetEnvironment(simulator) cannot be changed at runtime, because the condition is resolved by the compiler and does not exist as a runtime check.
+
+However, even though the directive itself is not runtime-evaluable, it is not recommended to expose its result through a reusable boolean function/property (e.g., `isRunningOnSimulator() -> Bool`) when it is used as a security decision point.
+
+Once compiled, the wrapper becomes ordinary runtime code (often a constant-returning function in a given build). That creates a single point of failure that can be targeted via runtime instrumentation/hooking or binary patching. In practice: the directive is not "hookable", but the wrapper function/flag that exposes its result is.
+
+For example, avoid relying on the following usage of the directive:
+
+```swift
+private static func checkCompile() -> Bool {
+    #if targetEnvironment(simulator)
+        return true
+    #else
+        return false
+    #endif
+}
+```
+
+Instead, implement the decision logic inside the directive:
+
+```swift
+#if targetEnvironment(simulator)
+    // Enforce policy here (e.g., disable the sensitive feature / fail fast)
+    exit(0)
 #endif 
 ```
 
 ## Limitations
 
-It is important to note that device-based checks are inherently a cat-and-mouse game. Detection methods and bypass techniques evolve continuously—determined attackers with sufficient time and resources can typically circumvent these protections (e.g., by patching the code logic). Therefore, these techniques should be part part of a defense-in-depth strategy, not a standalone solution.
+It is important to note that device-based checks are inherently a cat-and-mouse game. Detection methods and bypass techniques evolve continuously—determined attackers with sufficient time and resources can typically circumvent these protections (e.g., by patching the code logic).
