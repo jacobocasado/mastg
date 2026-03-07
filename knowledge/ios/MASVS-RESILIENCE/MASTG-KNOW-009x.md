@@ -10,7 +10,7 @@ In the context of anti-reversing, the goal of detecting virtual devices is to in
 
 Since its release, [Corellium](https://www.corellium.com/) (commercial tool) has made iOS virtualization available, [setting itself apart from the iOS simulator](https://www.corellium.com/compare/ios-simulator "Corellium vs Apple\'s iOS Simulator").
 
-Corellium claims that they are virtual devices running on a propietary hipervisor **and are not emulators**, which means that the iOS architecture is maintained and iOS apps can run in Corellium virtual devices, enabling reverse engineering of iOS apps using these virtual devices.
+Corellium claims that they are virtual devices running on a proprietary hipervisor **and are not emulators**, which means that the iOS architecture is maintained and iOS apps can run in Corellium virtual devices, enabling reverse engineering of iOS apps using these virtual devices.
 
 ## Techniques
 
