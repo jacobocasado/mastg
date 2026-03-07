@@ -6,19 +6,21 @@ title: Simulator Detection
 
 ## Overview
 
-In the context of anti-reversing, the goal of emulator detection is to increase the difficulty of running the app on an emulated device, which impedes some tools and techniques reverse engineers like to use. This increased difficulty forces the reverse engineer to defeat the emulator checks or utilize the physical device, thereby barring the access required for large-scale device analysis.
+In the context of anti-reversing, the goal of emulator detection is to increase the difficulty of running the app on a non-physical device, which impedes some tools and techniques reverse engineers like to use. This increased difficulty forces the reverse engineer to defeat these or utilize the physical device, thereby barring the access required for large-scale device analysis.
 
-MacOS operating system provide a software called "Simulator" and is shipped with XCode. This simulator mimics an iOS device, but does not try to emulate its architecture, and is not an iOS virtual machine.
+Apple's operating system provides a software called "Simulator", shipped with XCode. This simulator mimics an iOS device, but does not try to emulate its architecture, and is not an iOS virtual machine.
 
 At this moment, there is not a iOS "emulator" available.
 
-As discussed in the section [Testing on the iOS Simulator](../../../Document/0x06b-iOS-Security-Testing.md#testing-on-the-ios-simulator "Testing on the iOS Simulator") in the basic security testing chapter, simulator binaries are compiled to macOS operating system code instead of iOS operating system code (independently of the architecture) and apps compiled for a physical device don't run in the simulator, hence "_emulation_" protection is not so much a concern regarding iOS apps in contrast to Android with a wide range of _emulation_ choices available.
+As discussed in the section [Testing on the iOS Simulator](../../../Document/0x06b-iOS-Security-Testing.md#testing-on-the-ios-simulator "Testing on the iOS Simulator") in the basic security testing chapter, simulator binaries are compiled to macOS operating system code instead of iOS operating system code (independently of the architecture).
+
+Therefore, apps from app store (or compiled for physical devices) do not need to detect the presence of an iOS Simulator as they can't be installed or executed in such platform.
 
 ## Techniques
 
-There are several indicators that can be used as heuristics to know if the device in question is an iOS Simulator.
+Although apps from App Store cannot be executed in an iOS Simulator, there are several indicators that can be used by the app to know if the device in question is an iOS Simulator.
 
-## Runtime environment check
+### Runtime environment check
 
 The following indicator uses the [runtime environment](/https://developer.apple.com/documentation/foundation/processinfo/environment) process information to check if the environment variable "SIMULATOR_DEVICE_NAME" has been set (this variable is set by the iOS Simulator when spawning the app process):
 
@@ -28,43 +30,12 @@ private static func isSimulatorEnv() -> Bool {
   }
 ```
 
-## Usage of compiler directives
+### Usage of compiler directives
 
 Swift compiler directives can be used so that the compiler adds specific code to the binary when the destination target is an iOS simulator (remember that the resulting binary for the application differs from a physical device binary). **These compiler directives can be used in code so that the app detects in runtime if it is a compiled binary for the iOS emulator:**
 
 ```swift
 #if targetEnvironment(simulator)
-    // If code logic enters here, app is an iOS simulator binary.
+    // This code will only get compiled for iOS Simulator binaries
 #endif 
 ```
-
-It is important to note that the compile-time selection performed by `#if targetEnvironment(simulator)` cannot be changed at runtime, because the condition is resolved by the compiler and does not exist as a runtime check.
-
-However, even though the directive itself is not runtime-evaluable, it is not recommended to expose its result through a reusable boolean function/property (e.g., `isRunningOnSimulator() -> Bool`) when it is used as a security decision point.
-
-Once compiled, the wrapper becomes ordinary runtime code (often a constant-returning function in a given build). That creates a single point of failure that can be targeted via runtime instrumentation/hooking or binary patching. In practice: the directive is not "hookable", but the wrapper function/flag that exposes its result is.
-
-For example, avoid relying on the following usage of the directive:
-
-```swift
-private static func checkCompile() -> Bool {
-    #if targetEnvironment(simulator)
-        return true
-    #else
-        return false
-    #endif
-}
-```
-
-Instead, implement the decision logic inside the directive:
-
-```swift
-#if targetEnvironment(simulator)
-    // Enforce policy here (e.g., disable the sensitive feature / fail fast)
-    exit(0)
-#endif 
-```
-
-## Limitations
-
-It is important to note that device-based checks are inherently a cat-and-mouse game. Detection methods and bypass techniques evolve continuously—determined attackers with sufficient time and resources can typically circumvent these protections (e.g., by patching the code logic).

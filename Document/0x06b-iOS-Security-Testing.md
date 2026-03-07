@@ -10,7 +10,7 @@ Although you can use a Linux or Windows host computer for testing, you'll find t
 
 The following is the most basic iOS app testing setup:
 
-- Ideally macOS host computer with admin rights
+- Ideally macOS host computer with admin rights.
 - @MASTG-TOOL-0070 and @MASTG-TOOL-0071 installed.
 - Wi-Fi network that permits client-to-client traffic.
 - At least one jailbroken iOS device (of the desired iOS version).
@@ -66,9 +66,9 @@ You should have a jailbroken iPhone or iPad for running tests. These devices all
 
 Unlike the Android emulator, which fully emulates the hardware of an actual Android device, the iOS Simulator offers a higher-level _simulation_ of an iOS device. Most importantly, emulator binaries are compiled to x86 or ARM-based architecture for the macOS operating system, whereas apps compiled for a physical device are compiled for the ARM-based iOS operating system. This means that apps compiled for a real device can't run in the simulator.
 
-### Testing on an Emulator
+### Testing on a iOS virtual device
 
-@MASTG-TOOL-0108 is the only publicly available iOS emulator. It is an enterprise SaaS solution with a per user license model and does not offer community licenses.
+@MASTG-TOOL-0108 is the only publicly available iOS virtual device. It is an enterprise SaaS solution with a per user license model and does not offer community licenses.
 
 ### Getting Privileged Access
 
