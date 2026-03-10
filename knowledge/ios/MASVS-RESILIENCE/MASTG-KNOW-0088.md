@@ -10,7 +10,7 @@ In the context of anti-reversing, the goal of emulator detection is to increase 
 
 Apple's operating system provides a software called "Simulator", shipped with XCode. This simulator mimics an iOS device, but does not try to emulate its architecture, and is not an iOS virtual machine.
 
-At this moment, there is not a iOS "emulator" available.
+At this moment, there is not an iOS "emulator" available.
 
 As discussed in the section [Testing on the iOS Simulator](../../../Document/0x06b-iOS-Security-Testing.md#testing-on-the-ios-simulator "Testing on the iOS Simulator") in the basic security testing chapter, simulator binaries are compiled to macOS operating system code instead of iOS operating system code (independently of the architecture).
 

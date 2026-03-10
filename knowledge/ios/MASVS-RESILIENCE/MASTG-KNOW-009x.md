@@ -93,7 +93,7 @@ The following example checks against the presence of such file using the `stat` 
 #include <sys/stat.h>
 
 struct stat st;
-return stat("/usr/libexec/corelliumd", &st) == 0; // If true, stat was successfull and Corellium system process exists.
+return stat("/usr/libexec/corelliumd", &st) == 0; // If true, stat was successful and Corellium system process exists.
 ```
 
 ## Limitations
