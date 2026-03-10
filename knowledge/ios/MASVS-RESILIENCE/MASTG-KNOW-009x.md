@@ -87,7 +87,7 @@ It is also possible to check for specific files that the virtualization engine m
 
 Corellium virtual devices, for example, leaves a system process binary in `/usr/libexec/corelliumd`, which can be checked against its presence.
 
-The following example checks against tre presence of such file using the `stat` system call:
+The following example checks against the presence of such file using the `stat` call:
 
 ```c
 #include <sys/stat.h>
