@@ -81,6 +81,21 @@ For example, `sysctlbyname("hw.machine")` reports the platform identifier (the d
 
 These properties can be used to cross-check if the device should support the previous hardware capabilities. A claimed device model whose capabilities do not match what that model should expose is another indicator of a virtual device.
 
+### Presence of specific virtualization engine files
+
+It is also possible to check for specific files that the virtualization engine might create in the virtual device and are not part of a standard iOS device.
+
+Corellium virtual devices, for example, leaves a system process binary in `/usr/libexec/corelliumd`, which can be checked against its presence.
+
+The following example checks against tre presence of such file using the `stat` system call:
+
+```c
+#include <sys/stat.h>
+
+struct stat st;
+return stat("/usr/libexec/corelliumd", &st) == 0; // If true, stat was successfull and Corellium system process exists.
+```
+
 ## Limitations
 
 Some of these checks are heuristic-based and can lead to false positives; they can also be spoofed (and bypassed) with sufficient time and resources, especially on rooted devices. These techniques should be part of a defense-in-depth strategy, not a standalone solution. It is recommended to apply a layered approach with other anti-reversing techniques like detecting a jailbroken environment (@MASTG-KNOW-0084).
