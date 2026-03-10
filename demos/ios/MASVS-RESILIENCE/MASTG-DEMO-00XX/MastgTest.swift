@@ -1,20 +1,12 @@
 import Foundation
-import CoreBluetooth
 import Metal
 import Darwin
 
 struct MastgTest {
-    // SUMMARY: This sample demonstrates iOS virtual-device detection by executing the local indicators from MASTG-KNOW-009x and reporting a final verdict in the UI.
-
-    private static var activeDetector: VirtualDeviceDetector?
+    // SUMMARY: This sample demonstrates iOS virtual-device detection by executing virtual device indicator checks and reporting a final verdict in the UI.
 
     static func mastgTest(completion: @escaping (String) -> Void) {
-        let detector = VirtualDeviceDetector()
-        activeDetector = detector
-        detector.run { report in
-            activeDetector = nil
-            completion(report)
-        }
+        completion(VirtualDeviceDetector().run())
     }
 }
 
@@ -46,185 +38,81 @@ private struct IndicatorResult {
     let reason: String
 }
 
-private final class VirtualDeviceDetector: NSObject, CBCentralManagerDelegate {
-    private var completion: ((String) -> Void)?
-    private var bluetoothManager: CBCentralManager?
-    private var bluetoothResultRecorded = false
-    private var results = [IndicatorResult]()
-    private var finished = false
-    private var machineIdentifier = "unknown"
+private struct VirtualDeviceDetector {
+    func run() -> String {
+        let machineIdentifier = currentMachineIdentifier()
+        let results = [
+            machineIndicator(for: machineIdentifier),
+            metalIndicator(),
+            corelliumIndicator()
+        ]
 
-    func run(completion: @escaping (String) -> Void) {
-        self.completion = completion
-        machineIdentifier = currentMachineIdentifier()
-        runSynchronousChecks()
-
-        // PASS: [MASTG-TEST-0x92] The app queries Bluetooth support through CBCentralManager as a virtual-device indicator.
-        bluetoothManager = CBCentralManager(
-            delegate: self,
-            queue: nil,
-            options: [CBCentralManagerOptionShowPowerAlertKey: false]
-        )
-
-        if let bluetoothManager {
-            let state = bluetoothManager.state
-            if state != .unknown {
-                recordBluetoothState(state)
-            }
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.finishIfNeeded()
-        }
+        return buildReport(from: results)
     }
 
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        recordBluetoothState(central.state)
-        finishIfNeeded()
-    }
-
-    private func runSynchronousChecks() {
-        let machineLevel: IndicatorLevel = machineIdentifier == "unknown" ? .inconclusive : .expected
-        let machineReason: String
+    private func machineIndicator(for machineIdentifier: String) -> IndicatorResult {
+        let level: IndicatorLevel = machineIdentifier == "unknown" ? .inconclusive : .expected
+        let reason: String
 
         if machineIdentifier == "unknown" {
-            machineReason = "The app could not resolve the device model, so hardware cross-checks are limited."
+            reason = "The app could not resolve the device model."
         } else {
-            machineReason = "The reported model can be cross-checked against the hardware capabilities observed at runtime."
+            reason = "The reported model can be cross-checked against the hardware capabilities observed at runtime."
         }
 
         // PASS: [MASTG-TEST-0x92] The app queries hw.machine through sysctlbyname as a virtual-device indicator.
-        results.append(
-            IndicatorResult(
-                order: 1,
-                name: "hw.machine",
-                observed: machineIdentifier,
-                level: machineLevel,
-                reason: machineReason
-            )
+        return IndicatorResult(
+            order: 1,
+            name: "hw.machine",
+            observed: machineIdentifier,
+            level: level,
+            reason: reason
         )
+    }
 
+    private func metalIndicator() -> IndicatorResult {
         // PASS: [MASTG-TEST-0x92] The app checks whether a Metal GPU is available.
-        let metalDevice = MTLCreateSystemDefaultDevice()
-        if metalDevice != nil {
-            results.append(
-                IndicatorResult(
-                    order: 2,
-                    name: "Metal GPU",
-                    observed: "available",
-                    level: .expected,
-                    reason: "A Metal device is available, which is consistent with a physical iOS device."
-                )
-            )
-        } else {
-            results.append(
-                IndicatorResult(
-                    order: 2,
-                    name: "Metal GPU",
-                    observed: "missing",
-                    level: .suspicious,
-                    reason: "No Metal device is available, which is unusual for a supported physical iOS device."
-                )
+        if MTLCreateSystemDefaultDevice() != nil {
+            return IndicatorResult(
+                order: 2,
+                name: "Metal GPU",
+                observed: "available",
+                level: .expected,
+                reason: "A Metal device is available, which is consistent with a physical iOS device."
             )
         }
 
-        // PASS: [MASTG-TEST-0x92] The app checks for the Corellium daemon file.
-        let corelliumDaemonPresent = corelliumDaemonExists()
-        if corelliumDaemonPresent {
-            results.append(
-                IndicatorResult(
-                    order: 4,
-                    name: "Corellium daemon",
-                    observed: "present",
-                    level: .confirmed,
-                    reason: "The file /usr/libexec/corelliumd exists, which is a strong Corellium indicator."
-                )
-            )
-        } else {
-            results.append(
-                IndicatorResult(
-                    order: 4,
-                    name: "Corellium daemon",
-                    observed: "not found",
-                    level: .expected,
-                    reason: "The file /usr/libexec/corelliumd was not found."
-                )
-            )
-        }
-    }
-
-    private func recordBluetoothState(_ state: CBManagerState) {
-        guard !bluetoothResultRecorded else {
-            return
-        }
-
-        bluetoothResultRecorded = true
-
-        let observed = "\(bluetoothStateDescription(state)) (\(state.rawValue))"
-        let level: IndicatorLevel
-        let reason: String
-
-        switch state {
-        case .poweredOn:
-            level = .expected
-            reason = "Bluetooth hardware is available and powered on."
-        case .poweredOff:
-            level = .expected
-            reason = "Bluetooth hardware is available but currently powered off."
-        case .resetting:
-            level = .expected
-            reason = "Bluetooth hardware is available, but CoreBluetooth is temporarily resetting."
-        case .unsupported:
-            level = .suspicious
-            reason = "Bluetooth is reported as unsupported, which is unusual for a physical iOS device."
-        case .unauthorized:
-            level = .inconclusive
-            reason = "Bluetooth access is not authorized, so this indicator cannot confirm hardware availability."
-        case .unknown:
-            level = .inconclusive
-            reason = "CoreBluetooth has not finished resolving the hardware state yet."
-        @unknown default:
-            level = .inconclusive
-            reason = "CoreBluetooth returned an unknown state."
-        }
-
-        results.append(
-                IndicatorResult(
-                    order: 3,
-                    name: "Bluetooth",
-                    observed: observed,
-                    level: level,
-                reason: reason
-            )
+        return IndicatorResult(
+            order: 2,
+            name: "Metal GPU",
+            observed: "missing",
+            level: .suspicious,
+            reason: "No Metal device is available, which is unusual for a supported physical iOS device."
         )
     }
 
-    private func finishIfNeeded() {
-        guard !finished else {
-            return
-        }
-
-        finished = true
-
-        if !bluetoothResultRecorded {
-            results.append(
-                IndicatorResult(
-                    order: 3,
-                    name: "Bluetooth",
-                    observed: "timeout",
-                    level: .inconclusive,
-                    reason: "No Bluetooth state was received before the timeout expired."
-                )
+    private func corelliumIndicator() -> IndicatorResult {
+        // PASS: [MASTG-TEST-0x92] The app checks for the Corellium daemon file.
+        if corelliumDaemonExists() {
+            return IndicatorResult(
+                order: 3,
+                name: "Corellium daemon",
+                observed: "present",
+                level: .confirmed,
+                reason: "The file /usr/libexec/corelliumd exists, which is a strong Corellium indicator."
             )
         }
 
-        let report = buildReport()
-        DispatchQueue.main.async { [completion] in
-            completion?(report)
-        }
+        return IndicatorResult(
+            order: 3,
+            name: "Corellium daemon",
+            observed: "not found",
+            level: .expected,
+            reason: "The file /usr/libexec/corelliumd was not found."
+        )
     }
 
-    private func buildReport() -> String {
+    private func buildReport(from results: [IndicatorResult]) -> String {
         let orderedResults = results.sorted { lhs, rhs in
             lhs.order < rhs.order
         }
@@ -233,7 +121,7 @@ private final class VirtualDeviceDetector: NSObject, CBCentralManagerDelegate {
         let suspiciousResults = orderedResults.filter { $0.level == .suspicious }
 
         var lines = [
-            "Virtual device detection results (MASTG-KNOW-009x)",
+            "Virtual device detection results:",
             "",
             "Indicators:"
         ]
@@ -245,15 +133,16 @@ private final class VirtualDeviceDetector: NSObject, CBCentralManagerDelegate {
         lines.append("")
         lines.append("Verdict:")
 
-        if !confirmedResults.isEmpty || suspiciousResults.count >= 2 {
+        if !confirmedResults.isEmpty {
             lines.append("- Likely virtual device.")
-
-            for result in confirmedResults + suspiciousResults {
+            for result in confirmedResults {
                 lines.append("  - \(result.name): \(result.reason)")
             }
-        } else if suspiciousResults.count == 1 {
+        } else if !suspiciousResults.isEmpty {
             lines.append("- No strong virtual-device verdict yet. Review the suspicious indicator below.")
-            lines.append("  - \(suspiciousResults[0].name): \(suspiciousResults[0].reason)")
+            for result in suspiciousResults {
+                lines.append("  - \(result.name): \(result.reason)")
+            }
         } else {
             lines.append("- Likely physical device. No strong virtual-device indicators were observed.")
         }
@@ -284,24 +173,6 @@ private final class VirtualDeviceDetector: NSObject, CBCentralManagerDelegate {
         var fileInfo = stat()
         return "/usr/libexec/corelliumd".withCString { path in
             stat(path, &fileInfo) == 0
-        }
-    }
-    private func bluetoothStateDescription(_ state: CBManagerState) -> String {
-        switch state {
-        case .unknown:
-            return ".unknown"
-        case .resetting:
-            return ".resetting"
-        case .unsupported:
-            return ".unsupported"
-        case .unauthorized:
-            return ".unauthorized"
-        case .poweredOff:
-            return ".poweredOff"
-        case .poweredOn:
-            return ".poweredOn"
-        @unknown default:
-            return ".unknown"
         }
     }
 }
