@@ -15,7 +15,7 @@ knowledge: [MASTG-KNOW-0033]
 
 If security-relevant Java or Kotlin code is not obfuscated, decompilation of the app's DEX bytecode can expose business logic, device attestation and environment checks, integrity checks, and other implementation details that help an attacker understand the app and model attacks.
 
-This test checks whether security-relevant Java or Kotlin logic is protected with obfuscation techniques, or whether it remains easy to understand and correlate in the decompiled output.
+This test checks whether the obfuscation techniques applied to the Java or Kotlin layer prevent straightforward identification, correlation, and reverse engineering of security-relevant logic in the decompiled output.
 
 Use @MASTG-KNOW-0033 as reference for common obfuscation mechanisms and indicators to look for.
 
@@ -28,10 +28,10 @@ Use @MASTG-KNOW-0033 as reference for common obfuscation mechanisms and indicato
 
 ## Observation
 
-The output should contain the reviewed security-relevant Java or Kotlin code locations and any indicators showing whether those locations are obfuscated or remain easy to understand and correlate.
+The output should contain the candidate Java or Kotlin code locations, the indicators used to correlate them with security-relevant functionality, and any findings showing whether that logic can still be identified and reverse engineered with reasonable effort.
 
 ## Evaluation
 
-The test case fails if security-relevant Java or Kotlin logic remains sufficiently readable that an attacker can directly understand the logic, correlate it with sensitive functionality, or use it to model attacks.
+The test case fails if the Java or Kotlin layer allows an attacker to identify, correlate, and reverse engineer security-relevant logic with reasonable effort despite the obfuscation mechanisms present.
 
-The test case also fails if security-relevant logic is present but the observed protections are too weak to prevent straightforward recovery of identifiers, strings, control flow, or other implementation details relevant to reverse engineering. Findings should be interpreted in the context of the app's threat model and the sensitivity of the reviewed code.
+The test case also fails if the observed protections are too weak to prevent straightforward recovery of identifiers, strings, control flow, or other implementation details that allow security-relevant functionality to be located and understood. Findings should be interpreted in the context of the app's threat model and the sensitivity of the reviewed code.

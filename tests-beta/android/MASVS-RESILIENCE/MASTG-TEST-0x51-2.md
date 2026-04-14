@@ -15,7 +15,7 @@ knowledge: [MASTG-KNOW-0033]
 
 If first-party native libraries that implement security-relevant logic are not obfuscated, reverse engineering of packaged or loaded native code can expose business logic, device attestation and environment checks, integrity checks, and other implementation details that help an attacker understand the app and model attacks.
 
-This test checks whether the native libraries that contain security-relevant logic in the app are protected with native obfuscation techniques, or whether they remain easy to analyze through symbols, strings, constants, call structure, or control flow.
+This test checks whether the obfuscation techniques applied to first-party native libraries prevent straightforward identification, correlation, and reverse engineering of security-relevant logic through strings, constants, call structure, or control flow.
 
 Use @MASTG-KNOW-0033 as reference for common native obfuscation mechanisms and indicators to look for.
 
@@ -33,10 +33,10 @@ Use @MASTG-KNOW-0033 as reference for common native obfuscation mechanisms and i
 
 ## Observation
 
-The output should contain the identified first-party native libraries, the reviewed security-relevant code locations, and any indicators showing whether those locations are obfuscated or remain easy to understand and correlate.
+The output should contain the identified first-party native libraries, the candidate native code locations, the indicators used to correlate them with security-relevant functionality, and any findings showing whether that logic can still be identified and reverse engineered with reasonable effort.
 
 ## Evaluation
 
-The test case fails if first-party native libraries containing security-relevant logic remain sufficiently readable that an attacker can directly understand the logic, correlate it with sensitive functionality, or use it to model attacks.
+The test case fails if the app's first-party native libraries allow an attacker to identify, correlate, and reverse engineer security-relevant logic with reasonable effort despite the obfuscation mechanisms present.
 
-The test case also fails if security-relevant native logic is present but the observed protections are too weak to prevent straightforward recovery of strings, constants, symbols, call edges, or control flow relevant to reverse engineering.
+The test case also fails if the observed protections are too weak to prevent straightforward recovery of strings, constants, symbols, call edges, or control flow that allow security-relevant functionality to be located and understood.
