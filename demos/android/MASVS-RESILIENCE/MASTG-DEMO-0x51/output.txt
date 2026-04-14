@@ -1,0 +1,21 @@
+
+AndroidManifest_reversed.xml
+14:        <package android:name="com.topjohnwu.magisk"/>
+15:        <package android:name="eu.chainfire.supersu"/>
+16:        <package android:name="me.weishu.kernelsu"/>
+
+MastgTest_reversed.java
+7:import android.content.pm.PackageManager;
+21:    public final Context f7310a;
+24:    public final List f7311b;
+28:        this.f7310a = context;
+29:        this.f7311b = AbstractC0489n.I0("com.topjohnwu.magisk", "eu.chainfire.supersu", "me.weishu.kernelsu");
+32:    public final String a() {
+37:            Iterator it = this.f7311b.iterator();
+40:                context = this.f7310a;
+47:                PackageManager packageManager = context.getPackageManager();
+50:                        packageManager.getPackageInfo(str, PackageManager.PackageInfoFlags.of(0L));
+52:                        packageManager.getPackageInfo(str, 0);
+54:                } catch (PackageManager.NameNotFoundException unused) {
+59:                String str3 = "Detected root manager package '" + str2 + "'. The app closes when root-related packages are found.";
+64:                    activity.finishAffinity();
