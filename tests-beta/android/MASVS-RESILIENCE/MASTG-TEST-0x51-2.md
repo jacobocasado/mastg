@@ -25,9 +25,8 @@ Use @MASTG-KNOW-0033 as reference for common native obfuscation mechanisms and i
 1. Perform @MASTG-TECH-0029 to list first-party native libraries packaged in the APK.
 2. Perform @MASTG-TECH-0018 to disassemble the native libraries that may contain security-relevant logic.
 3. Perform @MASTG-TECH-0024 to review the disassembled native code.
-4. Perform @MASTG-TECH-0140 to inspect symbols and debugging information that may make the native code easier to analyze.
-5. Use @MASTG-KNOW-0033 as reference to identify whether the reviewed native code shows indicators of obfuscation, and whether those indicators prevent straightforward identification and correlation of security-relevant logic. Perform @MASTG-TOOL-0009 on the APK to obtain compiler, obfuscator, or packer hints that can help guide the manual review.
-6. Correlate the findings and determine whether the obfuscation applied to the native layer still allows security-relevant logic to be identified and reverse engineered with reasonable effort.
+4. Use @MASTG-KNOW-0033 as reference to identify whether the reviewed native code shows indicators of obfuscation, and whether those indicators prevent straightforward identification and correlation of security-relevant logic. Perform @MASTG-TOOL-0009 on the APK to obtain compiler, obfuscator, or packer hints that can help guide the manual review.
+5. Correlate the findings and determine whether the obfuscation applied to the native layer still allows security-relevant logic to be identified and reverse engineered with reasonable effort.
 
 ## Observation
 
@@ -37,4 +36,4 @@ The output should contain the identified first-party native libraries, the candi
 
 The test case fails if the app's first-party native libraries allow an attacker to identify, correlate, and reverse engineer security-relevant logic with reasonable effort despite the obfuscation mechanisms present.
 
-The test case also fails if the observed protections are too weak to prevent straightforward recovery of strings, constants, symbols, call edges, or control flow that allow security-relevant functionality to be located and understood.
+The test case also fails if the observed protections are too weak to prevent straightforward recovery of strings, constants, call edges, or control flow that allow security-relevant functionality to be located and understood.
