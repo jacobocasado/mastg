@@ -6,10 +6,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 
-// SUMMARY: This sample demonstrates a minified Java/Kotlin root detection routine based on root manager package names.
+// SUMMARY: This sample demonstrates a Java/Kotlin root detection routine based on root manager package names.
 class MastgTest(private val context: Context) {
 
-    // FAIL: [MASTG-TEST-0x51-1] Root detection logic remains identifiable in the decompiled Java/Kotlin code despite minification.
+    // FAIL: [MASTG-TEST-0x51-1] Due to weak code obfuscation, the root detection logic remains identifiable in the decompiled Java/Kotlin code despite minification.
     val shouldRunInMainThread = true
 
     private val rootManagerPackages = listOf(
@@ -30,7 +30,6 @@ class MastgTest(private val context: Context) {
                 results.add(Status.FAIL, message)
                 closeApp()
             } else {
-                // PASS: [MASTG-TEST-0x51-1] No monitored root manager package was installed during this run.
                 results.add(Status.PASS, "No monitored root manager package was found.")
             }
 

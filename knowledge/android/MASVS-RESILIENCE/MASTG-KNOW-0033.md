@@ -118,9 +118,11 @@ An open-source reference for native obfuscation techniques is [O-MVLL](https://o
 
 Symbol stripping is also a basic form of obfuscation in native code because it removes function names and other information that can make reverse engineering easier. This topic is covered in more detail in @MASTG-KNOW-0008.
 
+Native libraries that use name-based JNI resolution still expose descriptive exported `Java_*` symbols even after symbol stripping. Registering native methods dynamically through `JNI_OnLoad` and `RegisterNatives` can reduce that exposure, as the symbols of such functions can be stripped due to not needing to follow the `Java_*` convention.
+
 ### Control Flow Flattening
 
-Control flow flattening modifies the graph structure of a function by breaking it into basic blocks and placing them behind a dispatcher-driven structure, such as a loop and switch-based state machine. 
+Control flow flattening modifies the graph structure of a function by breaking it into basic blocks and placing them behind a dispatcher-driven structure, such as a loop and switch-based state machine.
 
 This makes the execution flow harder to follow because the natural branching structure of the original function is no longer directly visible in the disassembled or decompiled output.
 
@@ -137,7 +139,7 @@ def flatten_cfg(self, mod: omvll.Module, func: omvll.Function):
 
 ### Junk Code
 
-Junk code aims to add code that is noisy or annoying to analyze without changing the intended behavior of the original function. 
+Junk code aims to add code that is noisy or annoying to analyze without changing the intended behavior of the original function.
 
 In native code, one way to achieve this is to add duplicate basic blocks, redundant branches, or to introduce extra code paths that increase the size and complexity of the control-flow graph.
 
