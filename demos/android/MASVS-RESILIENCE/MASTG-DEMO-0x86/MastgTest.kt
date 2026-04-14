@@ -241,23 +241,15 @@ class MastgTest(private val context: Context) {
         return listOf(
             "com.vphone.",
             "com.bignox.",
-            "com.nox.mopen.app",
-            "me.haima.",
             "com.bluestacks",
-            "cn.itools.",
-            "com.kop.",
-            "com.kaopu.",
-            "com.microvirt.",
-            "com.bignox.app"
+            "com.microvirt."
         )
     }
 
     private fun emulatorPackageExact(): List<String> {
         return listOf(
             "com.google.android.launcher.layouts.genymotion",
-            "com.nox.mopen.app",
             "com.bignox.app",
-            "com.microvirt"
         )
     }
 
