@@ -114,6 +114,10 @@ Native code can be obfuscated with many different transformations. On Android, t
 
 An open-source reference for native obfuscation techniques is [O-MVLL](https://obfuscator.re/omvll/passes/arithmetic/), an LLVM-based obfuscator that documents several common protections and their tradeoffs.
 
+### Symbol Stripping
+
+Symbol stripping is also a basic form of obfuscation in native code because it removes function names and other information that can make reverse engineering easier. This topic is covered in more detail in @MASTG-KNOW-0008.
+
 ### Control Flow Flattening
 
 Control flow flattening modifies the graph structure of a function by breaking it into basic blocks and placing them behind a dispatcher-driven structure, such as a loop and switch-based state machine. 
