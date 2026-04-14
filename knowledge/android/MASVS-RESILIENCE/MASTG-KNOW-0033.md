@@ -24,6 +24,29 @@ Android classes, methods, fields, packages, and local variables can be renamed t
 
 This is a type of layout obfuscation, which doesn't impact the program's performance.
 
+R8 and ProGuard can rename classes, methods, and fields during the release build process. The behavior is controlled through the release build configuration and keep rules that preserve selected identifiers. See the [Android app optimization documentation](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization), the [Android keep rules guide](https://developer.android.com/topic/performance/app-optimization/add-keep-rules), and the [ProGuard manual](https://www.guardsquare.com/manual/configuration/usage).
+
+```groovy
+android {
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+}
+```
+
+```pro
+-keep class com.example.api.PublicApi { *; }
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+```
+
 ### String Encryption
 
 String literals can reveal implementation details that are relevant for reverse engineering and understanding of the business logic of the app, such as endpoint URLs, file paths, feature names, API keys, device attestation detection artifacts (such as root or jailbreak paths), and error messages.
@@ -31,6 +54,15 @@ String literals can reveal implementation details that are relevant for reverse 
 String encryption replaces plaintext literals with encoded or encrypted representations and adds runtime logic that reconstructs the original value before use.
 
 When this technique is applied, the original string values may no longer appear directly in the decompiled code or extracted DEX data; the clear strings are only present at runtime.
+
+`dProtect` extends the ProGuard rule format with string obfuscation passes. See the [dProtect strings encryption documentation](https://obfuscator.re/dprotect/passes/strings/) for more information about how to encrypt strings.
+
+```pro
+-obfuscate-strings class com.example.sensitive.ApiClient {
+    private static java.lang.String API_KEY;
+    public java.lang.String buildHeader();
+}
+```
 
 ### Dynamic Code Loading and Packing
 
@@ -51,6 +83,12 @@ Reflection is separate from dynamic code loading. It operates on code that is al
 The control-flow graph of a function is a representation of the elementary computational blocks and the conditions required to reach them. This representation is usually an early step in the decompilation process.
 
 Control flow obfuscation modifies the bytecode to produce a more complex control-flow graph in the decompiled output. Common examples include inserted conditions, opaque predicates, or transformations around branch instructions such as `GOTO #offset`.
+
+`dProtect` provides a dedicated pass for this transformation. See the [dProtect control-flow obfuscation documentation](https://obfuscator.re/dprotect/passes/control-flow/).
+
+```pro
+-obfuscate-control-flow class com.example.sensitive.** { *; }
+```
 
 ### Dead Code Injection
 
