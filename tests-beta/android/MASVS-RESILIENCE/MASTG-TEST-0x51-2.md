@@ -5,8 +5,6 @@ id: MASTG-TEST-0x51-2
 type: [static]
 weakness: MASWE-0089
 best-practices: [MASTG-BEST-0029]
-prerequisites:
-- identify-security-relevant-contexts
 profiles: [R]
 knowledge: [MASTG-KNOW-0033]
 ---
@@ -25,11 +23,11 @@ Use @MASTG-KNOW-0033 as reference for common native obfuscation mechanisms and i
 ## Steps
 
 1. Perform @MASTG-TECH-0029 to list first-party native libraries packaged in the APK.
-2. Perform @MASTG-TECH-0018 to disassemble the native libraries that implement security-relevant logic.
+2. Perform @MASTG-TECH-0018 to disassemble the native libraries that may contain security-relevant logic.
 3. Perform @MASTG-TECH-0024 to review the disassembled native code.
 4. Perform @MASTG-TECH-0140 to inspect symbols and debugging information that may make the native code easier to analyze.
-5. Use @MASTG-KNOW-0033 as reference to identify whether the reviewed native code shows indicators of obfuscation, or whether security-relevant logic remains easy to understand and correlate. @MASTG-TOOL-0009 can be used in the APK to obtain compiler, obfuscator, or packer hints that can help guide the manual review.
-6. Correlate the findings and determine whether security-relevant native code remains readily understandable enough to support reverse engineering of the application.
+5. Use @MASTG-KNOW-0033 as reference to identify whether the reviewed native code shows indicators of obfuscation, and whether those indicators prevent straightforward identification and correlation of security-relevant logic. Perform @MASTG-TOOL-0009 on the APK to obtain compiler, obfuscator, or packer hints that can help guide the manual review.
+6. Correlate the findings and determine whether the obfuscation applied to the native layer still allows security-relevant logic to be identified and reverse engineered with reasonable effort.
 
 ## Observation
 

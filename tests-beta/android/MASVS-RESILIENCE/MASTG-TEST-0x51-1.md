@@ -5,8 +5,6 @@ id: MASTG-TEST-0x51-1
 type: [static]
 weakness: MASWE-0089
 best-practices: [MASTG-BEST-0029]
-prerequisites:
-- identify-security-relevant-contexts
 profiles: [R]
 knowledge: [MASTG-KNOW-0033]
 ---
@@ -23,8 +21,8 @@ Use @MASTG-KNOW-0033 as reference for common obfuscation mechanisms and indicato
 
 1. Perform @MASTG-TECH-0017 to decompile the app's DEX bytecode.
 2. Perform @MASTG-TECH-0023 to review the decompiled Java or Kotlin code. If the decompiled output is incomplete or unreliable, run @MASTG-TECH-0016 to inspect the corresponding Smali code.
-3. Use @MASTG-KNOW-0033 as reference to identify whether the reviewed Java or Kotlin code shows indicators of obfuscation, or whether security-relevant logic remains easy to understand and correlate. @MASTG-TOOL-0009 can be used to obtain compiler, obfuscator, or packer hints that can help guide the manual review.
-4. Correlate the findings and determine whether security-relevant Java or Kotlin logic remains readily understandable enough to support attack modeling, bypassing, or reverse engineering of the application.
+3. Use @MASTG-KNOW-0033 as reference to identify whether the reviewed Java or Kotlin code shows indicators of obfuscation, and whether those indicators prevent straightforward identification and correlation of security-relevant logic. Perform @MASTG-TOOL-0009 to obtain compiler, obfuscator, or packer hints that can help guide the manual review.
+4. Correlate the findings and determine whether the obfuscation applied to the Java or Kotlin layer still allows security-relevant logic to be identified and reverse engineered with reasonable effort.
 
 ## Observation
 
