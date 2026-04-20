@@ -25,12 +25,12 @@ class MastgTest(private val context: Context) {
             val detectedPackage = rootManagerPackages.firstOrNull(::isPackageInstalled)
 
             if (detectedPackage != null) {
-                val message = "Detected root manager package '$detectedPackage'. The app closes when root-related packages are found."
+                val message = "Detected root manager package '$detectedPackage' and triggered the root-detection branch. The test fails because this security-relevant logic remains identifiable in the decompiled Java/Kotlin code despite minification."
                 Log.w("MASTG-DEMO-0x51", message)
                 results.add(Status.FAIL, message)
                 closeApp()
             } else {
-                results.add(Status.PASS, "No monitored root manager package was found.")
+                results.add(Status.PASS, "The root-detection branch was not triggered in this execution.")
             }
 
             results.toJson()
