@@ -17,7 +17,6 @@ class MastgTest(private val context: Context) {
             val detectedPath = findRootArtifactPath()
 
             if (detectedPath != null) {
-                // FAIL: [MASTG-TEST-0x51-2] The root-detection branch remains identifiable through exported JNI symbols, cleartext su paths, and disassembly despite basic obfuscation.
                 val message = "Detected root artifact path '$detectedPath' and triggered the root-detection branch. The test fails because this security-relevant native logic remains identifiable through exported JNI symbols, cleartext su paths, and disassembly despite basic obfuscation."
                 Log.w("MASTG-DEMO-0x52", message)
                 results.add(Status.FAIL, message)
