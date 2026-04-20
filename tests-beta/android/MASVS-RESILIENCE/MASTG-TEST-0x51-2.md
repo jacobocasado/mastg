@@ -36,4 +36,4 @@ The output should contain the identified first-party native libraries, the candi
 
 The test case fails if the app's first-party native libraries allow an attacker to identify, correlate, and reverse engineer security-relevant logic with reasonable effort despite the obfuscation mechanisms present.
 
-The test case also fails if the observed protections are too weak to prevent straightforward recovery of strings, constants, call edges, or control flow that allow security-relevant functionality to be located and understood.
+The test case also fails if the observed protections are too weak to prevent straightforward recovery of strings, constants, call edges, or control flow that allow security-relevant functionality to be located and understood.Findings should be interpreted in the context of the app's threat model and the sensitivity of the reviewed code.
