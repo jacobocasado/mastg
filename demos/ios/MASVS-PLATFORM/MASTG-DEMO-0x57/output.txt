@@ -1,0 +1,32 @@
+List all references to "UITextField":
+0x100010158 8 reloc.UITextField
+
+List all references to the "setSecureTextEntry:" selector:
+0x10000a0f4 20 str.setSecureTextEntry:
+0x100010138 8 reloc.fixup.setSecureTextEntry:
+
+Cross-references to the "setSecureTextEntry:" selector:
+sym.func.1000045a4 0x1000045f0 [DATA:r--] ldr x1, reloc.fixup.setSecureTextEntry:
+
+Disassembly around the password field setup:
+│           0x1000045c8      bl sym.imp.Foundationbool_...ridgeToObjectiveCSo8NSStringCyF_ ; Foundationbool(...ridgeToObjectiveCSo8NSStringCyF)
+│           0x1000045cc      mov x20, x0
+│           0x1000045d0      adrp x8, segment.__DATA                   ; 0x100010000
+│           0x1000045d4      ldr x1, [x8, 0x108]                       ; [0x100010108:4]=0xa018 ; reloc.fixup.setPlaceholder: ; char *selector
+│           0x1000045d8      mov x0, x19                               ; void *instance
+│           0x1000045dc      mov x2, x20
+│           0x1000045e0      bl sym.imp.objc_msgSend                   ; void *objc_msgSend(void *instance, char *selector)
+│           0x1000045e4      mov x0, x20                               ; void *instance
+│           0x1000045e8      bl sym.imp.objc_release                   ; void objc_release(void *instance)
+│           0x1000045ec      adrp x8, segment.__DATA                   ; 0x100010000
+│           0x1000045f0      ldr x1, [x8, 0x138]                       ; [0x100010138:4]=0xa0f4 ; reloc.fixup.setSecureTextEntry: ; char *selector
+│           0x1000045f4      mov x0, x19                               ; void *instance
+│           0x1000045f8      mov w2, 0
+│           0x1000045fc      bl sym.imp.objc_msgSend                   ; void *objc_msgSend(void *instance, char *selector)
+│           0x100004600      mov x0, 0x7061                            ; 'pa'
+│           0x100004604      movk x0, 0x7373, lsl 16                   ; 'ss'
+│           0x100004608      movk x0, 0x6f77, lsl 32                   ; 'wo'
+│           0x10000460c      movk x0, 0x5f64, lsl 48                   ; 'd_'
+│           0x100004610      mov x1, 0x6966                            ; 'fi'
+│           0x100004614      movk x1, 0x6c65, lsl 16                   ; 'el'
+│           0x100004618      movk x1, 0x64, lsl 32                     ; 'd'
