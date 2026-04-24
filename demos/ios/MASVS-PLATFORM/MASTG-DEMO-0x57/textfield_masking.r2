@@ -11,8 +11,10 @@ f~setSecureTextEntry
 
 ?e
 ?e Cross-references to the "setSecureTextEntry:" selector:
+?e (use the address from reloc.fixup.setSecureTextEntry: in the f~setSecureTextEntry output above)
 axt @ 0x100010138
 
 ?e
 ?e Disassembly around the password field setup:
+?e (use the caller address from the axt output above)
 pd--10 @ 0x1000045f0

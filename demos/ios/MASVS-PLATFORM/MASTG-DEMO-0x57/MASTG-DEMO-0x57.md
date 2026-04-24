@@ -27,7 +27,7 @@ The following sample demonstrates a login form where the password field does not
 The output reveals:
 
 - 1 reference to `UITextField` at address `0x100010158`.
-- 1 call to `setSecureTextEntry:` at address `0x1000045f0`.
+- 1 call to `setSecureTextEntry:` at address `0x1000045f0`, discovered via `f~setSecureTextEntry` and then `axt`.
 
 {{ output.txt }}
 

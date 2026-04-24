@@ -11,9 +11,9 @@ knowledge: [MASTG-KNOW-0098]
 
 ## Overview
 
-This test verifies that the app handles user input correctly, ensuring that access codes (passwords or PINs) and verification codes (OTPs) are not exposed in plain text within text input fields.
+If the app does not mask text input fields for access codes (passwords or PINs) and verification codes (OTPs), sensitive data may be visible to bystanders (shoulder surfing) or captured in screenshots and screen recordings.
 
-Proper masking (e.g., dots instead of input characters) of these codes is essential to protect user privacy. This can be achieved using appropriate input configurations that obscure the characters entered by the user.
+iOS provides dedicated APIs to prevent this. In UIKit, setting [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) to `true` on a `UITextField` replaces typed characters with bullet characters. In SwiftUI, [`SecureField`](https://developer.apple.com/documentation/swiftui/securefield) should be used instead of `TextField` for sensitive inputs. If the app uses a `UITextField` without `isSecureTextEntry = true`, or uses `TextField` in SwiftUI instead of `SecureField`, the entered value is displayed in plain text.
 
 UIKit:
 
@@ -27,8 +27,6 @@ SwiftUI:
 ```swift
 SecureField("Password", text: $password)
 ```
-
-If the app does not configure these settings, sensitive data such as passwords or OTPs may be visible to bystanders or captured in screenshots and screen recordings.
 
 ## Steps
 
