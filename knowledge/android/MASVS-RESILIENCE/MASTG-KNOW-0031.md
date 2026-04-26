@@ -4,9 +4,12 @@ platform: android
 title: Emulator Detection
 ---
 
-In the context of anti-reversing, the goal of emulator detection is to increase the difficulty of running the app on an emulated device, which impedes some tools and techniques reverse engineers like to use. This increased difficulty forces the reverse engineer to defeat the emulator checks or utilize the physical device, thereby barring the access required for large-scale device analysis.
+In the context of anti-reversing, the goal of emulator detection is to increase the difficulty of running the app on an emulated device.  This increased difficulty forces the reverse engineer to defeat the emulator checks or utilize the physical device, thereby barring the access required for large-scale device analysis.
 
-There are several indicators that the device in question is being emulated. Although all these API calls can be hooked, these indicators provide a modest first line of defense.
+!!! note
+  Emulator detection is inherently a cat-and-mouse game. Detection methods and bypass techniques evolve continuously-determined attackers with sufficient time and resources can circumvent these protections, for example, by developing custom AOSP builds. These techniques should be part of a defense-in-depth strategy, not a standalone solution.
+
+There are several indicators that the device in question is being emulated.
 
 ## Build characteristics
 
@@ -27,7 +30,7 @@ Apps can read build properties through [`android.os.Build`](https://developer.an
 | `Build.TAGS` | `test-keys` |
 | `Build.USER` | `android-build` |
 
-Notes: normalize to lowercase and compare; vendors can change these values on rooted devices or custom ROMs. You can also edit `build.prop` on a rooted device or rebuild AOSP with custom values to bypass static string checks.
+Notes: It is recommended to normalize to lowercase when checking these values.
 
 ## Telephony characteristics
 
@@ -43,8 +46,6 @@ Permission notes:
 
 - `getLine1Number()` requires `READ_PHONE_NUMBERS` or `READ_SMS`.
 - `getVoiceMailNumber()` requires `READ_PHONE_STATE`.
-
-Hooking frameworks such as @MASTG-TOOL-0001 can hook these APIs and return false values. These are common indicators, but you may encounter different indicators and values in practice.
 
 ## Package name indicators
 
@@ -66,7 +67,9 @@ Otherwise they can use the `QUERY_ALL_PACKAGES` permission, which grants visibil
 
 ## Available activities and services
 
-You can query launcher activities with [`Intent.ACTION_MAIN`](https://developer.android.com/reference/android/content/Intent#ACTION_MAIN) and [`Intent.CATEGORY_LAUNCHER`](https://developer.android.com/reference/android/content/Intent#CATEGORY_LAUNCHER) and look for emulator package prefixes (often `com.bluestacks.`). Intent-based discovery is also affected by Android 11+ package visibility restrictions. Apps should declare the matching intent signature in the `<queries>` element so [`queryIntentActivities`](https://developer.android.com/reference/android/content/pm/PackageManager#queryIntentActivities(android.content.Intent,%20int)) can return relevant launcher activities:
+Apps can query launcher activities with [`Intent.ACTION_MAIN`](https://developer.android.com/reference/android/content/Intent#ACTION_MAIN) and [`Intent.CATEGORY_LAUNCHER`](https://developer.android.com/reference/android/content/Intent#CATEGORY_LAUNCHER) and look for emulator package prefixes (often `com.bluestacks.`).
+
+Intent-based discovery is also affected by Android 11+ package visibility restrictions. Apps should declare the matching intent signature in the `<queries>` element so [`queryIntentActivities`](https://developer.android.com/reference/android/content/pm/PackageManager#queryIntentActivities(android.content.Intent,%20int)) can return relevant launcher activities:
 
 ```xml
 <queries>
@@ -77,7 +80,20 @@ You can query launcher activities with [`Intent.ACTION_MAIN`](https://developer.
 </queries>
 ```
 
-[`ActivityManager.getRunningServices`](https://developer.android.com/reference/android/app/ActivityManager#getRunningServices(int)) is restricted on API 26+ and usually only returns the app's own services.
+[`ActivityManager.getRunningServices`](https://developer.android.com/reference/android/app/ActivityManager#getRunningServices(int)) is restricted on API 26+ and only returns the app's own services.
+
+## File system artifacts
+
+Apps can check for emulator-specific files, sockets, and device nodes using standard file APIs such as [`java.io.File.exists()`](https://developer.android.com/reference/java/io/File#exists()). Common examples include:
+
+| Path | Description |
+| --- | --- |
+| `/dev/socket/qemud` | QEMU daemon socket |
+| `/dev/qemu_pipe` | QEMU communication pipe |
+| `/dev/goldfish_pipe` | Goldfish emulator pipe |
+| `/sys/qemu_trace` | QEMU trace marker |
+| `/dev/socket/genyd` | Genymotion daemon socket |
+| `/dev/socket/baseband_genyd` | Genymotion baseband socket |
 
 ## OpenGL renderer
 
@@ -85,10 +101,10 @@ Create an EGL context and read [`GLES20.glGetString(GL_RENDERER)`](https://devel
 
 ## Deprecated or advanced techniques
 
-Non-resettable identifiers (IMEI/MEID, SIM serial, subscriber ID) are restricted for third-party apps targeting Android 10+ and typically require privileged or carrier permissions. In practice, `TelephonyManager.getDeviceId()`, `getSimSerialNumber()`, and `getSubscriberId()` return empty values or fail for regular apps. See [Android 10 privacy changes](https://developer.android.com/about/versions/10/privacy/changes#non-resettable-device-ids).
+Non-resettable identifiers (IMEI/MEID, SIM serial, subscriber ID) are restricted for third-party apps targeting Android 10+ and require privileged or carrier permissions. In practice, `TelephonyManager.getDeviceId()`, `getSimSerialNumber()`, and `getSubscriberId()` return empty values or fail for regular apps. See [Android 10 privacy changes](https://developer.android.com/about/versions/10/privacy/changes#non-resettable-device-ids).
 
-`netcfg`-based IP detection no longer works on modern Android (deprecated since API 23). Vectorization-based detection requires NDK code and per-architecture assembly and is rarely used in apps.
+`netcfg`-based IP detection no longer works on modern Android (deprecated since API 23).
 
 ## Google Play Integrity API
 
-The app can also use Google Play Integrity API to obtain details of the device integrity. This API performs checks, including emulation detection. See @MASTG-KNOW-0035 for more details on the Google Play Integrity API.
+The app can also use Google Play Integrity API to obtain details of the device integrity. This API performs checks, including emulator detection. See @MASTG-KNOW-0035 for more details on the Google Play Integrity API.
