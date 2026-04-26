@@ -44,7 +44,7 @@ Permission notes:
 - `getLine1Number()` requires `READ_PHONE_NUMBERS` or `READ_SMS`.
 - `getVoiceMailNumber()` requires `READ_PHONE_STATE`.
 
-Hooking frameworks such as Frida or Xposed can hook these APIs and return false values. These are common indicators, but you may encounter different indicators and values in practice.
+Hooking frameworks such as @MASTG-TOOL-0001 can hook these APIs and return false values. These are common indicators, but you may encounter different indicators and values in practice.
 
 ## Package name indicators
 
