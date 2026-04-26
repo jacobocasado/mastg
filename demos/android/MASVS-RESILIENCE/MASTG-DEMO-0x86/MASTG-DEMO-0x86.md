@@ -1,6 +1,6 @@
 ---
 platform: android
-title: Detecting Emulator Detection checks with Frida
+title: Detecting Emulator Detection Checks with Frida
 id: MASTG-DEMO-0x86
 code: [kotlin]
 test: MASTG-TEST-0x49
