@@ -11,11 +11,9 @@ knowledge: [MASTG-KNOW-0031]
 
 ## Overview
 
-This test verifies that the app implements emulator detection checks and that it executes them at runtime.
+This test verifies whether the app actively executes emulator detection checks at runtime. An attacker who runs the app in an emulator can more easily leverage dynamic analysis tools and techniques that aren't practical on physical devices, making it important that effective emulator detection is actually triggered during execution.
 
-This test verifies if the application performs emulation detection by gathering dynamic evidence via hooking. See @MASTG-KNOW-0031 for a detailed overview about emulation detection indicators and patterns performed by applications.
-
-Threat model: an attacker can instrument or hook the process.
+See @MASTG-KNOW-0031 for more information on emulator detection techniques and specific APIs and artifacts to look for.
 
 ## Steps
 
