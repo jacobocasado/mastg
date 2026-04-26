@@ -6,7 +6,6 @@ code: [swift]
 test: MASTG-TEST-0x57
 kind: fail
 status: draft
-note: The MASTestApp binary and accurate output need to be added once the app is compiled from the MastgTest.swift in this demo.
 ---
 
 ## Sample
@@ -26,8 +25,10 @@ The following sample demonstrates a login form where the password field does not
 
 The output reveals:
 
-- 1 reference to `UITextField` at address `0x100010158`.
-- 1 call to `setSecureTextEntry:` at address `0x1000045f0`, discovered via `f~setSecureTextEntry` and then `axt`.
+- Multiple symbols referencing `UITextField` (functions, strings, and relocs).
+- The `setSecureTextEntry:` selector string at `0x00017474` and a fixup reloc at `0x000241b8`.
+- A cross-reference from `0x241b8` (DATA, read-only).
+- The disassembly near `0x000048fc` shows `setSecureTextEntry:` being loaded and called via `objc_msgSend`.
 
 {{ output.txt }}
 
@@ -45,8 +46,10 @@ Although `MastgTest.swift` is written in Swift, it interacts with UIKit (an Obje
 
 **Password Field (FAIL):**
 
-At address `0x1000045f0`, the binary loads the selector `setSecureTextEntry:`.
+At address `0x000048fc`, the binary loads the selector `setSecureTextEntry:` into `x1` via `ldr x1, [x8, 0x1b8]` (pointing to the reloc fixup at `0x241b8`).
 
-At address `0x1000045f8`, the instruction `mov w2, 0` sets the argument to `0`.
+At address `0x00004900`, the instruction `mov w8, 0` sets the value to `0`.
+
+At address `0x00004904`, `and w2, w8, 1` prepares the boolean argument (masking to 1 bit), so `w2 = 0`.
 
 This means [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) is set to `false` for the password field, causing the password to be displayed in plain text instead of being masked with bullet characters.
