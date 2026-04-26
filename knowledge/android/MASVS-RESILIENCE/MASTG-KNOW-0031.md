@@ -69,7 +69,7 @@ Otherwise they can use the `QUERY_ALL_PACKAGES` permission, which grants visibil
 
 Apps can query launcher activities with [`Intent.ACTION_MAIN`](https://developer.android.com/reference/android/content/Intent#ACTION_MAIN) and [`Intent.CATEGORY_LAUNCHER`](https://developer.android.com/reference/android/content/Intent#CATEGORY_LAUNCHER) and look for emulator package prefixes (often `com.bluestacks.`).
 
-Intent-based discovery is also affected by Android 11+ package visibility restrictions. Apps should declare the matching intent signature in the `<queries>` element so [`queryIntentActivities`](https://developer.android.com/reference/android/content/pm/PackageManager#queryIntentActivities(android.content.Intent,%20int)) can return relevant launcher activities:
+Launcher activity discovery through [`PackageManager.queryIntentActivities()`](https://developer.android.com/reference/android/content/pm/PackageManager#queryIntentActivities(android.content.Intent,%20int)) is also affected by Android 11+ package visibility restrictions. Apps should declare the matching intent signature in the `<queries>` element so it can return relevant launcher activities:
 
 ```xml
 <queries>
