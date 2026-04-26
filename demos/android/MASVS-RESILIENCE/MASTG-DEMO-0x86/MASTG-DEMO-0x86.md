@@ -40,4 +40,3 @@ The output shows all runtime calls to emulator detection APIs, such as `Telephon
 ## Evaluation
 
 The test passes because Frida confirms that the app performs emulator detection checks at runtime (by triggering several functions related to emulator detection) and queries the expected indicators.
-
