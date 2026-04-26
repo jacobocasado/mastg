@@ -52,7 +52,17 @@ Use [`PackageManager`](https://developer.android.com/reference/android/content/p
 
 `com.vphone.`, `com.bignox.`, `com.nox.mopen.app`, `me.haima.`, `com.bluestacks`, `cn.itools.`, `com.kop.`, `com.kaopu.`, `com.microvirt.`, `com.bignox.app`, and the exact package `com.google.android.launcher.layouts.genymotion`. Some checks also flag `Build.PRODUCT` starting with `iToolsAVM`.
 
-Android 11+ filters package visibility. Declare `<queries>` for specific packages or intents, or use `QUERY_ALL_PACKAGES` only when justified; see [package visibility](https://developer.android.com/training/package-visibility).
+On Android 11 and later, [package visibility restrictions](https://developer.android.com/training/package-visibility) affect this technique. If a package is installed but not visible to the app, [`getPackageInfo`](https://developer.android.com/reference/android/content/pm/PackageManager#getPackageInfo(java.lang.String,%20int)) behaves the same as if the package were not installed, typically by throwing [`PackageManager.NameNotFoundException`](https://developer.android.com/reference/android/content/pm/PackageManager.NameNotFoundException). This can create false negatives for package based root detection.
+
+Developers can query specific packages on Android 11 and later by declaring them in the app manifest using the `<queries>` element:
+
+```xml
+<queries>
+    <package android:name="com.bignox.app" />
+</queries>
+```
+
+Otherwise they can use the `QUERY_ALL_PACKAGES` permission, which grants visibility to all installed apps but is [subject to Google Play restrictions](https://support.google.com/googleplay/android-developer/answer/10158779) and may not be justifiable for many use cases.
 
 ## Available activities and services
 
