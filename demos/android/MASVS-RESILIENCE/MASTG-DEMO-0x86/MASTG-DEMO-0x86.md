@@ -6,7 +6,7 @@ code: [kotlin]
 test: MASTG-TEST-0x49
 ---
 
-### Sample
+## Sample
 
 The snippet below shows sample code that performs common emulator indicator checks and logs the queried values and matches against common emulator values (see @MASTG-KNOW-0031 for more information about common emulator checks and emulator values).
 
@@ -20,7 +20,7 @@ Notes about the checks performed:
 
 {{ MastgTest.kt # MastgTest_reversed.java }}
 
-### Steps
+## Steps
 
 1. Install the app on the device (@MASTG-TECH-0005). It does not need to be an emulated device.
 2. Start Frida (@MASTG-TOOL-0031) on the device and run `run.sh` to spawn the app.
@@ -31,13 +31,13 @@ Notes about the checks performed:
 
 {{ script.js }}
 
-### Observation
+## Observation
 
 The output shows all runtime calls to emulator detection APIs, such as `TelephonyManager` identifiers, `PackageManager` queries, `ActivityManager.getRunningServices`, `GLES20.glGetString`, and the `Build` checks performed by the app.
 
 {{ output.txt }}
 
-### Evaluation
+## Evaluation
 
 The test passes because Frida confirms that the app performs emulator detection checks at runtime (by triggering several functions related to emulator detection) and queries the expected indicators.
 
