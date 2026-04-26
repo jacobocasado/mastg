@@ -17,13 +17,12 @@ See @MASTG-KNOW-0031 for more information on emulator detection techniques and s
 
 ## Steps
 
-1. Start the device.
-2. Use runtime method hooking (see @MASTG-TECH-0043) and look for usages of emulator detection APIs (see @MASTG-KNOW-0031 to obtain a detailed list of emulation methods) while running the app on a device.
+1. Run @MASTG-TECH-0043 to trace emulator detection API calls while exercising the app.
 
 ## Observation
 
-The output should contain evidence of emulator detection checks.
+The output should contain any instances of emulator detection checks, along with the methods or APIs that were hooked.
 
 ## Evaluation
 
-The test case fails if the hooking output does not show any evidence of emulator detection checks.
+The test case fails if no instances of emulator detection checks are observed.
