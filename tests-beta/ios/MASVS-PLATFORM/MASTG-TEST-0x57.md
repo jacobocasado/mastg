@@ -32,11 +32,10 @@ SecureField("Password", text: $password)
 
 1. Use @MASTG-TECH-0065 to reverse engineer the app.
 2. Use @MASTG-TECH-0070 to look for references to text field classes and text obfuscation APIs.
-3. Manually evaluate and shortlist the fields for access or verification codes usage.
 
 ## Observation
 
-The output should contain a list of locations where text input fields for access or verification codes are used.
+The output should contain a list of locations where text input fields are used, along with whether they are configured to mask input.
 
 ## Evaluation
 
@@ -47,3 +46,5 @@ The test case fails if any text input field used for access or verification code
 
 !!! note
     This test may produce false negatives if the app uses custom text input controls that do not rely on standard classes such as `UITextField` or `SecureField` (for example in custom UI frameworks or game engines).
+
+Note that it is not a failure if non-sensitive text input fields (for example, for a username or email address) are unmasked. Validating whether a text input field is used for sensitive data may require manual review of the app's UI and code to determine the context in which the field is used. 

@@ -2,19 +2,25 @@ e asm.bytes=false
 e scr.color=false
 e asm.var=false
 
-?e List all references to "UITextField":
-f~UITextField
-
-?e
-?e List all references to the "setSecureTextEntry:" selector:
-f~setSecureTextEntry
+?e List all references to "UITextField", "setSecureTextEntry" and "SecureField":
+f~UITextField,setSecureTextEntry,SecureField
 
 ?e
 ?e Cross-references to the "setSecureTextEntry:" selector:
-?e (use the address from reloc.fixup.setSecureTextEntry: in the f~setSecureTextEntry output above)
-axt @ 0x00017474
+axt @ 0x000201c0
 
 ?e
-?e Disassembly around the password field setup:
-?e (use the caller address from the axt output above)
-pd--10 @ 0x48fc
+?e Cross-references to the "SecureField" initializer:
+axt @ 0x000040a4
+
+?e
+?e Disassembly around the password field setup (isSecureTextEntry = false, FAIL):
+pd--10 @ 0x1a30
+
+?e
+?e Disassembly around the OTP 1 field setup (isSecureTextEntry = true, PASS):
+pd--10 @ 0x1b40
+
+?e
+?e Disassembly around the SecureField (OTP 2) setup (PASS):
+pd 8 @ 0x3c50

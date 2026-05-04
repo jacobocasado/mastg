@@ -1,8 +1,7 @@
 import SwiftUI
 import UIKit
 
-// SUMMARY: This sample demonstrates a login form where the password field is not masked
-// because isSecureTextEntry is explicitly set to false, exposing the password in plain text.
+// SUMMARY: This sample demonstrates the use of both secure and insecure text input fields in an iOS app. It includes a login alert with a username field (insecure), a password field (insecure), and an OTP field (secure). Additionally, it presents a SwiftUI view for entering a second OTP, which is also secure. The test checks for the presence of text input fields and whether they are configured to mask sensitive information.
 
 struct MastgTest {
 
@@ -21,24 +20,70 @@ struct MastgTest {
                 tf.accessibilityIdentifier = "username_field"
             }
 
-            // FAIL: [MASTG-TEST-0x57] The password field has isSecureTextEntry set to false,
-            // so the password is displayed in plain text instead of being masked.
+            // FAIL: intentionally insecure password field
             alert.addTextField { tf in
                 tf.placeholder = "Password"
                 tf.isSecureTextEntry = false
                 tf.accessibilityIdentifier = "password_field"
             }
 
-            alert.addAction(UIAlertAction(title: "Login", style: .default, handler: { _ in
+            // SECURE: OTP 1 using UIKit
+            alert.addTextField { tf in
+                tf.placeholder = "OTP 1"
+                tf.isSecureTextEntry = true
+                tf.keyboardType = .numberPad
+                tf.accessibilityIdentifier = "otp_1_field"
+            }
+
+            alert.addAction(UIAlertAction(title: "Next", style: .default, handler: { _ in
                 let username = alert.textFields?[0].text ?? ""
-                completion("Logged in as: \(username)")
+                let otp1 = alert.textFields?[2].text ?? ""
+                let baseMessage = "Logged in as: \(username), OTP 1: \(otp1)"
+
+                let otpView = OTPView { otp2 in
+                    if let presenter = topViewController() {
+                        presenter.dismiss(animated: true) {
+                            completion("\(baseMessage), OTP 2: \(otp2)")
+                        }
+                    } else {
+                        completion("\(baseMessage), OTP 2: \(otp2)")
+                    }
+                }
+
+                let hosting = UIHostingController(rootView: otpView)
+
+                if let presenter = topViewController() {
+                    presenter.present(hosting, animated: true)
+                }
             }))
 
             if let presenter = topViewController() {
-                presenter.present(alert, animated: true, completion: nil)
+                presenter.present(alert, animated: true)
             } else {
-                completion("Failed to present alert (no active view controller).")
+                completion("Failed to present alert.")
             }
+        }
+    }
+
+    struct OTPView: View {
+        @State private var otp2: String = ""
+        var onSubmit: (String) -> Void
+
+        var body: some View {
+            VStack(spacing: 20) {
+                Text("Enter OTP 2")
+
+                SecureField("OTP 2", text: $otp2)
+                    .keyboardType(.numberPad)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .accessibilityIdentifier("otp_2_field")
+                    .padding()
+
+                Button("Submit") {
+                    onSubmit(otp2)
+                }
+            }
+            .padding()
         }
     }
 

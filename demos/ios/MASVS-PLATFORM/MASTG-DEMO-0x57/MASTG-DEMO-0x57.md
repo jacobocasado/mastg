@@ -10,7 +10,12 @@ status: draft
 
 ## Sample
 
-The following sample demonstrates a login form where the password field does not use secure text entry. The password field has [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) explicitly set to `false`, causing the entered password to be displayed in plain text.
+The following sample demonstrates a login form with three text input fields and one SwiftUI `SecureField`:
+
+- **Username** (`UITextField`, no explicit `isSecureTextEntry` — defaults to `false`, not sensitive).
+- **Password** (`UITextField`, `isSecureTextEntry = false` explicitly — **FAIL**).
+- **OTP 1** (`UITextField`, `isSecureTextEntry = true` — PASS).
+- **OTP 2** (`SecureField` in SwiftUI — PASS).
 
 {{ MastgTest.swift }}
 
@@ -25,16 +30,19 @@ The following sample demonstrates a login form where the password field does not
 
 The output reveals:
 
-- Multiple symbols referencing `UITextField` (functions, strings, and relocs).
-- The `setSecureTextEntry:` selector string at `0x00017474` and a fixup reloc at `0x000241b8`.
-- A cross-reference from `0x241b8` (DATA, read-only).
-- The disassembly near `0x000048fc` shows `setSecureTextEntry:` being loaded and called via `objc_msgSend`.
+- Multiple symbols referencing `UITextField` (closures, thunks, metadata) and `SecureField` (SwiftUI initializers, relocs, and metadata).
+- The `setSecureTextEntry:` selector string at `0x000177a5` and its fixup reloc at `0x000201c0`.
+- Two cross-references to `reloc.fixup.setSecureTextEntry:` (`0x000201c0`):
+    - `sym.MASTestApp.MastgTest.mastg.completion.UITextField...U0_` at `0x1a24` — the **password field** closure (FAIL).
+    - `sym.MASTestApp.MastgTest.mastg.completion.UITextField._` at `0x1b38` — the **OTP 1 field** closure (PASS).
+- One cross-reference to the `SecureField` initializer at `0x3c60` — the **OTP 2** SwiftUI view (PASS).
+- The disassembly confirms the argument value (`w2`) passed to `objc_msgSend` for each `setSecureTextEntry:` call.
 
 {{ output.txt }}
 
 ## Evaluation
 
-The test case fails because the `setSecureTextEntry:` selector is called with argument `0` (`false`) for the password field.
+The test case fails because the password field calls `setSecureTextEntry:` with argument `0` (`false`).
 
 **Interpreting the Disassembly:**
 
@@ -46,10 +54,24 @@ Although `MastgTest.swift` is written in Swift, it interacts with UIKit (an Obje
 
 **Password Field (FAIL):**
 
-At address `0x000048fc`, the binary loads the selector `setSecureTextEntry:` into `x1` via `ldr x1, [x8, 0x1b8]` (pointing to the reloc fixup at `0x241b8`).
+At address `0x00001a24`, the binary loads the selector `setSecureTextEntry:` into `x1` (pointing to `reloc.fixup.setSecureTextEntry:` at `0x201c0`).
 
-At address `0x00004900`, the instruction `mov w8, 0` sets the value to `0`.
+At address `0x00001a28`, `mov w8, 0` sets the value to `0`.
 
-At address `0x00004904`, `and w2, w8, 1` prepares the boolean argument (masking to 1 bit), so `w2 = 0`.
+At address `0x00001a2c`, `and w2, w8, 1` prepares the boolean argument (masking to 1 bit), so `w2 = 0`.
 
 This means [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) is set to `false` for the password field, causing the password to be displayed in plain text instead of being masked with bullet characters.
+
+**OTP 1 Field (PASS):**
+
+At address `0x00001ae0`, `mov w8, 1` stores the value `1` (true) into `var_1ch` at `0x00001ae4`.
+
+At address `0x00001b38`, the binary loads the selector `setSecureTextEntry:` into `x1`.
+
+At address `0x00001b2c`, `ldr w8, [var_1ch]` reloads that stored value (`1`).
+
+At address `0x00001b3c`, `and w2, w8, 1` results in `w2 = 1`, so `isSecureTextEntry` is `true`. The OTP 1 field is correctly masked.
+
+**OTP 2 Field (PASS — SwiftUI `SecureField`):**
+
+At address `0x00003c60`, the binary calls the `SecureField` initializer directly (`bl sym.SwiftUI.SecureField...`). SwiftUI's `SecureField` always masks input by design — there is no `isSecureTextEntry` setter involved.
