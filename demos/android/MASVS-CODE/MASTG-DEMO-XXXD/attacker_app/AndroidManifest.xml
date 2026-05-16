@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.owasp.mastestapp.attacker">
+
+    <application android:label="Attacker App">
+        <activity 
+            android:name=".AttackerActivity" 
+            android:label="Attacker Intent Interceptor"
+            android:exported="true">
+            <!-- Launcher Filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+            <!-- Intent Interception Filter -->
+            <intent-filter android:priority="999">
+                <action android:name="org.owasp.mastestapp.REQUEST_FILE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Provider that returns the path-traversal filename -->
+        <provider
+            android:name=".AttackerContentProvider"
+            android:authorities="org.owasp.mastestapp.attacker"
+            android:enabled="true"
+            android:exported="true">
+        </provider>
+    </application>
+</manifest>

@@ -1,0 +1,29 @@
+rules:
+  - id: android-implicit-intent-leaking-extras
+    patterns:
+      - pattern: |
+          $I = new Intent(...);
+          ...
+          $I.putExtra($KEY, $VAL);
+          ...
+          $CTX.startActivity($I);
+      - pattern-not: |
+          $I = new Intent($C, $CLASS);
+          ...
+      - pattern-not: |
+          $I = new Intent(...);
+          ...
+          $I.setPackage(...);
+          ...
+          $CTX.startActivity($I);
+      - pattern-not: |
+          $I = new Intent(...);
+          ...
+          $I.setComponent(...);
+          ...
+          $CTX.startActivity($I);
+    message: |
+      Potential leak of sensitive data via implicit intent. 
+      The intent has arguments (extras) set but no explicit component or package is defined.
+    languages: [java, kotlin]
+    severity: WARNING

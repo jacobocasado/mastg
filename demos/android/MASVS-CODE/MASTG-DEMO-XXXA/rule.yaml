@@ -1,0 +1,28 @@
+rules:
+  - id: android-implicit-intent-internal-communication
+    patterns:
+      - pattern: |
+          $INTENT = new Intent(...);
+          ...
+          $INTENT.setAction($ACTION);
+          ...
+          $CONTEXT.startActivity($INTENT);
+      - pattern-not: |
+          $INTENT = new Intent(...);
+          ...
+          $INTENT.setPackage(...);
+          ...
+          $CONTEXT.startActivity($INTENT);
+      - pattern-not: |
+          $INTENT = new Intent(...);
+          ...
+          $INTENT.setComponent(...);
+          ...
+          $CONTEXT.startActivity($INTENT);
+      - pattern-not: |
+          $INTENT = new Intent($CONTEXT, $CLASS);
+          ...
+          $CONTEXT.startActivity($INTENT);
+    message: "Potential use of implicit intent for internal communication. Consider using explicit intents by setting the package or component."
+    languages: [java]
+    severity: WARNING
