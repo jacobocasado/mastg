@@ -1,8 +1,8 @@
 ---
 platform: ios
-title: App Exposing User Authentication Data in Text Input Fields
+title: Runtime Monitoring of Text Fields Hiding Sensitive Data
 id: MASTG-TEST-0x57
-type: [static, manual]
+type: [dynamic]
 weakness: MASWE-0053
 profiles: [L2]
 best-practices: [MASTG-BEST-0x41]
@@ -11,40 +11,30 @@ knowledge: [MASTG-KNOW-0098]
 
 ## Overview
 
-If the app does not mask text input fields for access codes (passwords or PINs) and verification codes (OTPs), sensitive data may be visible to bystanders (shoulder surfing) or captured in screenshots and screen recordings.
-
-iOS provides dedicated APIs to prevent this. In UIKit, setting [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) to `true` on a `UITextField` replaces typed characters with bullet characters. In SwiftUI, [`SecureField`](https://developer.apple.com/documentation/swiftui/securefield) should be used instead of `TextField` for sensitive inputs. If the app uses a `UITextField` without `isSecureTextEntry = true`, or uses `TextField` in SwiftUI instead of `SecureField`, the entered value is displayed in plain text.
-
-UIKit:
-
-```swift
-let passwordField = UITextField()
-passwordField.isSecureTextEntry = true
-```
-
-SwiftUI:
-
-```swift
-SecureField("Password", text: $password)
-```
+This test complements @MASTG-TEST-0x58. It monitors text input fields in the app at runtime to check if the app masks the text entry when the user enters sensitive data.
 
 ## Steps
 
-1. Use @MASTG-TECH-0065 to reverse engineer the app.
-2. Use @MASTG-TECH-0070 to look for references to text field classes and text obfuscation APIs.
+1. Use @MASTG-TECH-0067 to look for text input fields used in the app and identify the visibility attributes of each text input field.
+2. Exercise the app thoroughly, entering realistic sensitive data (for example, usernames, passwords, email addresses, credit card numbers, recovery codes) into each identified text input field.
 
 ## Observation
 
-The output should contain a list of locations where text input fields are used, along with whether they are configured to mask input.
+The output should containg evidences that allow associating each text entry with the corresponding input field and its protection status. At minimum it should contain:
+
+- The input field class, such as `UITextField`, `SecureField` or `TextField`.
+- The input traits relevant to visibility, for example, `isSecureTextEntry`.
+- The entered values so they can be correlated with sensitive data.
 
 ## Evaluation
 
-The test case fails if any text input field used for access or verification codes is found to be unmasked. For example, due to the following:
+The test case fails if the app uses UI elements that do not allow masking text or if any text input field used containing sensitive data is found unmasked. For example, due to the following:
 
 - A `UITextField` used for a password, PIN, or OTP does not have [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) set to `true`.
 - A SwiftUI `TextField` is used instead of [`SecureField`](https://developer.apple.com/documentation/swiftui/securefield) for a password, PIN, or OTP field.
 
 !!! note
-    This test may produce false negatives if the app uses custom text input controls that do not rely on standard classes such as `UITextField` or `SecureField` (for example in custom UI frameworks or game engines).
+    It is not a failure if non-sensitive text input fields (for example, for a username or email address) are unmasked. Validating whether a text input field is used for sensitive data may require a review of the app's UI and business logic to determine the context in which the field is used.
 
-Note that it is not a failure if non-sensitive text input fields (for example, for a username or email address) are unmasked. Validating whether a text input field is used for sensitive data may require manual review of the app's UI and code to determine the context in which the field is used. 
+!!! note
+    This test may produce false negatives if the app uses custom text input controls that do not rely on standard classes such as `UITextField` or `SecureField` (for example in custom UI frameworks or game engines, or if text entry is handled through nonstandard abstractions that prevent reliable observation of input traits at rest).
