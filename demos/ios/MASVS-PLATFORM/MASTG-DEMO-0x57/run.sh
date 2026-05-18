@@ -1,2 +1,2 @@
 #!/bin/bash
-frida -U -f org.owasp.mastestapp.MASTestApp-iOS -l ./script.js -o output.txt
+r2 -q -e bin.relocs.apply=true -i textfield_masking.r2 -A MASTestApp > output.txt

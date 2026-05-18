@@ -1,8 +1,8 @@
 ---
 platform: ios
-title: References to APIs for Hiding Sensitive Data in Text Input Fields
+title: Runtime Monitoring of Text Input Fields Hiding Sensitive Data
 id: MASTG-TEST-0x58
-type: [static, manual]
+type: [dynamic]
 weakness: MASWE-0053
 profiles: [L2]
 best-practices: [MASTG-BEST-0x41]
@@ -11,50 +11,29 @@ knowledge: [MASTG-KNOW-0098]
 
 ## Overview
 
+This test complements @MASTG-TEST-0x58. It monitors text input fields in the app at runtime to check if the app masks the text entry when the user enters sensitive data.
+
 If the app does not mask text input fields that contain sensitive data, such data may be visible to bystanders (shoulder surfing) or captured in screenshots and screen recordings.
-
-This test statically analyzes the app binary for references to text input APIs and checks whether the app configures input fields to mask sensitive text entries. In iOS, masking replaces typed characters with bullet characters using the following settings:
-
-- In `UIKit`, this is done by setting [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) to `true` on a `UITextField`.
-- In `SwiftUI`, this is done by using [`SecureField`](https://developer.apple.com/documentation/swiftui/securefield) instead of `TextField`.
-
-Example for UIKit:
-
-```swift
-let passwordField = UITextField()
-passwordField.isSecureTextEntry = true
-// Alternatively, toggling the property
-textField.isSecureTextEntry.toggle()
-```
-
-Example for SwiftUI:
-
-```swift
-SecureField("Password", text: $password)
-```
-
-!!! note
-    This test may produce false negatives if the app uses custom text input controls that do not rely on standard classes such as `UITextField` or `SecureField` (for example in custom UI frameworks or game engines, or if text entry is handled through nonstandard abstractions that prevent reliable observation of input traits at rest).
 
 ## Steps
 
-1. Use @MASTG-TECH-0065 to reverse engineer the app.
-2. Use @MASTG-TECH-0072 to look for references to APIs that create text input fields and modify their visibility attributes.
-3. Use @MASTG-TECH-0076 to analyze the relevant code paths and determine whether sensitive data is stored in the input fields.
+1. Use @MASTG-TECH-0067 to look for text input fields used in the app and identify the visibility attributes of each text input field.
+2. Exercise the app thoroughly, entering realistic sensitive data (for example, usernames, passwords, email addresses, credit card numbers, recovery codes) into each identified text input field.
 
 ## Observation
 
-The output should contain a list of locations where the app:
+The output should contain evidences that allow associating each text entry with the corresponding input field and its protection status. At minimum it should contain:
 
-- Creates text input fields, such as `UITextField`, `SecureField` or `TextField`.
-- Explicitly configures visibility attributes that mask the inputted text.
+- The input field class, such as `UITextField`, `SecureField` or `TextField`.
+- The input traits relevant to visibility, for example, `isSecureTextEntry`.
+- The entered values so they can be correlated with sensitive data.
 
 ## Evaluation
 
-The test case fails if the app uses text input fields to input sensitive data and these input fields are not masked. This occurs when:
+The test case fails if the app uses UI elements that do not allow masking text or if any text input field used containing sensitive data is found unmasked. For example, due to the following:
 
-- `UIKit` `UITextField` used for a password, PIN, or OTP does not have [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) set to `true`.
-- `SwiftUI` `TextField` is used instead of [`SecureField`](https://developer.apple.com/documentation/swiftui/securefield) for a password, PIN, or OTP field.
+- A `UITextField` used for a password, PIN, or OTP does not have [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) set to `true`.
+- A SwiftUI `TextField` is used instead of [`SecureField`](https://developer.apple.com/documentation/swiftui/securefield) for a password, PIN, or OTP field.
 
 !!! note
     It is not a failure if non-sensitive text input fields (for example, for a username or email address) are unmasked. Validating whether a text input field is used for sensitive data may require a review of the app's UI and business logic to determine the context in which the field is used.
