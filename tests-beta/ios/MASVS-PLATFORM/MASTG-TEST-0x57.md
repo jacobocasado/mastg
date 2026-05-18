@@ -13,6 +13,8 @@ knowledge: [MASTG-KNOW-0098]
 
 This test complements @MASTG-TEST-0x58. It monitors text input fields in the app at runtime to check if the app masks the text entry when the user enters sensitive data.
 
+If the app does not mask text input fields that contain sensitive data, such data may be visible to bystanders (shoulder surfing) or captured in screenshots and screen recordings.
+
 ## Steps
 
 1. Use @MASTG-TECH-0067 to look for text input fields used in the app and identify the visibility attributes of each text input field.
