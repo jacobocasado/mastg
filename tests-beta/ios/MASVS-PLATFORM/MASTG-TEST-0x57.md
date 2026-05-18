@@ -20,7 +20,7 @@ This test complements @MASTG-TEST-0x58. It monitors text input fields in the app
 
 ## Observation
 
-The output should containg evidences that allow associating each text entry with the corresponding input field and its protection status. At minimum it should contain:
+The output should contain evidences that allow associating each text entry with the corresponding input field and its protection status. At minimum it should contain:
 
 - The input field class, such as `UITextField`, `SecureField` or `TextField`.
 - The input traits relevant to visibility, for example, `isSecureTextEntry`.
