@@ -1,6 +1,6 @@
 ---
 platform: ios
-title: Password Field Not Using Secure Text Entry
+title: Text Input Fields Not Hiding Sensitive Data
 id: MASTG-DEMO-0x58
 code: [swift]
 test: MASTG-TEST-0x58

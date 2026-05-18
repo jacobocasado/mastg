@@ -1,6 +1,6 @@
 ---
 platform: ios
-title: References to APIs for Hiding Sensitive Data in Text Fields
+title: References to APIs for Hiding Sensitive Data in Text Input Fields
 id: MASTG-TEST-0x58
 type: [static, manual]
 weakness: MASWE-0053
@@ -11,9 +11,9 @@ knowledge: [MASTG-KNOW-0098]
 
 ## Overview
 
-If the app does not mask text input fields that contain sensitive data, such data may be visible to bystanders (shoulder surfing) or captured in screenshots and screen recordings. Masking by replacing typed characters with bullet characters.
+If the app does not mask text input fields that contain sensitive data, such data may be visible to bystanders (shoulder surfing) or captured in screenshots and screen recordings.
 
-This test monitors text input fields in the app at runtime and their visibility properties to check if the app masks the text entry when the user enters sensitive data. In iOS, the following settings can be applied to input fields to mask the text entries:
+This test statically analyzes the app binary for references to text input APIs and checks whether the app configures input fields to mask sensitive text entries. In iOS, masking replaces typed characters with bullet characters using the following settings:
 
 - In `UIKit`, this is done by setting [`isSecureTextEntry`](https://developer.apple.com/documentation/uikit/uitextinputtraits/issecuretextentry) to `true` on a `UITextField`.
 - In `SwiftUI`, this is done by using [`SecureField`](https://developer.apple.com/documentation/swiftui/securefield) instead of `TextField`.
@@ -23,8 +23,7 @@ Example for UIKit:
 ```swift
 let passwordField = UITextField()
 passwordField.isSecureTextEntry = true
-// Alternative way (toggling)
-passwordField.isSecureTextEntry = false
+// Alternatively, toggling the property
 textField.isSecureTextEntry.toggle()
 ```
 

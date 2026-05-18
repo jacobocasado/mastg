@@ -1,6 +1,6 @@
 ---
 platform: ios
-title: Runtime Monitoring of Text Fields Hiding Sensitive Data
+title: Runtime Monitoring of Text Input Fields Hiding Sensitive Data
 id: MASTG-TEST-0x57
 type: [dynamic]
 weakness: MASWE-0053
