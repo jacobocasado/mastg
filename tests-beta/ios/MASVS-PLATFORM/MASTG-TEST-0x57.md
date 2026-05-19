@@ -6,7 +6,7 @@ type: [static, manual]
 weakness: MASWE-0053
 profiles: [L2]
 best-practices: [MASTG-BEST-0x41]
-knowledge: [MASTG-KNOW-0098]
+knowledge: [MASTG-KNOW-0x57]
 ---
 
 ## Overview
@@ -39,7 +39,7 @@ SecureField("Password", text: $password)
 ## Steps
 
 1. Use @MASTG-TECH-0065 to reverse engineer the app.
-2. Use @MASTG-TECH-0072 to look for references to APIs that create text input fields and modify their visibility attributes.
+2. Use @MASTG-TECH-0066 to look for uses of the relevant APIs.
 3. Use @MASTG-TECH-0076 to analyze the relevant code paths and determine whether sensitive data is stored in the input fields.
 
 ## Observation
