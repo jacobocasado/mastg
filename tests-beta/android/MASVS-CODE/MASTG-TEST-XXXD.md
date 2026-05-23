@@ -11,7 +11,7 @@ profiles: [L1, L2]
 
 ## Overview
 
-Applications that use implicit intents to request data (such as files) from other applications must properly validate and sanitize the data received in the `onActivityResult` callback. When an implicit intent is used (whether it is a standard action like `GET_CONTENT` or a custom action), any app on the device can potentially respond. A malicious responder can return unexpected URIs (like `file://` instead of `content://`) or malicious metadata (like filenames containing path-traversal strings `../`). 
+Applications that use implicit intents to request data (such as files) from other applications must properly validate and sanitize the data received in the `onActivityResult` callback. When an implicit intent is used (whether it is a standard action like `GET_CONTENT` or a custom action), any app on the device can potentially respond. A malicious responder can return unexpected URIs (like `file://` instead of `content://`) or malicious metadata (like filenames containing path-traversal strings `../`).
 
 If the receiving app trusts this data without validation, it can lead to severe vulnerabilities such as arbitrary file read or arbitrary code execution (see @MASTG-KNOW-XXXB).
 
