@@ -3,6 +3,7 @@ id: MASTG-DEMO-XXXC
 title: Leaking Sensitive Arguments via Implicit Intents
 platform: android
 code: [kotlin]
+tools: [semgrep]
 kind: fail
 ---
 

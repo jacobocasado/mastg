@@ -1,70 +1,68 @@
 ---
 masvs_category: MASVS-CODE
 platform: android
-title: Arbitrary File Read via Implicit Intent Results
+title: URI Schemes in Android Intent Results
 ---
 
-When an application uses an implicit intent to request content from other applications (e.g., using a custom action like `com.victim.app.ACTION_ATTACH_FILE`) and processes the returned data without validation, it can be vulnerable to an Arbitrary File Read attack.
+When an activity uses [`startActivityForResult`](https://developer.android.com/reference/android/app/Activity#startActivityForResult(android.content.Intent,int)) to request content from another app, the responding app returns a result via [`setResult`](https://developer.android.com/reference/android/app/Activity#setResult(int,android.content.Intent)). The result can carry a URI in [`Intent.getData()`](https://developer.android.com/reference/android/content/Intent#getData()) that the caller uses to access the content. The URI scheme determines how the system routes that access.
 
-If an attacker application registers an intent filter for the same action, it can intercept the request. The attacker app can then return a malicious result to the victim app, such as a `file://` URI pointing to a sensitive file within the victim app's private internal storage (e.g., `/data/data/<victim_app>/shared_preferences/session.xml`).
+## URI Schemes
 
-### Vulnerability Mechanism
+Android supports several URI schemes. The two most relevant in intent result handling are:
 
-A common vulnerable pattern occurs when the victim app receives the URI in its `onActivityResult` callback and copies the content of that URI to a public or accessible location (like external cache or external storage) so it can be used or uploaded.
+| Scheme | Route | Access control |
+| --- | --- | --- |
+| `content://` | Routes through a `ContentProvider` | Governed by provider permissions and `android:exported` |
+| `file://` | Accesses the filesystem path directly | Governed only by Unix file permissions |
 
-```java
-private void performAction(Intent intent, Context context){
-  Uri data = intent.getData();
-  if (data != null) {
-      getFileItemFromUri(context, data);
-  }
-}
+A `content://` URI identifies content managed by a specific `ContentProvider` on the device. The caller uses [`ContentResolver.openInputStream`](https://developer.android.com/reference/android/content/ContentResolver#openInputStream(android.net.Uri)) to open a stream, and the system routes the request through the provider's `openFile` method. The provider can enforce access controls and return only data it explicitly exposes.
 
-private File getFileItemFromUri(Context context, Uri uri){
-  // Vulnerable: Blindly trusting the provided URI
-  File file = new File(context.getExternalCacheDir(), "tmp_file");
-  try {
-      file.createNewFile();
-      // The victim app reads its own private file and copies it to a public location
-      copy(context.getContentResolver().openInputStream(uri), new FileOutputStream(file));
-  } catch (IOException e) {
-      // ...
-  }
-  return file;
-}
-```
+A `file://` URI references a filesystem path directly. When the calling app opens a stream for a `file://` URI, the system reads from that path using the calling app's own process identity, bypassing any `ContentProvider` access controls entirely.
 
-### Exploitation (Attacker Application)
+## How Callers Process a Returned URI
 
-An attacker app can exploit this by declaring an activity that handles the custom `ACTION_ATTACH_FILE` action.
+A typical pattern in the caller's `onActivityResult`:
 
-#### Attacker Manifest
-```xml
-<application>
-  <activity android:name=".EvilContentActivity" android:exported="true">
-      <intent-filter android:priority="999">
-          <action android:name="com.victim.app.ACTION_ATTACH_FILE" />
-          <category android:name="android.intent.category.DEFAULT" />
-      </intent-filter>
-  </activity>
-</application>
-```
-
-#### Attacker Activity
-When the victim triggers the intent and the user selects the attacker's app (or if the victim automatically routes to the highest priority intent), the attacker app returns the malicious `file://` URI.
-
-```java
-public class EvilContentActivity extends Activity {
-  @Override
-  protected void onCreate(Bundle savedInstanceState){
-    super.onCreate(savedInstanceState);
-    // Return a URI pointing to the victim's private data
-    Intent resultIntent = new Intent();
-    resultIntent.setData(Uri.parse("file:///data/data/com.victim.app/shared_prefs/session.xml"));
-    setResult(Activity.RESULT_OK, resultIntent);
-    finish();
-  }
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (resultCode == RESULT_OK) {
+        val uri = data?.data ?: return
+        val inputStream = contentResolver.openInputStream(uri)
+        // copy or process the stream
+    }
 }
 ```
 
-Once the victim app copies `session.xml` to `getExternalCacheDir()`, the attacker app can read the copied file using the `READ_EXTERNAL_STORAGE` permission, successfully stealing the victim's private data.
+### Potential Exploitation via `file://` URIs
+
+A responding app can exploit this behavior by returning a `file://` URI that points to the calling app's own private storage (for example, `file:///data/data/com.example.app/shared_prefs/session.xml`). The read succeeds because `openInputStream` uses the caller's process identity, not the responder's.
+
+If the calling app then writes the content to a world-readable location (such as [`externalCacheDir`](https://developer.android.com/reference/android/content/Context#getExternalCacheDir())), the responding app or any other app with `READ_EXTERNAL_STORAGE` permission can access the copied data.
+
+### Potential Exploitation via ContentProvider Metadata
+
+When the responding app returns a `content://` URI, the calling app typically queries [`OpenableColumns.DISPLAY_NAME`](https://developer.android.com/reference/android/provider/OpenableColumns#DISPLAY_NAME) to get a human-readable filename:
+
+```kotlin
+fun getDisplayName(uri: Uri): String? {
+    contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+        if (cursor.moveToFirst()) {
+            return cursor.getString(0)
+        }
+    }
+    return null
+}
+```
+
+The provider controls the value returned for that column and the Android system does not sanitize it. A malicious provider can return a path-traversal string such as `../lib-main/lib.so`. If the calling app then constructs a path using [`File(dir, name)`](https://developer.android.com/reference/java/io/File#File(java.io.File,%20java.lang.String)), the resolved path can escape the intended directory:
+
+```kotlin
+val name = getDisplayName(uri) ?: "download"
+val target = File(context.filesDir, name) // resolves to ../lib-main/lib.so
+```
+
+If the overwritten file is a native library later loaded via [`System.loadLibrary`](https://developer.android.com/reference/java/lang/System#loadLibrary(java.lang.String)) or [`System.load`](https://developer.android.com/reference/java/lang/System#load(java.lang.String)), the attacker's code runs with the app's full process identity. The same applies to `.dex` or `.apk` files loaded dynamically via [`DexClassLoader`](https://developer.android.com/reference/dalvik/system/DexClassLoader). Additionally, when the caller calls `openInputStream`, the system invokes [`ContentProvider.openFile`](https://developer.android.com/reference/android/content/ContentProvider#openFile(android.net.Uri,%20java.lang.String)) and returns a [`ParcelFileDescriptor`](https://developer.android.com/reference/android/os/ParcelFileDescriptor) — the provider controls which file descriptor it returns and can point it at any file it can read, regardless of what the URI path suggests.
+
+## Validation Considerations
+
+Apps that receive URI data from an implicit intent result should check the URI scheme before opening a stream or copying content. Accepting `file://` URIs from an untrusted responder gives that responder control over which file path the calling app reads. Similarly, display names returned by an external `ContentProvider` should be sanitized before use in file path construction.

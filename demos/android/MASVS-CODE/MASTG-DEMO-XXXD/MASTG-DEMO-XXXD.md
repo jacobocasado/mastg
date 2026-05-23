@@ -1,15 +1,15 @@
 ---
 id: MASTG-DEMO-XXXD
-title: Unsanitized Data from Implicit Intents
+title: Path Traversal via Malicious ContentProvider Filename
 platform: android
-code: [kotlin, java]
+code: [kotlin]
 tools: [frida, frooky]
 kind: fail
 ---
 
 ## Sample
 
-The following sample code demonstrates how an application can be vulnerable when handling results from implicit intents. The application requests a file using a custom implicit intent (`org.owasp.mastestapp.REQUEST_FILE`) and attempts to save it within its internal `filesDir/public/` directory using the filename provided by the returning `ContentProvider`. 
+The following sample code demonstrates how an application can be vulnerable when handling results from implicit intents. The application requests a file using a custom implicit intent (`org.owasp.mastestapp.REQUEST_FILE`) and attempts to save it within its internal `filesDir/public/` directory using the filename provided by the returning `ContentProvider`.
 
 However, because the filename (`_display_name`) is used directly in a `File` instantiation without sanitization, an attacker can supply a path-traversal string (like `../private/secret.txt`) to reach outside the intended `public/` directory and overwrite sensitive files in the `private/` folder.
 

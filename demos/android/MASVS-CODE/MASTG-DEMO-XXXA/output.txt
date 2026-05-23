@@ -6,9 +6,9 @@
                            
     MastgTest_reversed.java
     ❯❱ [1mandroid-implicit-intent-internal-communication[0m
-          Potential use of implicit intent for internal communication. Consider using explicit intents by
-          setting the package or component.                                                              
-                                                                                                         
+          [MASVS-CODE-4] The app uses an implicit intent for internal component communication. Use explicit
+          intents by specifying the package or component.                                                  
+                                                                                                           
            22┆ Intent implicitIntent = new Intent();
            23┆ implicitIntent.setAction("org.owasp.mastestapp.INTERNAL_ACTION");
            24┆ implicitIntent.putExtra("user_id", "12345");

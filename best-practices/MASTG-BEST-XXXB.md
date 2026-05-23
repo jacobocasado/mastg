@@ -3,54 +3,38 @@ title: Sanitize Data Coming from External Components
 alias: sanitize-external-data
 id: MASTG-BEST-XXXB
 platform: android
-knowledge: [MASTG-KNOW-0025]
+knowledge: [MASTG-KNOW-0025, MASTG-KNOW-XXXB]
 ---
 
-All data received from external sources — such as `Intent` extras, `onActivityResult` callbacks, or `ContentProvider` results — must be treated as untrusted and thoroughly sanitized before use. Failure to validate this data can lead to serious vulnerabilities, including arbitrary file access and path traversal. Specifically, applications must always validate URIs and associated metadata before reading from them, copying their content, or passing them to sensitive system APIs.
+All data received from external sources (such as `Intent` extras, `onActivityResult` callbacks, or `ContentProvider` results) must be treated as untrusted and thoroughly sanitized before use. Failure to validate this data can lead to serious vulnerabilities, including arbitrary file access and path traversal. Specifically, applications must always validate URIs and associated metadata before reading from them, copying their content, or passing them to sensitive system APIs.
 
 ## Validate the URI scheme
 
-Reject URI schemes that are unsafe in your context. For most result-handling scenarios, only `content://` URIs from known, trusted authorities should be accepted:
+Prefer `content://` URIs over `file://` URIs. A `content://` URI routes through a `ContentProvider`, which controls exactly what data it exposes. A `file://` URI is resolved directly using the calling app's own process identity and permissions. This means a malicious responding app can return a `file://` URI pointing at any path the calling app can access, which, depending on the permissions the app holds, may go well beyond its own private storage. See @MASTG-KNOW-XXXB for a detailed explanation of how this is exploited.
 
-```kotlin
-fun isSafeUri(uri: Uri): Boolean {
-    // Reject file:// — allows reading arbitrary internal storage paths
-    if (uri.scheme == "file") return false
-    // Reject unknown content authorities
-    val trustedAuthorities = setOf("com.example.app.provider")
-    if (uri.scheme == "content" && uri.authority !in trustedAuthorities) return false
-    return true
-}
-```
+For `content://` URIs, Android's URI permission grant system provides the actual security guarantee. When a responding app returns a `content://` URI via `setResult`, it must have explicitly granted your app access to that URI (via `FLAG_GRANT_READ_URI_PERMISSION` or `grantUriPermission`). If no grant exists, `ContentResolver.openInputStream` throws a `SecurityException`. This means the OS itself ensures you can only read content the responding app deliberately shared.
 
-## Validate the filename from a ContentProvider
+## Sanitize Filenames Provided by External Components
 
-When querying a `ContentProvider` for a display name or file path, sanitize the result before using it as a file name. Path-traversal sequences (`../`) in the filename can redirect writes outside the intended directory:
+When querying a `ContentProvider` for a display name, sanitize the result before using it as a filename. A malicious provider can return a path-traversal sequence (such as `../lib/native.so`) that redirects writes outside the intended directory. Use `File(name).name` to strip any directory components:
 
 ```kotlin
 fun sanitizeFileName(name: String): String {
-    // Remove all path separators and traversal sequences
-    return File(name).name  // strips any directory components
+    return File(name).name  // returns only the final path component
 }
 
 val rawName = getFileNameFromUri(uri) ?: "default.bin"
 val safeName = sanitizeFileName(rawName)
-val target = File(context.filesDir, safeName)
 ```
 
-`File(name).name` returns only the final path component, discarding any `../` prefix an attacker might inject.
+## Sanitize Externally Provided Paths Before File Operations
 
-## Avoid world-readable output locations
-
-Don't copy URI content to `externalCacheDir`, `getExternalFilesDir`, or any path on shared storage unless the data is intentionally public. Use internal storage (`filesDir`, `cacheDir`) for any content received from an untrusted source:
+Avoid using paths or filenames received from an intent to construct an output location directly. A malicious responder could supply an absolute path (such as `/sdcard/evil.apk`) that writes to an unintended location. Always anchor the output to a directory you control, such as `filesDir` or `cacheDir`, and append only a sanitized filename:
 
 ```kotlin
-// Avoid: world-readable on older Android versions
-val output = File(activity.externalCacheDir, fileName)
+// Avoid: output path comes from intent data
+val output = File(fileNameFromIntent)
 
-// Prefer: private to the app
-val output = File(activity.filesDir, fileName)
+// Prefer: fixed base dir with a sanitized filename
+val output = File(context.filesDir, sanitizeFileName(fileNameFromIntent))
 ```
-
-> [!NOTE]
-> Validating the URI and filename reduces the attack surface but doesn't eliminate it entirely if the content itself is attacker-controlled. Never execute or dynamically load files (via `System.load()`, `DexClassLoader`, etc.) whose content originates from an untrusted source, regardless of where they are stored.

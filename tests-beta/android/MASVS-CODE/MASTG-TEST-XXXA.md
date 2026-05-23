@@ -15,12 +15,12 @@ Using implicit intents for communication between components within the same appl
 
 ## Steps
 
-1. Use @MASTG-TOOL-0110 to scan the application's source code or decompiled codebase for insecure intent patterns.
+1. Use @MASTG-TECH-0014 to scan the application's source code or decompiled codebase for insecure intent patterns.
 2. Review the findings to identify if implicit intents are used to launch internal components.
 
 ## Observation
 
-The output should show instances where an `Intent` is initialized and used without specifying a target component or package.
+The output should contain instances where an `Intent` is initialized and used without specifying a target component or package.
 
 ## Evaluation
 

@@ -1,6 +1,6 @@
 ---
-title: Avoid Exporting Internal Components
-alias: avoid-exporting-internal-components
+title: Control Component Export and Access
+alias: control-component-export-and-access
 id: MASTG-BEST-XXXC
 platform: android
 knowledge: [MASTG-KNOW-0025]
@@ -27,5 +27,33 @@ If a component is only needed internally, either:
 <activity android:name=".InternalActivity" android:exported="false" />
 ```
 
-> [!NOTE]
-> Setting `android:exported="false"` doesn't prevent other components within the same app from starting the activity via an explicit intent. It only prevents external apps from doing so. If `android:exported="true"` is required (for example, to handle system actions), restrict access using [permissions](https://developer.android.com/guide/topics/permissions/overview) with `android:permission`.
+## Limiting Access on Exported Components
+
+Some components must remain exported, for example to respond to system actions or to allow cross-app communication within a suite of companion apps. In those cases, use `android:protectionLevel` and `android:permission` to require the caller to hold a specific prerequisites before the system delivers the intent.
+
+### Restricting with a Signature Protection
+
+A plain custom permission can still be obtained by any app that requests it. To restrict access to apps from the same developer, set `android:protectionLevel="signature"`:
+
+```xml
+<permission
+    android:name="com.example.app.INTERNAL_ACCESS"
+    android:protectionLevel="signature" />
+```
+
+With this protection level, the system only grants the permission to apps signed with the same certificate. This is different from `android:exported="false"`, which limits access to the same APK. Signature protection allows communication across separate APKs you own (such as a main app and a companion app or widget) while still blocking third-party apps.
+
+### Restricting with a Custom Permission
+
+Declare a custom permission and reference it on the component:
+
+```xml
+<permission android:name="com.example.app.INTERNAL_ACCESS" />
+
+<activity
+    android:name=".InternalActivity"
+    android:exported="true"
+    android:permission="com.example.app.INTERNAL_ACCESS" />
+```
+
+Any app that wants to start this activity must declare `<uses-permission android:name="com.example.app.INTERNAL_ACCESS" />`. Without it, the system throws a `SecurityException`.

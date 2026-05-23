@@ -16,7 +16,7 @@ The transmission of sensitive data (such as authentication tokens, passwords, or
 ## Steps
 
 1. Identify actions in the app that involve transmitting sensitive data between components.
-2. Monitor the intents sent by the app using @MASTG-TECH-0012 or a custom @MASTG-TOOL-0001 script.
+2. Monitor the intents sent by the app using @MASTG-TECH-0033.
 3. Check if the captured intents are implicit and if they contain sensitive information in their extras.
 
 ## Observation
