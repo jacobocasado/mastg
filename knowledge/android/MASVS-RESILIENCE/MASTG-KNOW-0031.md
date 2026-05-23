@@ -7,7 +7,7 @@ title: Emulator Detection
 In the context of anti-reversing, the goal of emulator detection is to increase the difficulty of running the app on an emulated device. This increased difficulty forces the reverse engineer to defeat the emulator checks or utilize the physical device, thereby barring the access required for large-scale device analysis.
 
 !!! note
-  Emulator detection is inherently a cat-and-mouse game. Detection methods and bypass techniques evolve continuously-determined attackers with sufficient time and resources can circumvent these protections, for example, by developing custom AOSP builds. These techniques should be part of a defense-in-depth strategy, not a standalone solution.
+    Emulator detection is inherently a cat-and-mouse game. Detection methods and bypass techniques evolve continuously, and determined attackers with sufficient time and resources can circumvent these protections, for example, by developing custom AOSP builds. These techniques should be part of a defense-in-depth strategy, not a standalone solution.
 
 There are several indicators that the device in question is being emulated.
 
