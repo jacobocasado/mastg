@@ -2,9 +2,9 @@
 platform: android
 title: Emulator Detection Checks
 id: MASTG-TEST-0x49
-type: [dynamic]
+type: [dynamic, hooks]
 weakness: MASWE-0099
-best-practices: []
+best-practices: [MASTG-BEST-00ea]
 profiles: [R]
 knowledge: [MASTG-KNOW-0031]
 ---
@@ -17,7 +17,9 @@ See @MASTG-KNOW-0031 for more information on emulator detection techniques and s
 
 ## Steps
 
-1. Run @MASTG-TECH-0043 to trace emulator detection API calls while exercising the app.
+1. Use @MASTG-TECH-0005 to install the app.
+2. Use @MASTG-TECH-0043 to trace emulator detection API calls.
+3. Exercise the app extensively to trigger emulator detection checks.
 
 ## Observation
 
