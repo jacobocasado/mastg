@@ -4,7 +4,6 @@ title: Detecting Emulator Detection Checks with Frida
 id: MASTG-DEMO-0x86
 code: [kotlin]
 test: MASTG-TEST-0x49
-tools: [MASTG-TOOL-0031]
 kind: pass
 ---
 
@@ -35,10 +34,31 @@ Notes about the checks performed:
 
 ## Observation
 
-The output shows all runtime calls to emulator detection APIs, such as `TelephonyManager` identifiers, `PackageManager` queries, `ActivityManager.getRunningServices`, `GLES20.glGetString`, and the `Build` checks performed by the app.
+The output shows all emulator detection method invocations captured during app execution.
 
 {{ output.txt }}
 
 ## Evaluation
 
-The test passes because Frida confirms that the app performs emulator detection checks at runtime (by triggering several functions related to emulator detection) and queries the expected indicators.
+The test passes because the output confirms the app implements emulator detection checks that were triggered at runtime:
+
+- **`Build.*` field accesses for build property checks:**
+    - The app reads 13 build properties (`Build.BOARD`, `Build.BRAND`, `Build.DEVICE`, `Build.FINGERPRINT`, `Build.MODEL`, `Build.MANUFACTURER`, `Build.PRODUCT`, `Build.HARDWARE`, `Build.ID`, `Build.RADIO`, `Build.SERIAL`, `Build.TAGS`, `Build.USER`) and compares them against known emulator values.
+    - Several values are characteristic of an emulated device (e.g., `Build.BOARD=goldfish_arm64`, `Build.DEVICE=emu64a`, `Build.HARDWARE=ranchu`, `Build.TAGS=test-keys`).
+
+- **`PackageManager.hasSystemFeature` calls for feature checks:**
+    - The app checks for `android.hardware.type.watch`, `android.hardware.telephony`, and `android.hardware.telephony.calling` to determine device type and telephony capabilities.
+
+- **`TelephonyManager` calls for telephony identifier checks:**
+    - The app queries `getLine1Number`, `getNetworkCountryIso`, `getNetworkType`, `getNetworkOperator`, `getNetworkOperatorName`, `getPhoneType`, `getSimCountryIso`, and `getVoiceMailNumber`.
+    - The returned values (e.g., `+15551234567` for `getLine1Number`, `T-Mobile` for `getNetworkOperatorName`) are typical emulator defaults.
+
+- **`PackageManager.queryIntentActivities` and `PackageManager.getPackageInfo` calls for emulator package checks:**
+    - The app queries launcher packages and checks for known emulator-specific packages such as `com.google.android.launcher.layouts.genymotion`, `com.nox.mopen.app`, `com.bignox.app`, and `com.microvirt`. All return "not found" on this device.
+
+- **`ActivityManager.getRunningServices` calls for emulator service checks:**
+    - The app enumerates running services (count=0 on this device) to check for emulator-specific service prefixes such as `com.bluestacks.`.
+
+- **`GLES20.glGetString` calls for OpenGL renderer checks:**
+    - The app queries `GL_RENDERER`, `GL_VENDOR`, and `GL_VERSION`.
+    - The `GL_RENDERER` value (`Android Emulator OpenGL ES Translator`) is a well-known emulator indicator, confirming the device is running in an emulated environment.
