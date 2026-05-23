@@ -4,6 +4,8 @@ title: Detecting Emulator Detection Checks with Frida
 id: MASTG-DEMO-0x86
 code: [kotlin]
 test: MASTG-TEST-0x49
+tools: [MASTG-TOOL-0031]
+kind: pass
 ---
 
 ## Sample
@@ -22,8 +24,8 @@ Notes about the checks performed:
 
 ## Steps
 
-1. Install the app on the device (@MASTG-TECH-0005). It does not need to be an emulated device.
-2. Start Frida (@MASTG-TOOL-0031) on the device and run `run.sh` to spawn the app.
+1. Use @MASTG-TECH-0005 to install the app. It does not need to be an emulated device.
+2. Use @MASTG-TECH-0043 to trace emulator detection API calls and run `run.sh` to spawn the app.
 3. Open the app and grant the `READ_PHONE_STATE` and `READ_PHONE_NUMBERS` permissions when prompted, then tap **Start**.
 4. Stop the Frida session by pressing `Ctrl+C`.
 

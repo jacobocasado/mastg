@@ -34,9 +34,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.owasp.mastestapp.MastgTest;
 
-/* compiled from: MastgTest.kt */
+/* JADX INFO: compiled from: MastgTest.kt */
+/* JADX INFO: loaded from: classes3.dex */
 @Metadata(d1 = {"\u0000F\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0019\b\u0007\u0018\u00002\u00020\u0001:\u00017B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005J\u0006\u0010\u0006\u001a\u00020\u0007J\u0006\u0010\b\u001a\u00020\tJ\u000e\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001a\u0010\r\u001a\u00020\f2\u0006\u0010\u000e\u001a\u00020\t2\b\u0010\u000f\u001a\u0004\u0018\u00010\tH\u0002J\u000e\u0010\u0010\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J0\u0010\u0011\u001a\u00020\f2\b\u0010\u0012\u001a\u0004\u0018\u00010\u00132\u0006\u0010\u000e\u001a\u00020\t2\u0014\u0010\u0014\u001a\u0010\u0012\u0004\u0012\u00020\u0013\u0012\u0006\u0012\u0004\u0018\u00010\t0\u0015H\u0002J.\u0010\u0016\u001a\u00020\f2\b\u0010\u0012\u001a\u0004\u0018\u00010\u00132\u0006\u0010\u000e\u001a\u00020\t2\u0012\u0010\u0014\u001a\u000e\u0012\u0004\u0012\u00020\u0013\u0012\u0004\u0012\u00020\u00170\u0015H\u0002J\u000e\u0010\u0018\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J2\u0010\u0019\u001a\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u001a\u001a\u00020\t2\f\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0016\u0010\u001d\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\u0006\u0010\u001e\u001a\u00020\u001fH\u0002J\u000e\u0010 \u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0018\u0010!\u001a\u00020\u00072\u0006\u0010\u001e\u001a\u00020\u001f2\u0006\u0010\"\u001a\u00020\tH\u0002J\u000e\u0010#\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u000e\u0010$\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u000e\u0010%\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u000e\u0010&\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010'\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010(\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010)\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010*\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010+\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010,\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001c\u0010-\u001a\b\u0012\u0004\u0012\u00020\t0\u000b2\f\u0010.\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0002J\u001e\u0010/\u001a\u00020\u00072\u0006\u0010\u000f\u001a\u00020\t2\f\u00100\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\n\u00101\u001a\u0004\u0018\u00010\tH\u0002J\u001a\u00102\u001a\u00020\t*\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u000e\u001a\u00020\tH\u0002J\u001a\u00103\u001a\u00020\t*\b\u0012\u0004\u0012\u00020\f0\u000b2\u0006\u0010\u000e\u001a\u00020\tH\u0002J\u000e\u00104\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002J\u0016\u00105\u001a\u00020\t2\f\u00106\u001a\b\u0012\u0004\u0012\u00020\t0\u000bH\u0002R\u000e\u0010\u0002\u001a\u00020\u0003X\u0082\u0004¢\u0006\u0002\n\u0000¨\u00068"}, d2 = {"Lorg/owasp/mastestapp/MastgTest;", "", "context", "Landroid/content/Context;", "<init>", "(Landroid/content/Context;)V", "shouldRunInMainThread", "", "mastgTest", "", "queryBuildProperties", "", "Lorg/owasp/mastestapp/MastgTest$QueryResult;", "queryBuildValue", HintConstants.AUTOFILL_HINT_NAME, "value", "queryTelephonyProperties", "queryTelephonyValue", "telephonyManager", "Landroid/telephony/TelephonyManager;", "block", "Lkotlin/Function1;", "queryTelephonyIntValue", "", "queryPackageChecks", "buildPrefixResults", "label", "prefixes", "packages", "queryLauncherPackages", "pm", "Landroid/content/pm/PackageManager;", "queryRunningServices", "isPackageInstalled", "packageName", "emulatorPackagePrefixes", "emulatorPackageExact", "queryOpenGlProperties", "openGlUnavailableResults", "buildIndicators", "buildQueries", "telephonyIndicators", "telephonyQueries", "packageIndicators", "packageQueries", "openGlIndicators", "openGlQueries", "containsAny", "tokens", "safeBuildSerial", "findValue", "findDisplayValue", "ensureTelephonyPermissions", "telephonyPermissionNote", "missingPermissions", "QueryResult", "app_debug"}, k = 1, mv = {2, 0, 0}, xi = 48)
-/* loaded from: classes3.dex */
 public final class MastgTest {
     public static final int $stable = 8;
     private final Context context;
@@ -50,22 +50,22 @@ public final class MastgTest {
         return true;
     }
 
-    public final String mastgTest() throws SecurityException {
+    public final String mastgTest() {
         String indicatorSummary;
-        List missingPermissions = ensureTelephonyPermissions();
-        List buildQueries = queryBuildProperties();
-        List telephonyQueries = queryTelephonyProperties();
-        List packageQueries = queryPackageChecks();
-        List openGlQueries = queryOpenGlProperties();
-        List allQueries = CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) buildQueries, (Iterable) telephonyQueries), (Iterable) packageQueries), (Iterable) openGlQueries);
-        List indicators = CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) buildIndicators(buildQueries), (Iterable) telephonyIndicators(telephonyQueries)), (Iterable) packageIndicators(packageQueries)), (Iterable) openGlIndicators(openGlQueries));
+        List<String> listEnsureTelephonyPermissions = ensureTelephonyPermissions();
+        List<QueryResult> listQueryBuildProperties = queryBuildProperties();
+        List<QueryResult> listQueryTelephonyProperties = queryTelephonyProperties();
+        List<QueryResult> listQueryPackageChecks = queryPackageChecks();
+        List<QueryResult> listQueryOpenGlProperties = queryOpenGlProperties();
+        List allQueries = CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) listQueryBuildProperties, (Iterable) listQueryTelephonyProperties), (Iterable) listQueryPackageChecks), (Iterable) listQueryOpenGlProperties);
+        List indicators = CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) CollectionsKt.plus((Collection) buildIndicators(listQueryBuildProperties), (Iterable) telephonyIndicators(listQueryTelephonyProperties)), (Iterable) packageIndicators(listQueryPackageChecks)), (Iterable) openGlIndicators(listQueryOpenGlProperties));
         String queryOutput = CollectionsKt.joinToString$default(allQueries, "\n", null, null, 0, null, new Function1() { // from class: org.owasp.mastestapp.MastgTest$$ExternalSyntheticLambda0
             @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 return MastgTest.mastgTest$lambda$0((MastgTest.QueryResult) obj);
             }
         }, 30, null);
-        String permissionNote = telephonyPermissionNote(missingPermissions);
+        String permissionNote = telephonyPermissionNote(listEnsureTelephonyPermissions);
         if (indicators.isEmpty()) {
             indicatorSummary = "Indicators matched in this run: none";
         } else {
@@ -83,7 +83,7 @@ public final class MastgTest {
     }
 
     /* JADX INFO: Access modifiers changed from: private */
-    /* compiled from: MastgTest.kt */
+    /* JADX INFO: compiled from: MastgTest.kt */
     @Metadata(d1 = {"\u0000\"\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0002\b\r\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\b\u0082\b\u0018\u00002\u00020\u0001B!\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\b\u0010\u0004\u001a\u0004\u0018\u00010\u0003\u0012\u0006\u0010\u0005\u001a\u00020\u0003¢\u0006\u0004\b\u0006\u0010\u0007J\t\u0010\f\u001a\u00020\u0003HÆ\u0003J\u000b\u0010\r\u001a\u0004\u0018\u00010\u0003HÆ\u0003J\t\u0010\u000e\u001a\u00020\u0003HÆ\u0003J)\u0010\u000f\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\n\b\u0002\u0010\u0004\u001a\u0004\u0018\u00010\u00032\b\b\u0002\u0010\u0005\u001a\u00020\u0003HÆ\u0001J\u0013\u0010\u0010\u001a\u00020\u00112\b\u0010\u0012\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0013\u001a\u00020\u0014HÖ\u0001J\t\u0010\u0015\u001a\u00020\u0003HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\tR\u0013\u0010\u0004\u001a\u0004\u0018\u00010\u0003¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\tR\u0011\u0010\u0005\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\t¨\u0006\u0016"}, d2 = {"Lorg/owasp/mastestapp/MastgTest$QueryResult;", "", HintConstants.AUTOFILL_HINT_NAME, "", "rawValue", "displayValue", "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", "getName", "()Ljava/lang/String;", "getRawValue", "getDisplayValue", "component1", "component2", "component3", "copy", "equals", "", "other", "hashCode", "", "toString", "app_debug"}, k = 1, mv = {2, 0, 0}, xi = 48)
     static final /* data */ class QueryResult {
         private final String displayValue;
@@ -103,17 +103,17 @@ public final class MastgTest {
             return queryResult.copy(str, str2, str3);
         }
 
-        /* renamed from: component1, reason: from getter */
+        /* JADX INFO: renamed from: component1, reason: from getter */
         public final String getName() {
             return this.name;
         }
 
-        /* renamed from: component2, reason: from getter */
+        /* JADX INFO: renamed from: component2, reason: from getter */
         public final String getRawValue() {
             return this.rawValue;
         }
 
-        /* renamed from: component3, reason: from getter */
+        /* JADX INFO: renamed from: component3, reason: from getter */
         public final String getDisplayValue() {
             return this.displayValue;
         }
@@ -292,31 +292,31 @@ public final class MastgTest {
         }
     }
 
-    private final List<QueryResult> queryPackageChecks() throws SecurityException {
+    private final List<QueryResult> queryPackageChecks() {
         PackageManager pm = this.context.getPackageManager();
         List results = new ArrayList();
-        List prefixes = emulatorPackagePrefixes();
+        List<String> listEmulatorPackagePrefixes = emulatorPackagePrefixes();
         Intrinsics.checkNotNull(pm);
-        List launcherPackages = queryLauncherPackages(pm);
-        results.add(new QueryResult("PackageManager.queryIntentActivities(MAIN/LAUNCHER).count", String.valueOf(launcherPackages.size()), String.valueOf(launcherPackages.size())));
-        results.addAll(buildPrefixResults("LauncherPackagePrefix", prefixes, launcherPackages));
+        List<String> listQueryLauncherPackages = queryLauncherPackages(pm);
+        results.add(new QueryResult("PackageManager.queryIntentActivities(MAIN/LAUNCHER).count", String.valueOf(listQueryLauncherPackages.size()), String.valueOf(listQueryLauncherPackages.size())));
+        results.addAll(buildPrefixResults("LauncherPackagePrefix", listEmulatorPackagePrefixes, listQueryLauncherPackages));
         for (String pkg : emulatorPackageExact()) {
             String installed = String.valueOf(isPackageInstalled(pm, pkg));
             results.add(new QueryResult("PackageManager.hasPackage:" + pkg, installed, installed));
         }
-        List runningServices = queryRunningServices();
-        results.add(new QueryResult("ActivityManager.getRunningServices.count", String.valueOf(runningServices.size()), String.valueOf(runningServices.size())));
-        List $this$filter$iv = runningServices;
+        List<String> listQueryRunningServices = queryRunningServices();
+        results.add(new QueryResult("ActivityManager.getRunningServices.count", String.valueOf(listQueryRunningServices.size()), String.valueOf(listQueryRunningServices.size())));
+        List<String> $this$filter$iv = listQueryRunningServices;
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             String it = (String) element$iv$iv;
             PackageManager pm2 = pm;
-            List prefixes2 = prefixes;
+            List<String> list = listEmulatorPackagePrefixes;
             if (StringsKt.startsWith$default(it, "com.bluestacks.", false, 2, (Object) null)) {
                 destination$iv$iv.add(element$iv$iv);
             }
             pm = pm2;
-            prefixes = prefixes2;
+            listEmulatorPackagePrefixes = list;
         }
         List serviceMatches = (List) destination$iv$iv;
         String strJoinToString$default = CollectionsKt.joinToString$default(serviceMatches, ", ", null, null, 0, null, null, 62, null);
@@ -382,9 +382,9 @@ public final class MastgTest {
     private final List<String> queryLauncherPackages(PackageManager pm) {
         Intent intent = new Intent("android.intent.action.MAIN").addCategory("android.intent.category.LAUNCHER");
         Intrinsics.checkNotNullExpressionValue(intent, "addCategory(...)");
-        Iterable activities = Build.VERSION.SDK_INT >= 33 ? pm.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0L)) : pm.queryIntentActivities(intent, 0);
-        Intrinsics.checkNotNull(activities);
-        Iterable $this$mapNotNull$iv = activities;
+        Iterable iterableQueryIntentActivities = Build.VERSION.SDK_INT >= 33 ? pm.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0L)) : pm.queryIntentActivities(intent, 0);
+        Intrinsics.checkNotNull(iterableQueryIntentActivities);
+        Iterable $this$mapNotNull$iv = iterableQueryIntentActivities;
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv$iv : $this$mapNotNull$iv) {
             ResolveInfo it = (ResolveInfo) element$iv$iv$iv;
@@ -397,15 +397,15 @@ public final class MastgTest {
         return CollectionsKt.distinct((List) destination$iv$iv);
     }
 
-    private final List<String> queryRunningServices() throws SecurityException {
+    private final List<String> queryRunningServices() {
         Object systemService = this.context.getSystemService("activity");
         ActivityManager activityManager = systemService instanceof ActivityManager ? (ActivityManager) systemService : null;
         if (activityManager == null) {
             return CollectionsKt.emptyList();
         }
-        Iterable services = activityManager.getRunningServices(20);
-        Intrinsics.checkNotNull(services);
-        Iterable $this$map$iv = services;
+        Iterable runningServices = activityManager.getRunningServices(20);
+        Intrinsics.checkNotNull(runningServices);
+        Iterable $this$map$iv = runningServices;
         Collection destination$iv$iv = new ArrayList(CollectionsKt.collectionSizeOrDefault($this$map$iv, 10));
         for (Object item$iv$iv : $this$map$iv) {
             ActivityManager.RunningServiceInfo it = (ActivityManager.RunningServiceInfo) item$iv$iv;
@@ -414,7 +414,7 @@ public final class MastgTest {
         return CollectionsKt.distinct((List) destination$iv$iv);
     }
 
-    private final boolean isPackageInstalled(PackageManager pm, String packageName) throws PackageManager.NameNotFoundException {
+    private final boolean isPackageInstalled(PackageManager pm, String packageName) {
         try {
             if (Build.VERSION.SDK_INT >= 33) {
                 pm.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0L));
@@ -428,11 +428,11 @@ public final class MastgTest {
     }
 
     private final List<String> emulatorPackagePrefixes() {
-        return CollectionsKt.listOf((Object[]) new String[]{"com.vphone.", "com.bignox.", "com.nox.mopen.app", "me.haima.", "com.bluestacks", "cn.itools.", "com.kop.", "com.kaopu.", "com.microvirt.", "com.bignox.app"});
+        return CollectionsKt.listOf((Object[]) new String[]{"com.vphone.", "com.bignox.", "com.bluestacks", "com.microvirt."});
     }
 
     private final List<String> emulatorPackageExact() {
-        return CollectionsKt.listOf((Object[]) new String[]{"com.google.android.launcher.layouts.genymotion", "com.nox.mopen.app", "com.bignox.app", "com.microvirt"});
+        return CollectionsKt.listOf((Object[]) new String[]{"com.google.android.launcher.layouts.genymotion", "com.bignox.app"});
     }
 
     private final List<QueryResult> queryOpenGlProperties() {
@@ -508,7 +508,7 @@ public final class MastgTest {
     */
     private final java.util.List<java.lang.String> buildIndicators(java.util.List<org.owasp.mastestapp.MastgTest.QueryResult> r38) {
         /*
-            Method dump skipped, instructions count: 795
+            Method dump skipped, instruction units count: 795
             To view this dump add '--comments-level debug' option
         */
         throw new UnsupportedOperationException("Method not decompiled: org.owasp.mastestapp.MastgTest.buildIndicators(java.util.List):java.util.List");
@@ -641,8 +641,7 @@ public final class MastgTest {
         Collection destination$iv$iv = new ArrayList();
         for (Object element$iv$iv : $this$filter$iv) {
             String it = (String) element$iv$iv;
-            String it2 = ContextCompat.checkSelfPermission(this.context, it) != 0 ? 1 : null;
-            if (it2 != null) {
+            if (ContextCompat.checkSelfPermission(this.context, it) != 0) {
                 destination$iv$iv.add(element$iv$iv);
             }
         }
