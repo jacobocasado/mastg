@@ -1,7 +1,7 @@
 ---
 title: Hardening Against Emulation
 alias: hardening-against-emulation
-id: MASTG-BEST-00ea
+id: MASTG-BEST-0046
 platform: android
 knowledge: [MASTG-KNOW-0031, MASTG-KNOW-0035, MASTG-KNOW-0033, MASTG-KNOW-0030]
 ---

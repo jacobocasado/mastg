@@ -1,10 +1,10 @@
 ---
 platform: android
 title: Runtime Use of Emulator Detection Techniques
-id: MASTG-TEST-0x49
+id: MASTG-TEST-0351
 type: [dynamic, hooks]
 weakness: MASWE-0099
-best-practices: [MASTG-BEST-00ea]
+best-practices: [MASTG-BEST-0046]
 profiles: [R]
 knowledge: [MASTG-KNOW-0031]
 ---
@@ -18,7 +18,7 @@ See @MASTG-KNOW-0031 for more information on emulator detection techniques and s
 It is recommended to run this test on an emulator to ensure that emulator detection mechanisms are triggered during testing. However, some checks may still surface on a physical device if the app runs them unconditionally.
 
 !!! note "Out of Scope"
-    This test does not cover robustness or effectiveness of emulator detection mechanisms, which can be very difficult to assess through automated testing alone and may require manual reverse engineering and custom instrumentation. See @MASTG-BEST-00ea for best practices on implementing emulator detection effectively.
+    This test does not cover robustness or effectiveness of emulator detection mechanisms, which can be very difficult to assess through automated testing alone and may require manual reverse engineering and custom instrumentation. See @MASTG-BEST-0046 for best practices on implementing emulator detection effectively.
 
 In this test we focus our approach on identifying the presence of emulator detection mechanisms at runtime by hooking into common emulator detection APIs and tracing relevant system calls. But, optionally, you can try to bypass emulator detection checks in the app and observe the results. For example, successful bypassing of certain checks or failed detections may indicate the presence of emulator detection mechanisms.
 
@@ -35,7 +35,7 @@ The output should contain any instances of emulator detection checks, along with
 
 ## Evaluation
 
-The test case fails if no instances of emulator detection checks are observed. However, results from this test should be interpreted as evidence of the presence of emulator detection logic, not as an assessment of its robustness or effectiveness. See @MASTG-BEST-00ea.
+The test case fails if no instances of emulator detection checks are observed. However, results from this test should be interpreted as evidence of the presence of emulator detection logic, not as an assessment of its robustness or effectiveness. See @MASTG-BEST-0046.
 
 **Expected False Negatives:**
 

@@ -47,8 +47,8 @@ class MastgTest(private val context: Context) {
         } else {
             "Indicators matched in this run: none"
         }
-        // PASS: [MASTG-TEST-0x49] The app implements emulator detection checks. In this case, this app is a PASS as the emulation detection checks are performed.
-        // FAIL: [MASTG-TEST-0x49] The test fails if the app lacks emulator detection checks.
+        // PASS: [MASTG-TEST-0351] The app implements emulator detection checks. In this case, this app is a PASS as the emulation detection checks are performed.
+        // FAIL: [MASTG-TEST-0351] The test fails if the app lacks emulator detection checks.
         val output = "Queried properties:\n$queryOutput\n\n$indicatorSummary$permissionNote"
 
         Log.i("MASTG-TEST", output)
