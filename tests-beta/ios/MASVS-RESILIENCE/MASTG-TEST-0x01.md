@@ -1,13 +1,13 @@
 ---
 platform: ios
 title: References to Reverse Engineering Tools Detection in Code
-id: MASTG-TEST-0354
+id: MASTG-TEST-0x01
 type: [static, code]
 weakness: MASWE-0107
 false_negative_prone: true
 profiles: [R]
 knowledge: [MASTG-KNOW-0087]
-best-practices: [MASTG-BEST-0048]
+best-practices: [MASTG-BEST-0x01]
 ---
 
 ## Overview
@@ -19,7 +19,7 @@ On iOS, detecting reverse engineering tools typically involves inspecting loaded
 This test is best combined with a dynamic analysis test that verifies whether the detection checks are actually triggered at runtime.
 
 !!! note "Out of Scope"
-    This test does not assess the robustness or bypass-resistance of the detection mechanisms. Even a well-implemented detection routine can be bypassed by hooking the file-system or dyld APIs used to perform the checks. See @MASTG-BEST-0048 for best practices on implementing effective reverse engineering tools detection.
+    This test does not assess the robustness or bypass-resistance of the detection mechanisms. Even a well-implemented detection routine can be bypassed by hooking the file-system or dyld APIs used to perform the checks. See @MASTG-BEST-0x01 for best practices on implementing effective reverse engineering tools detection.
 
 ## Steps
 

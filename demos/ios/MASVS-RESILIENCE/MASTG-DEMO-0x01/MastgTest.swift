@@ -14,7 +14,7 @@ class ReverseEngineeringToolsDetector {
     static func detect() -> String {
         var detections = [String]()
 
-        // FAIL: [MASTG-TEST-0354] Check for Frida-related dynamic libraries by iterating loaded dylibs.
+        // FAIL: [MASTG-TEST-0x01] Check for Frida-related dynamic libraries by iterating loaded dylibs.
         let fridaArtifacts = ["FridaGadget", "frida-agent", "cynject", "libcycript"]
         let imageCount = _dyld_image_count()
         for i in 0..<imageCount {
@@ -28,7 +28,7 @@ class ReverseEngineeringToolsDetector {
             }
         }
 
-        // FAIL: [MASTG-TEST-0354] Probe TCP port 27042 for frida-server (default port).
+        // FAIL: [MASTG-TEST-0x01] Probe TCP port 27042 for frida-server (default port).
         if isFridaServerRunning(host: "127.0.0.1", port: 27042) {
             detections.append("Detected frida-server listening on port 27042")
         }

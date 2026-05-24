@@ -2,8 +2,8 @@
 platform: ios
 title: References to Reverse Engineering Tools Detection with r2
 code: [swift]
-id: MASTG-DEMO-0117
-test: MASTG-TEST-0354
+id: MASTG-DEMO-0x01
+test: MASTG-TEST-0x01
 status: draft
 ---
 
