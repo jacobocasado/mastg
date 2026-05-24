@@ -1,33 +1,42 @@
 ---
 platform: ios
-title: References to Reverse Engineering Tools Detection with r2
+title: Extracting Sensitive Data from CCCrypt via Frida Hooking
 code: [swift]
 id: MASTG-DEMO-0x01
 test: MASTG-TEST-0x01
+kind: fail
 status: draft
 ---
 
 ## Sample
 
-The code snippet below shows sample code that detects the presence of reverse engineering tools at runtime. It checks for known Frida artifacts by iterating over loaded dynamic libraries using `_dyld_image_count` and `_dyld_get_image_name`, and probes TCP port 27042 for a frida-server response.
+This sample encrypts and decrypts a sensitive API key using CommonCrypto's `CCCrypt`. The app does not implement any runtime hook detection mechanisms. On the contrary, @MASTG-DEMO-0x02 demonstrates a runtime hook detection mechanism.
+
+!!! note
+    This is a series of correlated tests.
+
+    - This demo is a failed test (failed defense/successful attack) against a data exfiltration attack.
+    - @MASTG-DEMO-0x02 is a successful test (successful defense/failed attack) against the attack of @MASTG-DEMO-0x01.
+    - @MASTG-DEMO-0x03 is a failed test (failed defense/successful attack) against the defenses of @MASTG-DEMO-0x02 by using a more complex attack.
 
 {{ MastgTest.swift }}
 
 ## Steps
 
-1. Unzip the app package and locate the main binary file (@MASTG-TECH-0058), which in this case is `./Payload/MASTestApp.app/MASTestApp`.
-2. Open the app binary with @MASTG-TOOL-0073 with the `-i` option to run this script.
+1. Install the app on a device (@MASTG-TECH-0056).
+2. Make sure you have @MASTG-TOOL-0039 installed on your machine and frida-server running on the device.
+3. Run `run.sh` to spawn the app with Frida.
+4. Tap the **Start** button.
+5. Stop the script by pressing `Ctrl+C`.
 
-{{ reverse_engineering_tools_detection.r2 }}
-
-{{ run.sh }}
+{{ run.sh # script.js }}
 
 ## Observation
 
-The output reveals references to known Frida artifact strings (`FridaGadget`, `frida-agent`, `cynject`, `libcycript`) and calls to `_dyld_image_count` and `_dyld_get_image_name` in the app binary. A reference to port `27042` (the default frida-server port) is also present.
+The output contains two `CCCrypt` calls found at runtime. The encryption call reveals the sensitive API key as plaintext input, and the decryption call reveals the same API key as plaintext output. Backtraces are also provided to help identify the locations in the code.
 
-{{ output.asm }}
+{{ output.txt }}
 
 ## Evaluation
 
-The test case passes because the output shows that the app implements reverse engineering tools detection: it scans loaded dynamic libraries for Frida-related artifact names using `_dyld_image_count`/`_dyld_get_image_name` and checks whether frida-server is reachable on port 27042.
+The test case fails because the hook executes successfully and the sensitive API key `sk-OWASP-MAS-SuperSecretKey-1234567890` is extracted in plaintext from the `CCCrypt` calls. The app lacks runtime integrity verification, allowing instrumentation tools to intercept cryptographic operations without any defensive response.

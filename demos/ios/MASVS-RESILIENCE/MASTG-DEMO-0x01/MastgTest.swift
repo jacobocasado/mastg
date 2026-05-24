@@ -1,65 +1,95 @@
-// SUMMARY: This sample demonstrates reverse engineering tools detection in Swift by inspecting loaded dynamic libraries using _dyld_image_count and _dyld_get_image_name to check for known Frida artifacts, and by probing TCP port 27042 for a frida-server response.
+// SUMMARY: This sample demonstrates a sensitive cryptographic operation that can be intercepted at runtime because the app does not implement runtime hook detection.
 
 import SwiftUI
 import Foundation
+import CommonCrypto
+import Security
 
 class MastgTest {
     static func mastgTest(completion: @escaping (String) -> Void) {
-        let result = ReverseEngineeringToolsDetector.detect()
-        completion(result)
+        completion(runCryptoDemo())
     }
-}
 
-class ReverseEngineeringToolsDetector {
-    static func detect() -> String {
-        var detections = [String]()
+    private static func runCryptoDemo() -> String {
+        let sensitiveApiKey = "sk-OWASP-MAS-SuperSecretKey-1234567890"
+        let key = Data("0123456789abcdef0123456789abcdef".utf8)
+        let plaintext = Data(sensitiveApiKey.utf8)
 
-        // FAIL: [MASTG-TEST-0x01] Check for Frida-related dynamic libraries by iterating loaded dylibs.
-        let fridaArtifacts = ["FridaGadget", "frida-agent", "cynject", "libcycript"]
-        let imageCount = _dyld_image_count()
-        for i in 0..<imageCount {
-            if let imageName = _dyld_get_image_name(i) {
-                let name = String(cString: imageName)
-                for artifact in fridaArtifacts {
-                    if name.lowercased().contains(artifact.lowercased()) {
-                        detections.append("Detected reverse engineering tool library: \(name)")
+        guard let iv = randomBytes(count: kCCBlockSizeAES128) else {
+            return "Error: Could not generate IV."
+        }
+
+        // FAIL: [MASTG-TEST-0x01] The app calls CCCrypt with sensitive data without detecting runtime hooks.
+        guard let encryptedData = crypt(
+            operation: CCOperation(kCCEncrypt),
+            data: plaintext,
+            key: key,
+            iv: iv
+        ) else {
+            return "Error: Encryption failed."
+        }
+
+        // FAIL: [MASTG-TEST-0x01] The app decrypts sensitive data without detecting runtime hooks.
+        guard let decryptedData = crypt(
+            operation: CCOperation(kCCDecrypt),
+            data: encryptedData,
+            key: key,
+            iv: iv
+        ), let decryptedString = String(data: decryptedData, encoding: .utf8) else {
+            return "Error: Decryption failed."
+        }
+
+        return """
+        Encryption and decryption successful.
+        IV: \(iv.base64EncodedString())
+        Encrypted: \(encryptedData.base64EncodedString())
+        Decrypted: \(decryptedString)
+        """
+    }
+
+    private static func randomBytes(count: Int) -> Data? {
+        var data = Data(count: count)
+        let status = data.withUnsafeMutableBytes { buffer -> OSStatus in
+            guard let baseAddress = buffer.baseAddress else {
+                return errSecParam
+            }
+            return SecRandomCopyBytes(kSecRandomDefault, count, baseAddress)
+        }
+        return status == errSecSuccess ? data : nil
+    }
+
+    private static func crypt(operation: CCOperation, data: Data, key: Data, iv: Data) -> Data? {
+        var output = Data(count: data.count + kCCBlockSizeAES128)
+        let outputCapacity = output.count
+        var outputLength: size_t = 0
+
+        let status = output.withUnsafeMutableBytes { outputBytes in
+            data.withUnsafeBytes { dataBytes in
+                key.withUnsafeBytes { keyBytes in
+                    iv.withUnsafeBytes { ivBytes in
+                        CCCrypt(
+                            operation,
+                            CCAlgorithm(kCCAlgorithmAES),
+                            CCOptions(kCCOptionPKCS7Padding),
+                            keyBytes.baseAddress,
+                            key.count,
+                            ivBytes.baseAddress,
+                            dataBytes.baseAddress,
+                            data.count,
+                            outputBytes.baseAddress,
+                            outputCapacity,
+                            &outputLength
+                        )
                     }
                 }
             }
         }
 
-        // FAIL: [MASTG-TEST-0x01] Probe TCP port 27042 for frida-server (default port).
-        if isFridaServerRunning(host: "127.0.0.1", port: 27042) {
-            detections.append("Detected frida-server listening on port 27042")
+        guard status == kCCSuccess else {
+            return nil
         }
 
-        if detections.isEmpty {
-            return "Reverse Engineering Tools: Not Detected ✅\n\nNo known reverse engineering tool artifacts were found."
-        } else {
-            return "Reverse Engineering Tools: Detected ⚠️\n\nDetections:\n" + detections.joined(separator: "\n")
-        }
-    }
-
-    private static func isFridaServerRunning(host: String, port: Int32) -> Bool {
-        let sock = socket(AF_INET, SOCK_STREAM, 0)
-        guard sock >= 0 else { return false }
-        defer { close(sock) }
-
-        var timeout = timeval(tv_sec: 0, tv_usec: 500_000) // 0.5 second timeout
-        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
-        setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
-
-        var addr = sockaddr_in()
-        addr.sin_family = sa_family_t(AF_INET)
-        addr.sin_port = UInt16(port).bigEndian
-        addr.sin_addr.s_addr = inet_addr(host)
-
-        let connected = withUnsafePointer(to: &addr) {
-            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                connect(sock, $0, socklen_t(MemoryLayout<sockaddr_in>.size))
-            }
-        }
-
-        return connected == 0
+        output.removeSubrange(outputLength..<output.count)
+        return output
     }
 }
