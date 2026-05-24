@@ -24,9 +24,9 @@ This test focuses on the broader issue of improper verification of data returned
 1. Use @MASTG-TECH-0014 to scan the application's source code or decompiled codebase for instances where data is received via an intent response (e.g., in `onActivityResult`).
 2. Analyze the flow of the returned data (URI or metadata) to identify where it is used in sensitive operations, such as file I/O or dynamic code loading.
 3. Verify if the application implements robust sanitization and validation on the data. For example:
-    * Checking that a URI uses the expected `content://` scheme and not a local `file://` scheme.
-    * Validating that a filename does not contain path-traversal sequences like `../`.
-    * Ensuring the final resolved file path is within the intended directory.
+    - Checking that a URI uses the expected `content://` scheme and not a local `file://` scheme.
+    - Validating that a filename does not contain path-traversal sequences like `../`.
+    - Ensuring the final resolved file path is within the intended directory.
 
 ### Dynamic Analysis
 
