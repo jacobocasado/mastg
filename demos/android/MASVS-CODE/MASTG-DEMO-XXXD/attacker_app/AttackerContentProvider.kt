@@ -1,4 +1,4 @@
-package org.owasp.mastestapp
+package org.owasp.mastestapp.attacker
 
 import android.content.ContentProvider
 import android.content.ContentValues

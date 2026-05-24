@@ -1,5 +1,5 @@
 ---
-title: Unsanitized Data from Implicit Intents
+title: Missing Validation of Data Returned from Implicit Intents
 platform: android
 id: MASTG-TEST-XXXD
 type: [static, dynamic]
@@ -31,17 +31,14 @@ This test focuses on the broader issue of improper verification of data returned
 ### Dynamic Analysis
 
 1. Use @MASTG-TECH-0033 to hook file system constructors (e.g., `java.io.File`, `java.io.FileOutputStream`).
-2. Trigger the implicit intent and provide a malicious response from a controlled attacker app (see @MASTG-DEMO-XXXD for an example).
+2. Trigger the implicit intent and provide a malicious response from a controlled attacker app.
 3. Observe the parameters passed to the file system hooks.
 4. Verify if the instrumentation detects path traversal or attempts to write to sensitive internal directories.
 
 ## Observation
 
-The output should contain evidence of whether the app handles data returned from an implicit intent with proper validation or sanitization routines.
+The output should contain the file system operations triggered when the malicious intent response is processed, including the full paths passed to file constructors and output streams.
 
 ## Evaluation
 
-The test case **fails** if:
-
-- Static analysis reveals that data from an intent response is used in sensitive operations without proper sanitization.
-- Dynamic analysis confirms that providing a malicious intent response results in unauthorized file access or path-traversal behavior.
+The test case fails if data from an intent response is used in sensitive operations without proper sanitization, or if providing a malicious intent response results in unauthorized file access or path-traversal behavior.

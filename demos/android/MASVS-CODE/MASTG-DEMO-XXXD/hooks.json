@@ -8,8 +8,7 @@
         {
           "args": ["java.io.File", "java.lang.String"]
         }
-      ],
-      "filterEventsByStacktrace": ["org.owasp.mastestapp.VulnerableActivity"]
+      ]
     },
     {
       "class": "java.io.FileOutputStream",

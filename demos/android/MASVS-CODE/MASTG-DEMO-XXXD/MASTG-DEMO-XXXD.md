@@ -3,7 +3,7 @@ id: MASTG-DEMO-XXXD
 title: Path Traversal via Malicious ContentProvider Filename
 platform: android
 code: [kotlin]
-tools: [frida, frooky]
+tools: [MASTG-TOOL-0001, MASTG-TOOL-0145]
 kind: fail
 ---
 
@@ -13,7 +13,7 @@ The following sample code demonstrates how an application can be vulnerable when
 
 However, because the filename (`_display_name`) is used directly in a `File` instantiation without sanitization, an attacker can supply a path-traversal string (like `../private/secret.txt`) to reach outside the intended `public/` directory and overwrite sensitive files in the `private/` folder.
 
-{{ MastgTest.kt # MastgTest_reversed.java }}
+{{ MastgTest.kt # MastgTest_reversed.java # AndroidManifest.xml # AndroidManifest_reversed.xml }}
 
 ## Steps
 
@@ -33,4 +33,9 @@ The output shows all instances of `File` construction and `FileOutputStream` ini
 
 ## Evaluation
 
-The test case **fails** because the application trusts and processes metadata (the filename) received from an implicit intent response without validation. Dynamic analysis confirms that the malicious path-traversal string provided by the attacker successfully redirects the file write operation to a sensitive internal directory (`private/`), allowing the attacker to overwrite protected files.
+The test case fails because the application uses the filename returned by the attacker's `ContentProvider` directly in a `File` constructor without sanitization, allowing the attacker to redirect the write operation outside the intended directory.
+
+Two entries in the output confirm the path traversal:
+
+- `java.io.File.$init` called from `onActivityResult` with arguments `files/public` and `../private/secret.txt` — the unsanitized attacker-controlled filename causes the resolved path to escape the `public/` directory.
+- `java.io.FileOutputStream.$init` called with the fully resolved path `files/public/../private/secret.txt`, confirming that the file write targets the `private/` directory rather than `public/`.

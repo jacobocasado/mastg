@@ -14,7 +14,7 @@
             </intent-filter>
             
             <!-- Intent Interception Filter -->
-            <intent-filter android:priority="999">
+            <intent-filter>
                 <action android:name="org.owasp.mastestapp.REQUEST_FILE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
