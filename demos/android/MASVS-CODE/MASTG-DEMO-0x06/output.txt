@@ -1,0 +1,17 @@
+                  
+                  
+┌────────────────┐
+│ 1 Code Finding │
+└────────────────┘
+                       
+    AndroidManifest.xml
+    ❯❱ android-exported-content-provider
+          [MASVS-CODE-4] ContentProvider is exported. External apps can query it and receive attacker-
+          controlled data.                                                                            
+                                                                                                      
+           19┆ <provider
+           20┆     android:name=".AttackerContentProvider"
+           21┆     android:authorities="org.owasp.mastestapp.attacker.provider"
+           22┆     android:enabled="true"
+           23┆     android:exported="true">
+           24┆ </provider>
