@@ -3,7 +3,7 @@ id: MASTG-DEMO-0x02
 title: Detecting Unintentionally Exported Activities
 platform: android
 code: [xml]
-tools: [semgrep]
+tools: [MASTG-TOOL-0110]
 kind: fail
 ---
 

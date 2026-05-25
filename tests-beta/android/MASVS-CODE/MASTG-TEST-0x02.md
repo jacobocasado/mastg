@@ -2,7 +2,7 @@
 title: Internal Component Unintentionally Exported
 platform: android
 id: MASTG-TEST-0x02
-type: [static]
+type: [static, config]
 weakness: MASWE-0066
 best-practices: [MASTG-BEST-0x01]
 knowledge: [MASTG-KNOW-0025]
@@ -15,9 +15,10 @@ Activities intended for internal use within an application should not be exporte
 
 ## Steps
 
-1. Extract the `AndroidManifest.xml` file using @MASTG-TECH-0007.
-2. Search for all `<activity>` tags where `android:exported` is set to `true`.
-3. For each exported activity, determine if it is intended to be accessible by other apps (e.g., launcher, deep link handlers) or if it performs internal-only tasks.
+1. Use @MASTG-TECH-0013 to reverse engineer the app.
+2. Use @MASTG-TECH-0117 to obtain the `AndroidManifest.xml`.
+3. Use @MASTG-TECH-0150 to identify exported activities (for example, `android:exported="true"`).
+4. For each exported activity, determine whether external access is intended (e.g., launcher, deep link handler) or if it performs internal-only tasks.
 
 ## Observation
 
@@ -25,4 +26,4 @@ The output should contain a list of all exported activities found in the manifes
 
 ## Evaluation
 
-The test case fails if any activity intended for internal use is found to be exported (`android:exported="true"`). For example, if an activity that processes sensitive user data or performs administrative tasks is accessible to external apps, it poses a significant security risk and should be marked as `android:exported="false"`.
+The test case fails if any activity intended for internal use is exported (for example, `android:exported="true"`).

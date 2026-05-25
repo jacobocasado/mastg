@@ -30,10 +30,11 @@ This test focuses on the broader issue of improper verification of data returned
 
 ### Dynamic Analysis
 
-1. Use @MASTG-TECH-0033 to hook file system constructors (e.g., `java.io.File`, `java.io.FileOutputStream`).
-2. Trigger the implicit intent and provide a malicious response from a controlled attacker app.
-3. Observe the parameters passed to the file system hooks.
-4. Verify if the instrumentation detects path traversal or attempts to write to sensitive internal directories.
+1. Use @MASTG-TECH-0005 to install the app.
+2. Use @MASTG-TECH-0043 to hook file system constructors (e.g., `java.io.File`, `java.io.FileOutputStream`).
+3. Trigger the implicit intent and provide a malicious response from a controlled attacker app.
+4. Observe the parameters passed to the file system hooks.
+5. Verify if the instrumentation detects path traversal or attempts to write to sensitive internal directories.
 
 ## Observation
 

@@ -29,7 +29,7 @@ If a component is only needed internally, either:
 
 ## Limiting Access on Exported Components
 
-Some components must remain exported, for example to respond to system actions or to allow cross-app communication within a suite of companion apps. In those cases, use `android:protectionLevel` and `android:permission` to require the caller to hold a specific prerequisites before the system delivers the intent.
+Some components must remain exported, for example to respond to system actions or to allow cross-app communication within a suite of companion apps. In those cases, use `android:protectionLevel` and `android:permission` to require the caller to hold a specific permission (ideally one with `android:protectionLevel="signature"`) before the system delivers the intent.
 
 ### Restricting with a Signature Protection
 

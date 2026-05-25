@@ -13,7 +13,7 @@ The following sample code demonstrates how an application can be vulnerable when
 
 However, because the filename (`_display_name`) is used directly in a `File` instantiation without sanitization, an attacker can supply a path-traversal string (like `../private/secret.txt`) to reach outside the intended `public/` directory and overwrite sensitive files in the `private/` folder.
 
-{{ MastgTest.kt # MastgTest_reversed.java # AndroidManifest.xml # AndroidManifest_reversed.xml }}
+{{ MastgTest.kt # AndroidManifest.xml }}
 
 ## Steps
 

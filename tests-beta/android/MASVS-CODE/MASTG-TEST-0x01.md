@@ -2,7 +2,7 @@
 title: Implicit Intents Used for Internal App Communication
 platform: android
 id: MASTG-TEST-0x01
-type: [static]
+type: [static, code]
 weakness: MASWE-0066
 best-practices: [MASTG-BEST-0x01]
 knowledge: [MASTG-KNOW-0025, MASTG-KNOW-0x01]
@@ -15,8 +15,8 @@ Using implicit intents for communication between components within the same appl
 
 ## Steps
 
-1. Use @MASTG-TECH-0014 to scan the application's source code or decompiled codebase for insecure intent patterns.
-2. Review the findings to identify if implicit intents are used to launch internal components.
+1. Use @MASTG-TECH-0013 to reverse engineer the app.
+2. Use @MASTG-TECH-0014 to look for the relevant APIs.
 
 ## Observation
 

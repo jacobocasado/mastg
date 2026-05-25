@@ -4,7 +4,7 @@ title: Attacker App Registering for Internal Implicit Intent
 id: MASTG-DEMO-0x05
 code: [kotlin, xml]
 test: MASTG-TEST-0x01
-tools: [semgrep]
+tools: [MASTG-TOOL-0110]
 kind: info
 ---
 

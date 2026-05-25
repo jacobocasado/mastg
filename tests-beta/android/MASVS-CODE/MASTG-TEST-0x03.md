@@ -2,7 +2,7 @@
 title: References to Implicit Intents Carrying Sensitive Extras
 platform: android
 id: MASTG-TEST-0x03
-type: [static]
+type: [static, code]
 weakness: MASWE-0066
 best-practices: [MASTG-BEST-0x01]
 knowledge: [MASTG-KNOW-0025, MASTG-KNOW-0x01]
@@ -15,8 +15,8 @@ Sending sensitive data (such as authentication tokens, passwords, or personally 
 
 ## Steps
 
-1. Use @MASTG-TECH-0014 to scan the application's source code or decompiled codebase for implicit intents that carry sensitive extras.
-2. Review the findings to identify if any sensitive data is attached to an implicit intent.
+1. Use @MASTG-TECH-0013 to reverse engineer the app.
+2. Use @MASTG-TECH-0014 to look for the relevant APIs.
 
 ## Observation
 
