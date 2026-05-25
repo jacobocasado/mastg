@@ -3,7 +3,6 @@ id: MASTG-DEMO-0x03
 title: Leaking Sensitive Arguments via Implicit Intents
 platform: android
 code: [kotlin]
-tools: [MASTG-TOOL-0110]
 kind: fail
 ---
 

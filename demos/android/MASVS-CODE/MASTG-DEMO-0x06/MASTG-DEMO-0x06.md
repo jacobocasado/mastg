@@ -4,7 +4,6 @@ title: Attacker App Returning Malicious ContentProvider Filename
 id: MASTG-DEMO-0x06
 code: [kotlin, xml]
 test: MASTG-TEST-0x04
-tools: [MASTG-TOOL-0110]
 kind: info
 ---
 

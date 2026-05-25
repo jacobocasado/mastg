@@ -5,7 +5,7 @@
 └────────────────┘
                            
     MastgTest_reversed.java
-    ❯❱ [1mandroid-implicit-intent-internal-communication[0m
+    ❯❱ android-implicit-intent-internal-communication
           [MASVS-CODE-4] The app uses an implicit intent for internal component communication. Use explicit
           intents by specifying the package or component.                                                  
                                                                                                            
@@ -20,3 +20,4 @@
            30┆ } catch (Exception e) {
            31┆     r.add(Status.ERROR, e.toString());
              [hid 1 additional lines, adjust with --max-lines-per-finding] 
+

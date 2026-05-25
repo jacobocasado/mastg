@@ -9,4 +9,5 @@
           [MASVS-CODE-4] App registers an intent-filter for a custom action. It can intercept implicit intents
           sent by other apps targeting that action.                                                           
                                                                                                               
-           12┆ <action android:name="org.owasp.mastestapp.INTERNAL_ACTION" />
+           16┆ <action android:name="org.owasp.mastestapp.INTERNAL_ACTION" />
+

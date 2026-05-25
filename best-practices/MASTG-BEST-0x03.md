@@ -6,7 +6,7 @@ platform: android
 knowledge: [MASTG-KNOW-0025]
 ---
 
-Avoid declaring internal components with `android:exported="true"` unless absolutely necessary. By default, any component with an `<intent-filter>` is exported, making it reachable by any other application installed on the device.
+Avoid declaring internal components with `android:exported="true"` unless absolutely necessary. By default, [any component with an `<intent-filter>` is exported](https://android.googlesource.com/platform/frameworks/base/+/master/core/res/res/values/attrs_manifest.xml#490), making it reachable by any other application installed on the device.
 
 ## Manifest Configuration
 

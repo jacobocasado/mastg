@@ -3,7 +3,6 @@ id: MASTG-DEMO-0x01
 title: Internal Activity Communication via Implicit Intent
 platform: android
 code: [kotlin, xml]
-tools: [semgrep]
 kind: fail
 ---
 

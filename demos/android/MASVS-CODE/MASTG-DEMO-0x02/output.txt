@@ -5,7 +5,7 @@
 └─────────────────┘
                                                    
     ../MASTG-DEMO-0x01/AndroidManifest_reversed.xml
-    ❯❱ [1mandroid-exported-activity[0m
+    ❯❱ android-exported-activity
           [MASVS-CODE-4] Activity is explicitly exported. Verify whether it should be accessible by external
           apps.                                                                                             
                                                                                                             
@@ -35,3 +35,4 @@
            50┆     android:theme="@android:style/Theme.Material.Light.NoActionBar"
            51┆     android:name="androidx.activity.ComponentActivity"
            52┆     android:exported="true"/>
+

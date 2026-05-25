@@ -3,7 +3,6 @@ id: MASTG-DEMO-0x04
 title: Path Traversal via Malicious ContentProvider Filename
 platform: android
 code: [kotlin]
-tools: [MASTG-TOOL-0001, MASTG-TOOL-0145]
 kind: fail
 ---
 

@@ -12,8 +12,6 @@ All data received from external sources (such as `Intent` extras, `onActivityRes
 
 Prefer `content://` URIs over `file://` URIs. A `content://` URI routes through a `ContentProvider`, which controls exactly what data it exposes. A `file://` URI is resolved directly using the calling app's own process identity and permissions. This means a malicious responding app can return a `file://` URI pointing at any path the calling app can access, which, depending on the permissions the app holds, may go well beyond its own private storage. See @MASTG-KNOW-0x02 for a detailed explanation of how this is exploited.
 
-For `content://` URIs, Android's URI permission grant system provides the actual security guarantee. When a responding app returns a `content://` URI via `setResult`, it must have explicitly granted your app access to that URI (via `FLAG_GRANT_READ_URI_PERMISSION` or `grantUriPermission`). If no grant exists, `ContentResolver.openInputStream` throws a `SecurityException`. This means the OS itself ensures you can only read content the responding app deliberately shared.
-
 ## Sanitize Filenames Provided by External Components
 
 When querying a `ContentProvider` for a display name, sanitize the result before using it as a filename. A malicious provider can return a path-traversal sequence (such as `../lib/native.so`) that redirects writes outside the intended directory. Use `File(name).name` to strip any directory components:
