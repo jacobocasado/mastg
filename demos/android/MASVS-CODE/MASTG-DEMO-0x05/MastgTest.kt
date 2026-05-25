@@ -1,9 +1,20 @@
-package org.owasp.mastestapp.attacker
+package org.owasp.mastestapp
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.TextView
+
+// SUMMARY: This sample demonstrates the risk of processing unsanitized data from implicit intent results.
+class MastgTest(private val context: Context) {
+
+    fun mastgTest(): String {
+        val r = DemoResults("0x05")
+        r.add(Status.FAIL, "This app should be invoked by an implicit intents from MASTG-DEMO-0x01")
+        return r.toJson()
+    }
+}
 
 class AttackerActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {

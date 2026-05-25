@@ -42,7 +42,15 @@ class VulnerableActivity : Activity() {
         File(privateDir, "secret.txt").writeText("Original Secret Content")
 
         val intent = Intent("org.owasp.mastestapp.REQUEST_FILE")
-        startActivityForResult(intent, REQUEST_CODE_GET_CONTENT)
+        try {
+            startActivityForResult(intent, REQUEST_CODE_GET_CONTENT)
+        } catch (e: android.content.ActivityNotFoundException) {
+            val tv = TextView(this)
+            tv.textSize = 18f
+            tv.setPadding(32, 32, 32, 32)
+            tv.text = "No handler found for REQUEST_FILE.\nInstall the attacker app from MASTG-DEMO-0x06 first."
+            setContentView(tv)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

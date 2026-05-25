@@ -3,13 +3,18 @@
 
     <application android:label="Attacker App">
         <activity
-            android:name=".AttackerActivity"
-            android:label="Attacker Intent Interceptor"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".AttackerActivity"
+            android:label="Attacker Intent Interceptor"
+            android:exported="true">
             <intent-filter>
                 <action android:name="org.owasp.mastestapp.REQUEST_FILE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -20,7 +25,8 @@
             android:name=".AttackerContentProvider"
             android:authorities="org.owasp.mastestapp.attacker.provider"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:grantUriPermissions="true">
         </provider>
     </application>
 </manifest>
