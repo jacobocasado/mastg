@@ -62,7 +62,3 @@ val target = File(context.filesDir, name) // resolves to ../lib-main/lib.so
 ```
 
 If the overwritten file is a native library later loaded via [`System.loadLibrary`](https://developer.android.com/reference/java/lang/System#loadLibrary(java.lang.String)) or [`System.load`](https://developer.android.com/reference/java/lang/System#load(java.lang.String)), the attacker's code runs with the app's full process identity. The same applies to `.dex` or `.apk` files loaded dynamically via [`DexClassLoader`](https://developer.android.com/reference/dalvik/system/DexClassLoader). Additionally, when the caller calls `openInputStream`, the system invokes [`ContentProvider.openFile`](https://developer.android.com/reference/android/content/ContentProvider#openFile(android.net.Uri,%20java.lang.String)) and returns a [`ParcelFileDescriptor`](https://developer.android.com/reference/android/os/ParcelFileDescriptor) — the provider controls which file descriptor it returns and can point it at any file it can read, regardless of what the URI path suggests.
-
-## Validation Considerations
-
-Apps that receive URI data from an implicit intent result should check the URI scheme before opening a stream or copying content. Accepting `file://` URIs from an untrusted responder gives that responder control over which file path the calling app reads. Similarly, display names returned by an external `ContentProvider` should be sanitized before use in file path construction.
