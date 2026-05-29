@@ -2,17 +2,17 @@
 platform: ios
 title: Identifying Purpose Strings in Info.plist
 id: MASTG-DEMO-0x01
-code: [swift]
+code: [swift, xml]
 test: MASTG-TEST-0x01
 ---
 
-### Sample
+## Sample
 
 The code snippet below shows sample code that accesses protected resources requiring purpose strings. The `Info.plist` file declares multiple usage descriptions that the app uses to request permissions.
 
 {{ MastgTest.swift # Info.plist }}
 
-### Steps
+## Steps
 
 1. Unzip the app package and locate the `Info.plist` file (@MASTG-TECH-0058), which is located in `./Payload/MASTestApp.app/Info.plist`.
 2. Convert the `Info.plist` to XML format if needed (@MASTG-TECH-0138).
@@ -20,13 +20,13 @@ The code snippet below shows sample code that accesses protected resources requi
 
 {{ run.sh }}
 
-### Observation
+## Observation
 
 The output reveals the purpose strings declared in the app's `Info.plist` file.
 
 {{ output.txt }}
 
-### Evaluation
+## Evaluation
 
 The test fails because the app declares multiple purpose strings that may be excessive for its core functionality:
 

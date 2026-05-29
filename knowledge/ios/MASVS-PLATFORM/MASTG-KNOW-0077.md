@@ -38,6 +38,33 @@ When collecting or simply handling (e.g. caching) sensitive data, an app should 
 
 As you can see, using app capabilities and permissions mostly involve handling personal data, therefore being a matter of protecting the user's privacy. See the articles ["Protecting the User's Privacy"](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy "Protecting the User\'s Privacy") and ["Accessing Protected Resources"](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc "Accessing Protected Resources") in Apple Developer Documentation for more details.
 
+## Modern iOS Permission Model
+
+Current iOS releases combine multiple layers that are easy to confuse during review:
+
+- purpose strings in `Info.plist`, which explain protected-resource access to the user,
+- signed entitlements and capabilities, which enable access to specific platform services or cross-app data sharing, and
+- newer privacy metadata such as [privacy manifests](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files), which complement but do not replace either of the above.
+
+When reviewing app permissions, inspect all of these layers together. A feature may require a purpose string, an entitlement, both, or neither depending on which API the app uses.
+
+Apple increasingly provides user-selected or reduced-scope alternatives to broad library access. For example, photo selection flows can often use [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) or [`PhotosPicker`](https://developer.apple.com/documentation/photosui/photospicker), and many location-driven features can work with [`when in use`](https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services) access instead of persistent background access.
+
+## Purpose Strings and Entitlements in Practice
+
+The deprecated test @MASTG-TEST-0069 covered four areas that still matter during assessment:
+
+- purpose strings in `Info.plist`,
+- the app's signed entitlements,
+- the embedded provisioning profile when present, and
+- the actual code paths that use the protected resource or capability.
+
+The dedicated v2 tests split these concerns so each one can stay focused:
+
+- @MASTG-TEST-0x01 for `Info.plist` purpose strings,
+- @MASTG-TEST-0x02 for runtime authorization APIs, and
+- @MASTG-TEST-0x03 for entitlements and related capabilities.
+
 ## Device Capabilities
 
 Device capabilities are used by the App Store to ensure that only compatible devices are listed and therefore are allowed to download the app. They are specified in the `Info.plist` file of the app under the [`UIRequiredDeviceCapabilities`](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/plist/info/UIRequiredDeviceCapabilities "UIRequiredDeviceCapabilities") key.
@@ -60,11 +87,11 @@ For example, if BLE is a core feature of the app, Apple's [Core Bluetooth Progra
 - The `bluetooth-le` device capability can be set in order to _restrict_ non-BLE capable devices from downloading their app.
 - App capabilities like `bluetooth-peripheral` or `bluetooth-central` (both `UIBackgroundModes`) should be added if [BLE background processing](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html "Core Bluetooth Background Processing for iOS Apps") is required.
 
-However, this is not yet enough for the app to get access to the Bluetooth peripheral, the `NSBluetoothPeripheralUsageDescription` key has to be included in the `Info.plist` file, meaning that the user has to actively give permission. See "Purpose Strings in the Info.plist File" below for more information.
+However, this is not yet enough for the app to get access to Bluetooth-related features. On current iOS releases, the relevant purpose string is typically `NSBluetoothAlwaysUsageDescription`, meaning that the user still has to actively grant permission. See "Purpose Strings in the Info.plist File" below for more information.
 
 ## Entitlements
 
-According to [Apple's iOS Security Guide](https://www.apple.com/business/site/docs/iOS_Security_Guide.pdf "iOS Security Guide"):
+According to [Apple Platform Security](https://support.apple.com/guide/security/welcome/web):
 
 > Entitlements are key value pairs that are signed in to an app and allow authentication beyond runtime factors, like UNIX user ID. Since entitlements are digitally signed, they can't be changed. Entitlements are used extensively by system apps and daemons to perform specific privileged operations that would otherwise require the process to run as root. This greatly reduces the potential for privilege escalation by a compromised system app or daemon.
 
@@ -104,13 +131,13 @@ For other capabilities such as HealthKit, the user has to be asked for permissio
 
 ## Purpose Strings in the Info.plist File
 
-[_Purpose strings_](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc#3037322 "Provide a Purpose String") or_usage description strings_ are custom texts that are offered to users in the system's permission request alert when requesting permission to access protected data or resources.
+[_Purpose strings_](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc#3037322 "Provide a Purpose String") or _usage description strings_ are custom texts that are offered to users in the system's permission request alert when requesting permission to access protected data or resources.
 
 <img src="Images/Chapters/0x06h/permission_request_alert.png" width="400px" />
 
 If linking on or after iOS 10, developers are required to include purpose strings in their app's [`Info.plist`](https://developer.apple.com/library/archive/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/ExpectedAppBehaviors/ExpectedAppBehaviors.html#//apple_ref/doc/uid/TP40007072-CH3-SW5 "The Information Property List File") file. Otherwise, if the app attempts to access protected data or resources without having provided the corresponding purpose string, [the access will fail and the app might even crash](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc "Accessing Protected Resources").
 
-For an overview of the different _purpose strings Info.plist keys_ available see Table 1-2 at the [Apple App Programming Guide for iOS](https://developer.apple.com/library/archive/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/ExpectedAppBehaviors/ExpectedAppBehaviors.html#//apple_ref/doc/uid/TP40007072-CH3-SW7 "Data and resources protected by system authorization settings"). Click on the provided links to see the full description of each key in the [CocoaKeys reference](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html "Cocoa Keys").
+For an overview of the currently supported _purpose string Info.plist keys_, use Apple's [Bundle Resources](https://developer.apple.com/documentation/bundleresources/information_property_list) documentation together with the protected-resource API documentation for the framework under review. Examples of current keys include `NSPhotoLibraryAddUsageDescription`, `NSLocationAlwaysAndWhenInUseUsageDescription`, and `NSBluetoothAlwaysUsageDescription`.
 
 ## Code Signing Entitlements File
 

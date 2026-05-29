@@ -6,13 +6,13 @@ code: [swift]
 test: MASTG-TEST-0x02
 ---
 
-### Sample
+## Sample
 
-This demo uses the same sample as @MASTG-DEMO-0076.
+This demo uses the same sample as @MASTG-DEMO-0x01.
 
-{{ ../MASTG-DEMO-0076/MastgTest.swift }}
+{{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
-### Steps
+## Steps
 
 1. Install the app on a device (@MASTG-TECH-0056).
 2. Make sure you have @MASTG-TOOL-0039 installed on your machine and the frida-server running on the device.
@@ -22,7 +22,7 @@ This demo uses the same sample as @MASTG-DEMO-0076.
 
 {{ run.sh # script.js }}
 
-### Observation
+## Observation
 
 The output reveals the authorization APIs being called at runtime:
 
@@ -34,11 +34,11 @@ The trace shows:
 - `CNContactStore.authorizationStatusForEntityType` was called, returning `authorized` (3).
 - `PHPhotoLibrary.authorizationStatus` was called, returning `authorized` (3).
 
-### Evaluation
+## Evaluation
 
 The test fails because the app actively checks all declared permissions at runtime.
 
-Cross-reference these runtime calls with the purpose strings from @MASTG-DEMO-0076 to verify:
+Cross-reference these runtime calls with the purpose strings from @MASTG-DEMO-0x01 to verify:
 
 1. Every permission declared in `Info.plist` is actually used.
 2. The authorization levels match expected behavior (e.g., location is "when in use" not "always").

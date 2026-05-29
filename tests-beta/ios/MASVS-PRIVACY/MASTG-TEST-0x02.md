@@ -1,37 +1,29 @@
 ---
-title: Runtime Permission Usage Verification
+title: Runtime Use of Protected Resource Authorization APIs
 platform: ios
 id: MASTG-TEST-0x02
-type: [dynamic]
+type: [dynamic, hooks, manual]
 weakness: MASWE-0117
 profiles: [P]
+best-practices: [MASTG-BEST-0x01]
+knowledge: [MASTG-KNOW-0077]
 ---
 
 ## Overview
 
-This test is the dynamic counterpart to @MASTG-TEST-0313.
+This test is the dynamic counterpart to @MASTG-TEST-0x01.
 
-While static analysis identifies declared purpose strings, dynamic analysis verifies which permissions the app actually uses at runtime. This helps identify whether the app requests permissions it doesn't use, or whether it accesses protected resources in unexpected ways.
-
-iOS apps check authorization status before accessing protected resources using dedicated APIs from system frameworks. By tracing these APIs at runtime, you can understand which permissions are actually exercised during normal app usage.
+If an iOS app checks or requests access to protected resources in contexts that do not match its declared purpose strings or feature set, it may access personal data unexpectedly. This test verifies which authorization APIs the app actually reaches at runtime and whether those calls match the declared permissions and user-visible functionality.
 
 ## Steps
 
-1. Identify the purpose strings declared by the app (see @MASTG-TEST-0313).
-2. Map each purpose string to its corresponding system framework and authorization APIs:
-    - Location: `CLLocationManager` methods such as `authorizationStatus`, `requestWhenInUseAuthorization`
-    - Camera: `AVCaptureDevice.authorizationStatus(for:)`
-    - Contacts: `CNContactStore.authorizationStatus(for:)`
-    - Photos: `PHPhotoLibrary.authorizationStatus()`
-    - Calendar: `EKEventStore.authorizationStatus(for:)`
-    - Microphone: `AVAudioSession.recordPermission`
-    - Health: `HKHealthStore.authorizationStatus(for:)`
-3. Use @MASTG-TOOL-0001 to trace authorization-related methods.
-4. Exercise the app's features that should trigger the identified permissions.
+1. Use @MASTG-TEST-0x01 to identify the purpose strings declared by the app.
+2. Use @MASTG-TECH-0095 to hook the authorization and permission-request APIs associated with those purpose strings.
+3. Exercise the app's relevant features and record which authorization APIs are called, their return values, and the backtraces of relevant calls.
 
 ## Observation
 
-The output should contain a list of authorization-related methods that were called during app usage, including:
+The output should contain a list of authorization-related methods that were called during app usage, for example:
 
 - Method names and classes
 - Return values (authorization status)
@@ -39,10 +31,20 @@ The output should contain a list of authorization-related methods that were call
 
 ## Evaluation
 
-The test fails if:
+The test case fails if runtime traces show permission checks or requests that do not match the app's declared features or its stated purpose strings.
 
-- The app declares permissions it never uses at runtime, indicating unnecessary data collection declarations.
-- The app accesses protected resources in contexts that don't match the stated purpose string.
-- Authorization checks reveal the app has broader access than expected (e.g., "always" location instead of "when in use").
+Examples include:
 
-Cross-reference the runtime observations with the declared purpose strings to ensure the app only accesses resources it has legitimately declared and uses them appropriately.
+- The app requests or checks access for a protected resource in a feature that users would not reasonably expect.
+- The app requests broader access than needed, for example "always" location access when "when in use" would suffice.
+- The backtrace shows sensitive resource access in code paths that are unrelated to the feature described in the purpose string.
+
+**Further Validation Required:**
+
+Use the observed backtraces to inspect the relevant code with @MASTG-TECH-0076 and determine:
+
+- whether the traced authorization calls lead to actual access to the protected data or capability,
+- whether the surrounding feature genuinely requires that access, and
+- whether the app could use a narrower or user-selected alternative instead.
+
+Do not treat the absence of a trace during one execution as proof that a declared permission is unused. Optional flows, dormant code, and region-specific features may require deeper static review.

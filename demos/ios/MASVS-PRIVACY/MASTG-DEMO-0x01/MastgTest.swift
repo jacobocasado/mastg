@@ -7,14 +7,14 @@ import Photos
 
 struct MastgTest {
     static func mastgTest(completion: @escaping (String) -> Void) {
-        // FAIL: [MASTG-TEST-0313] The app declares NSLocationWhenInUseUsageDescription but the permission may be excessive for its functionality.
+        // FAIL: [MASTG-TEST-0x01] The app declares NSLocationWhenInUseUsageDescription but the permission may be excessive for its functionality.
         let locationManager = CLLocationManager()
         let locationStatus = locationManager.authorizationStatus
         
-        // FAIL: [MASTG-TEST-0313] The app declares NSContactsUsageDescription but the permission may be excessive for its functionality.
+        // FAIL: [MASTG-TEST-0x01] The app declares NSContactsUsageDescription but the permission may be excessive for its functionality.
         let contactsStatus = CNContactStore.authorizationStatus(for: .contacts)
         
-        // FAIL: [MASTG-TEST-0313] The app declares NSPhotoLibraryUsageDescription but the permission may be excessive for its functionality.
+        // FAIL: [MASTG-TEST-0x01] The app declares NSPhotoLibraryUsageDescription but the permission may be excessive for its functionality.
         let photosStatus = PHPhotoLibrary.authorizationStatus()
         
         let result = """
