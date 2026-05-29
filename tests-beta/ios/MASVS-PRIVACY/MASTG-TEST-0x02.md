@@ -1,7 +1,7 @@
 ---
 title: Runtime Permission Usage Verification
 platform: ios
-id: MASTG-TEST-0314
+id: MASTG-TEST-0x02
 type: [dynamic]
 weakness: MASWE-0117
 profiles: [P]

@@ -1,9 +1,9 @@
 ---
 platform: ios
 title: Identifying Purpose Strings in Info.plist
-id: MASTG-DEMO-0076
+id: MASTG-DEMO-0x01
 code: [swift]
-test: MASTG-TEST-0313
+test: MASTG-TEST-0x01
 ---
 
 ### Sample

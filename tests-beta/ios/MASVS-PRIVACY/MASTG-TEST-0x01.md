@@ -1,7 +1,7 @@
 ---
 title: Purpose Strings in Info.plist
 platform: ios
-id: MASTG-TEST-0313
+id: MASTG-TEST-0x01
 type: [static]
 weakness: MASWE-0117
 profiles: [P]

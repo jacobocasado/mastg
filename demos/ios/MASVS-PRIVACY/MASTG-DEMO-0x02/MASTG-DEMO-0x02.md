@@ -1,9 +1,9 @@
 ---
 platform: ios
 title: Runtime Permission Usage Verification with Frida
-id: MASTG-DEMO-0077
+id: MASTG-DEMO-0x02
 code: [swift]
-test: MASTG-TEST-0314
+test: MASTG-TEST-0x02
 ---
 
 ### Sample
