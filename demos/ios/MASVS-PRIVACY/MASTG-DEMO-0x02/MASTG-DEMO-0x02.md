@@ -8,7 +8,7 @@ test: MASTG-TEST-0x02
 
 ## Sample
 
-This demo uses the same sample as @MASTG-DEMO-0x01.
+This demo uses the same sample as the static purpose-string demo in this folder.
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
@@ -38,7 +38,7 @@ The trace shows:
 
 The test fails because the app actively checks all declared permissions at runtime.
 
-Cross-reference these runtime calls with the purpose strings from @MASTG-DEMO-0x01 to verify:
+Cross-reference these runtime calls with the purpose strings extracted in the static demo to verify:
 
 1. Every permission declared in `Info.plist` is actually used.
 2. The authorization levels match expected behavior (e.g., location is "when in use" not "always").
