@@ -107,7 +107,7 @@ Depending on the data to-be-shared it might be more appropriate to share it usin
 [Xcode Capabilities](https://developer.apple.com/documentation/Xcode/capabilities) are features/services you enable for your app that require entitlements and provisioning profile configuration, such as Push Notifications, iCloud, In-App Purchase, Apple Pay, Sign in with Apple, Game Center, etc. They are configured in Xcode's "Signing & Capabilities" tab and generate entitlements in the app's `.entitlements` file. When reviewing an IPA, these are visible as entitlements in `embedded.mobileprovision` and the app binary.
 
 !!! "note"
-    The terms "capabilities" and "entitlements" are often used interchangeably but refer to different things: *Capabilities* is the Xcode UI concept (the toggle you enable); *entitlements* are the resulting key-value pairs in the signed artifact. When reviewing an IPA, you are always looking at entitlements, as the Xcode capabilities that produced them are not visible in the build output.
+    The terms "capabilities" and "entitlements" are often used interchangeably but refer to different things: _Capabilities_ is the Xcode UI concept (the toggle you enable); _entitlements_ are the resulting key-value pairs in the signed artifact. When reviewing an IPA, you are always looking at entitlements, as the Xcode capabilities that produced them are not visible in the build output.
 
 ## Required Device Capabilities
 

@@ -8,7 +8,7 @@ test: MASTG-TEST-0x03
 
 ## Sample
 
-The sample below includes the `com.apple.developer.healthkit` entitlement, which allows the app to request user authorization for HealthKit access, which is a privacy-relevant capability. This entitlement does not by itself prove that the app has accessed health data, because HealthKit access still requires runtime authorization for specific data types. The entitlement should be reviewed together with the app’s Info.plist usage descriptions, linked HealthKit APIs, authorization request code, and any evidence of HealthKit data processing or transmission.
+The sample below includes the `com.apple.developer.healthkit` entitlement, which allows the app to request user authorization for HealthKit access, which is a privacy-relevant capability. This entitlement does not by itself prove that the app has accessed health data, because HealthKit access still requires runtime authorization for specific data types. The entitlement should be reviewed together with the app's Info.plist usage descriptions, linked HealthKit APIs, authorization request code, and any evidence of HealthKit data processing or transmission.
 
 For this demo, we assume that the app does not have any health-related features, so this entitlement is unnecessary and represents a privacy concern.
 
