@@ -1,9 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
+# Extract the entitlements from the app's main binary (see @MASTG-TECH-0111).
+# A pipeline/simulator build is pseudo-signed and has no embedded.mobileprovision,
+# so the binary's code signature is the reliable source of entitlements.
 rabin2 -OC MASTestApp > entitlements_reversed.plist
 
-INPUT="${1:-entitlements.plist}"
+INPUT="${1:-entitlements_reversed.plist}"
 OUTPUT="${2:-output.txt}"
 
 # Apple entitlement catalog:
@@ -22,11 +25,13 @@ if [[ ! -f "$INPUT" ]]; then
   exit 1
 fi
 
-tmp_xml="$(mktemp)"
+tmp_plist="$(mktemp)"
 tmp_keys="$(mktemp)"
-trap 'rm -f "$tmp_xml" "$tmp_keys"' EXIT
+trap 'rm -f "$tmp_plist" "$tmp_keys"' EXIT
 
-plutil -convert xml1 -o "$tmp_xml" "$INPUT"
+# rabin2 -OC may append a DER dump after the </plist> tag. Keep only the embedded
+# plist so the grep below reports the real <key> entries and their file line numbers.
+sed -n '1,/<\/plist>/p' "$INPUT" > "$tmp_plist"
 
 cat > "$tmp_keys" <<'EOF'
 aps-environment
@@ -70,9 +75,9 @@ com.apple.developer.voip-push-notification
 EOF
 
 {
-  echo "iOS privacy relevant entitlement matches in: $INPUT"
+  echo "iOS privacy-relevant entitlement matches in: $INPUT"
   echo
-  grep -nF -f "$tmp_keys" "$tmp_xml" || true
+  grep -nF -f "$tmp_keys" "$tmp_plist" || true
 } > "$OUTPUT"
 
 echo "Wrote $OUTPUT"
