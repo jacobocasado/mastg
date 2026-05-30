@@ -13,8 +13,8 @@ You can detect popular reverse engineering tools that have been installed in an 
 
 The following steps should guide you when bypassing detection of reverse engineering tools:
 
-1. Patch the anti reverse engineering functionality. Disable the unwanted behavior by patching the binary through usage of radare2/[iaito](https://github.com/radareorg/iaito "iaito") or Ghidra.
-2. Use Frida or ElleKit to hook file system APIs on the Objective-C/Swift or native layers. Return a handle to the original file, not the modified file.
+1. Patch the anti reverse engineering functionality. Disable the unwanted behavior by patching the binary through usage of @MASTG-TOOL-0073/@MASTG-TOOL-0098 or @MASTG-TOOL-0033.
+2. Use @MASTG-TOOL-0039 or @MASTG-TOOL-0139 to hook file system APIs on the Objective-C/Swift or native layers. Return a handle to the original file, not the modified file.
 
 ## Frida Detection
 
