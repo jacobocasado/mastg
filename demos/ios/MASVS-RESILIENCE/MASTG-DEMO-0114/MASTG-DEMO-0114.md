@@ -11,6 +11,9 @@ kind: fail
 
 This sample encrypts and decrypts a sensitive API key using CommonCrypto's `CCCrypt`. The app does not implement any runtime hook detection mechanisms. On the contrary, @MASTG-DEMO-0115 demonstrates a runtime hook detection mechanism.
 
+!!! note "Environment"
+    This demo was tested on an iPhone running iOS 16.7.10 (jailbroken with Dopamine 2.4.9) using Xcode 26.2.9.
+
 !!! note
     This is a series of correlated tests.
 
