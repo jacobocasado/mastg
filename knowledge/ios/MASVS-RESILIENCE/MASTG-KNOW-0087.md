@@ -9,6 +9,13 @@ The presence of tools, frameworks and apps commonly used by reverse engineers ma
 
 You can detect popular reverse engineering tools that have been installed in an unmodified form by looking for associated application packages, files, processes, or other tool-specific modifications and artifacts. In the following examples, we'll discuss different ways to detect the Frida instrumentation framework, which is used extensively in this guide and also in the real world. Other tools, such as ElleKit, can be detected similarly. Note that injection, hooking and DBI (Dynamic Binary Instrumentation) tools can often be detected implicitly, through runtime integrity checks, which are discussed below.
 
+**Bypass:**
+
+The following steps should guide you when bypassing detection of reverse engineering tools:
+
+1. Patch the anti reverse engineering functionality. Disable the unwanted behavior by patching the binary through usage of radare2/[iaito](https://github.com/radareorg/iaito "iaito") or Ghidra.
+2. Use Frida or ElleKit to hook file system APIs on the Objective-C/Swift or native layers. Return a handle to the original file, not the modified file.
+
 ## Frida Detection
 
 Frida runs under the name of frida-server in its default configuration (injected mode) on a jailbroken device. When you explicitly attach to a target app (e.g. via frida-trace or the Frida CLI), Frida injects a frida-agent into the memory of the app. Therefore, you may expect to find it there after attaching to the app (and not before). On Android, verifying this is pretty straightforward as you can simply grep for the string "frida" in the memory maps of the process ID in the `proc` directory (`/proc/<pid>/maps`).
@@ -52,5 +59,3 @@ Please remember that this table is far from exhaustive. For example, two other p
 - detecting [trampolines](https://en.wikipedia.org/wiki/Trampoline_%28computing%29 "Trampolines") (see ["Prevent bypassing of SSL certificate pinning in iOS applications"](https://www.guardsquare.com/en/blog/iOS-SSL-certificate-pinning-bypassing "Prevent bypassing of SSL certificate pinning in iOS applications") for further explanation and sample code for detection of trampolines in an iOS app)
 
 Both would help to detect ElleKit or Frida's Interceptor but, for example, won't be effective against Frida's Stalker. Remember that the success of each of these detection methods will depend on whether you're using a jailbroken device, the specific version of the jailbreak and method and/or the version of the tool itself. At the end, this is part of the cat and mouse game of protecting data being processed on an uncontrolled environment (the end user's device).
-
-@MASTG-TECH-0095 describes how to hook methods with Frida on iOS. Understanding these hooking mechanisms is essential for evaluating the effectiveness of the detection methods discussed in this document.
