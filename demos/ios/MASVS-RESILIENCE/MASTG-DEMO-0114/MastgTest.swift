@@ -1,17 +1,12 @@
-// SUMMARY: This sample demonstrates runtime hook detection before sensitive cryptographic operations by checking for local Frida ports responding to D-Bus AUTH.
+// SUMMARY: This sample demonstrates a sensitive cryptographic operation that can be intercepted at runtime because the app does not implement runtime hook detection.
 
 import SwiftUI
 import Foundation
 import CommonCrypto
 import Security
-import Darwin
 
 class MastgTest {
     static func mastgTest(completion: @escaping (String) -> Void) {
-        if detectHooking() {
-            exit(0)
-        }
-
         completion(runCryptoDemo())
     }
 
@@ -24,11 +19,7 @@ class MastgTest {
             return "Error: Could not generate IV."
         }
 
-        if detectHooking() {
-            exit(0)
-        }
-
-        // PASS: [MASTG-TEST-0x01] The app checks for runtime hooks before calling CCCrypt with sensitive data.
+        // FAIL: [MASTG-TEST-0350] The app calls CCCrypt with sensitive data without detecting runtime hooks.
         guard let encryptedData = crypt(
             operation: CCOperation(kCCEncrypt),
             data: plaintext,
@@ -38,11 +29,7 @@ class MastgTest {
             return "Error: Encryption failed."
         }
 
-        if detectHooking() {
-            exit(0)
-        }
-
-        // PASS: [MASTG-TEST-0x01] The app checks for runtime hooks before decrypting sensitive data.
+        // FAIL: [MASTG-TEST-0350] The app decrypts sensitive data without detecting runtime hooks.
         guard let decryptedData = crypt(
             operation: CCOperation(kCCDecrypt),
             data: encryptedData,
@@ -58,60 +45,6 @@ class MastgTest {
         Encrypted: \(encryptedData.base64EncodedString())
         Decrypted: \(decryptedString)
         """
-    }
-
-    private static func detectHooking() -> Bool {
-        let ports: [in_port_t] = [27042]
-        return ports.contains(where: respondsToDBusAuth)
-    }
-
-    private static func respondsToDBusAuth(_ port: in_port_t) -> Bool {
-        let descriptor = socket(AF_INET, SOCK_STREAM, 0)
-        guard descriptor >= 0 else {
-            return false
-        }
-
-        defer {
-            close(descriptor)
-        }
-
-        var timeout = timeval(tv_sec: 1, tv_usec: 0)
-        setsockopt(descriptor, SOL_SOCKET, SO_RCVTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
-        setsockopt(descriptor, SOL_SOCKET, SO_SNDTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
-
-        var address = sockaddr_in()
-        address.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
-        address.sin_family = sa_family_t(AF_INET)
-        address.sin_port = port.bigEndian
-        address.sin_addr = in_addr(s_addr: inet_addr("127.0.0.1"))
-
-        let connected = withUnsafePointer(to: &address) { pointer in
-            pointer.withMemoryRebound(to: sockaddr.self, capacity: 1) { socketAddress in
-                connect(descriptor, socketAddress, socklen_t(MemoryLayout<sockaddr_in>.size)) == 0
-            }
-        }
-
-        guard connected else {
-            return false
-        }
-
-        let authProbe = [UInt8]("\0AUTH\r\n".utf8)
-        let sent = authProbe.withUnsafeBytes { buffer in
-            send(descriptor, buffer.baseAddress, buffer.count, 0)
-        }
-
-        guard sent == authProbe.count else {
-            return false
-        }
-
-        var response = [UInt8](repeating: 0, count: 256)
-        let received = recv(descriptor, &response, response.count, 0)
-        guard received > 0 else {
-            return false
-        }
-
-        let responseText = String(decoding: response.prefix(received), as: UTF8.self).uppercased()
-        return responseText.contains("REJECTED") || responseText.contains("OK")
     }
 
     private static func randomBytes(count: Int) -> Data? {

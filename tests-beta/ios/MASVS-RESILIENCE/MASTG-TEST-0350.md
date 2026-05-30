@@ -1,12 +1,12 @@
 ---
 platform: ios
 title: Testing Runtime Hook Detection
-id: MASTG-TEST-0x01
+id: MASTG-TEST-0350
 type: [dynamic, hooks]
 weakness: MASWE-0107
 profiles: [R]
 knowledge: [MASTG-KNOW-0087]
-best-practices: [MASTG-BEST-0x01]
+best-practices: [MASTG-BEST-0048]
 prerequisites:
   - identify-sensitive-data
 ---
@@ -25,7 +25,7 @@ This test verifies whether the app detects and responds to instrumentation and h
     This list is just indicative, and each app may have its own defensive response mechanisms.
 
 !!! note "Out of Scope"
-    This test does not assess the robustness or bypass-resistance of the hook detection mechanisms. Detection methods and bypass techniques evolve continuously, and determined attackers with sufficient time and resources can circumvent these protections, for example, by using advanced instrumentation mechanisms. These techniques should be part of a defense-in-depth strategy, not a standalone solution. See @MASTG-BEST-0x01 for best practices on implementing effective runtime hook detection.
+    This test does not assess the robustness or bypass-resistance of the hook detection mechanisms. Detection methods and bypass techniques evolve continuously, and determined attackers with sufficient time and resources can circumvent these protections, for example, by using advanced instrumentation mechanisms. These techniques should be part of a defense-in-depth strategy, not a standalone solution. See @MASTG-BEST-0048 for best practices on implementing effective runtime hook detection.
 
 ## Steps
 

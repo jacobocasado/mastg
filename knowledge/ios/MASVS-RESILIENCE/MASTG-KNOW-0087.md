@@ -2,7 +2,7 @@
 masvs_category: MASVS-RESILIENCE
 platform: ios
 title: Reverse Engineering Tools Detection
-best-practices: [MASTG-BEST-0x01]
+best-practices: [MASTG-BEST-0048]
 ---
 
 The presence of tools, frameworks and apps commonly used by reverse engineers may indicate an attempt to reverse engineer the app. Some of these tools can only run on a jailbroken device, while others force the app into debugging mode or depend on starting a background service on the mobile phone. Therefore, there are different ways that an app may implement to detect a reverse engineering attack and react to it, e.g. by terminating itself.
