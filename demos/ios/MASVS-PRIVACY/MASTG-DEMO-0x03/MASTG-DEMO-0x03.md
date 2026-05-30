@@ -12,7 +12,7 @@ The sample below includes the `com.apple.developer.healthkit` entitlement, which
 
 For this demo, we assume that the app does not have any health-related features, so this entitlement is unnecessary and represents a privacy concern.
 
-{{ entitlements.plist # entitlements_reversed.plist }}
+{{ MASTestApp.entitlements # entitlements_reversed.plist }}
 
 ## Steps
 
