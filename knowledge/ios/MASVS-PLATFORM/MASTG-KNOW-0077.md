@@ -4,33 +4,18 @@ platform: ios
 title: App Permissions
 ---
 
-In contrast to Android, where each app runs on its own user ID, iOS makes all third-party apps run under the non-privileged `mobile` user. Each app has a unique home directory and is sandboxed, so that they cannot access protected system resources or files stored by the system or by other apps. These restrictions are implemented via sandbox policies (aka. _profiles_), which are enforced by the [Trusted BSD (MAC) Mandatory Access Control Framework](http://www.trustedbsd.org/mac.html "TrustedBSD Mandatory Access Control (MAC) Framework") via a kernel extension. iOS applies a generic sandbox profile to all third-party apps called _container_. Access to protected resources or data (some also known as [app capabilities](https://developer.apple.com/support/app-capabilities/ "Advanced App Capabilities")) is possible, but it's strictly controlled via special permissions known as _entitlements_.
+iOS permissions work differently from Android. On Android, permissions are declared in a manifest and granted at install time or via runtime prompts. On iOS, access control is a layered model that is worth understanding before diving into individual checks.
 
-Some permissions can be configured by the app's developers (e.g. Data Protection or Keychain Sharing) and will directly take effect after the installation. However, for others, the user will be explicitly asked the first time the app attempts to access a protected resource, [for example](https://developer.apple.com/library/archive/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/ExpectedAppBehaviors/ExpectedAppBehaviors.html#//apple_ref/doc/uid/TP40007072-CH3-SW7 "Data and resources protected by system authorization settings"):
+All third-party iOS apps run under the non-privileged `mobile` user and are sandboxed via policies enforced by the [Trusted BSD (MAC) Mandatory Access Control Framework](http://www.trustedbsd.org/mac.html "TrustedBSD Mandatory Access Control (MAC) Framework"). This baseline sandboxing is not the same as "permissions": it applies to every app automatically, without any developer configuration or user interaction. Access to resources beyond the sandbox is controlled through three distinct mechanisms (entitlements, purpose strings, and runtime authorization), each of which is described in the sections below.
 
-- Bluetooth peripherals
-- Calendar data
-- Camera
-- Contacts
-- Health sharing
-- Health updating
-- HomeKit
-- Location
-- Microphone
-- Motion
-- Music and the media library
-- Photos
-- Reminders
-- Siri
-- Speech recognition
-- the TV provider
+A practical consequence of this model is that not all "permissions" are visible to or granted by the user. Some are purely developer-side configuration that takes effect at install time (e.g. enabling Data Protection or Keychain Sharing via entitlements), while others require an explicit user prompt at runtime. Resources that require a [runtime authorization prompt](https://developer.apple.com/documentation/uikit/requesting-access-to-protected-resources "Requesting access to protected resources") include camera, microphone, location, contacts, calendar, photos, health, Bluetooth, motion, and speech recognition, among others.
 
-Even though Apple urges to protect the privacy of the user and to be [very clear on how to ask permissions](https://developer.apple.com/design/human-interface-guidelines/privacy "Requesting Permission"), it can still be the case that an app requests too many of them for non-obvious reasons.
+Even though Apple urges developers to protect user privacy and to be [very clear on how to ask permissions](https://developer.apple.com/design/human-interface-guidelines/privacy "Requesting Permission"), it can still be the case that an app requests too many of them for non-obvious reasons.
 
 Verifying the use of some permissions such as Camera, Photos, Calendar Data, Motion, Contacts or Speech Recognition should be pretty straightforward as it should be obvious if the app requires them to fulfill its tasks. Let's consider the following examples regarding the Photos permission, which, if granted, gives the app access to all user photos in the "Camera Roll" (the iOS default system-wide location for storing photos):
 
 - The typical QR Code scanning app obviously requires the camera to function but might be requesting the photos permission as well. If storage is explicitly required, and depending on the sensitivity of the pictures being taken, these apps might better opt to use the app sandbox storage to avoid other apps (having the photos permission) to access them.
-- Some apps require photo uploads (e.g. for profile pictures). Recent versions of iOS introduce new APIs such as [`UIImagePickerController`](https://developer.apple.com/documentation/uikit/uiimagepickercontroller "UIImagePickerController") (iOS 11+) and its modern [replacement](https://developer.apple.com/videos/play/wwdc2020/10652/ "replacement") [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller "PHPickerViewController") (iOS 14+). These APIs run on a separate process from your app and by using them, the app gets read-only access exclusively to the images selected by the user instead of to the whole "Camera Roll". This is considered a best practice to avoid requesting unnecessary permissions.
+- Some apps require photo uploads (e.g. for profile pictures). Use [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller "PHPickerViewController") (iOS 14+) or [`PhotosPicker`](https://developer.apple.com/documentation/photosui/photospicker) (iOS 16+, SwiftUI). These APIs run in a separate process and give the app read-only access exclusively to the images selected by the user, rather than the entire photo library. This is the preferred approach to avoid requesting unnecessary permissions.
 
 Verifying other permissions like Bluetooth or Location require a deeper source code inspection. They may be required for the app to properly function but the data being handled by those tasks might not be properly protected.
 
@@ -38,67 +23,34 @@ When collecting or simply handling (e.g. caching) sensitive data, an app should 
 
 As you can see, using app capabilities and permissions mostly involve handling personal data, therefore being a matter of protecting the user's privacy. See the articles ["Protecting the User's Privacy"](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy) and ["Accessing Protected Resources"](https://developer.apple.com/documentation/uikit/requesting-access-to-protected-resources) in Apple Developer Documentation for more details.
 
-## Modern iOS Permission Model
+## Permission Model Overview
 
 Current iOS releases combine multiple layers that are easy to confuse during review:
 
-- purpose strings in `Info.plist`, which explain protected-resource access to the user,
-- signed entitlements and capabilities, which enable access to specific platform services or cross-app data sharing, and
-- runtime authorization APIs, which request user permission for specific data types or operations.
-
-When reviewing app permissions, inspect all of these layers together. A feature may require a purpose string, an entitlement, both, or neither depending on which API the app uses.
+- **Usage description strings** (purpose strings) in `Info.plist`, which explain protected-resource access to the user and are required before the system will show an authorization prompt.
+- **Entitlements**, signed key-value pairs that enable access to specific platform services or cross-app data sharing.
+- **Authorization requests** at runtime, where the system prompts the user to grant or deny access to a specific resource.
+When reviewing app permissions, inspect all of these layers together. A feature may require a usage description, an entitlement, both, or neither depending on which API the app uses.
 
 Apple increasingly provides user-selected or reduced-scope alternatives to broad library access. For example, photo selection flows can often use [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) or [`PhotosPicker`](https://developer.apple.com/documentation/photosui/photospicker), and many location-driven features can work with [`when in use`](https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services) access instead of persistent background access.
 
-## Xcode Capabilities
+## Usage Description Strings (Purpose Strings) in Info.plist
 
-[Xcode Capabilities](https://developer.apple.com/documentation/Xcode/capabilities) are features/services you enable for your app that require entitlements and provisioning profile configuration. For example, things like Push Notifications, iCloud, In-App Purchase, Apple Pay, Sign in with Apple, Game Center, etc. These are about what your app is allowed to do on Apple's infrastructure, and they're configured in Xcode's "Signing & Capabilities" tab. They generate entitlements in the app's `.entitlements` file.
+[_Usage description strings_](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc#3037322 "Provide a Purpose String") (also called _purpose strings_) are custom texts that are offered to users in the system's permission request alert when requesting permission to access protected data or resources.
 
-## Required Device Capabilities
+<img src="Images/Chapters/0x06h/permission_request_alert.png" width="400px" />
 
-[`UIRequiredDeviceCapabilities`](https://developer.apple.com/documentation/bundleresources/information-property-list/uirequireddevicecapabilities) (in Info.plist) tells the App Store what hardware or software features the device must have to run your app at all. Examples: `arkit`, `camera-flash`, `gps`, `nfc`, `gyroscope`, `metal`, etc. It's used to filter out incompatible devices on the App Store, so users on devices lacking those capabilities simply won't see or be able to install your app.
+If linking on or after iOS 10, developers are required to include purpose strings in their app's [`Info.plist`](https://developer.apple.com/library/archive/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/ExpectedAppBehaviors/ExpectedAppBehaviors.html#//apple_ref/doc/uid/TP40007072-CH3-SW5 "The Information Property List File") file. Otherwise, if the app attempts to access protected data or resources without having provided the corresponding purpose string, [the access will fail and the app might even crash](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc "Accessing Protected Resources").
 
-You can verify which devices support a given capability by checking Apple's [Required Device Capabilities](https://developer.apple.com/support/required-device-capabilities/) page.
-
-For example, an app such as ["NFC Tag Reader"](https://itunes.apple.com/us/app/nfc-taginfo-by-nxp/id1246143596 "NFC TagInfo by NXP") is completely dependent on NFC to work, so it includes `nfc` in its `UIRequiredDeviceCapabilities`. This means that users on devices without NFC (e.g. iPhone 6) won't even see the app on the App Store, while users on compatible devices (e.g. iPhone 7 and later) can install it and use its features.
-
-Unlike entitlements, required device capabilities do not confer any right or access to protected resources. Additional configuration steps might be required for that, which are very specific to each capability.
-
-For example, if BLE is a core feature of the app, Apple's [Core Bluetooth Programming Guide](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothOverview/CoreBluetoothOverview.html#//apple_ref/doc/uid/TP40013257-CH2-SW1 "Core Bluetooth Overview") explains the different things to be considered:
-
-- The `bluetooth-le` device capability can be set in order to _restrict_ non-BLE capable devices from downloading their app.
-- App capabilities like `bluetooth-peripheral` or `bluetooth-central` (both `UIBackgroundModes`) should be added if [BLE background processing](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html "Core Bluetooth Background Processing for iOS Apps") is required.
-
-However, this is not yet enough for the app to get access to Bluetooth-related features. On current iOS releases, the relevant purpose string is typically `NSBluetoothAlwaysUsageDescription`, meaning that the user still has to actively grant permission. See "Purpose Strings in the Info.plist File" below for more information.
+For an overview of the currently supported _purpose string Info.plist keys_, use Apple's [Bundle Resources](https://developer.apple.com/documentation/bundleresources/information_property_list) documentation together with the protected-resource API documentation for the framework under review. Examples of current keys include `NSPhotoLibraryAddUsageDescription`, `NSLocationAlwaysAndWhenInUseUsageDescription`, and `NSBluetoothAlwaysUsageDescription`.
 
 ## Entitlements
 
-According to [Apple Platform Security](https://support.apple.com/guide/security/welcome/web):
+Entitlements are key-value pairs that are signed into an app to grant it specific privileges, such as access to iCloud, HealthKit, push notifications, or the ability to share data with other apps. Because they are part of the code signature, they cannot be modified after signing.
 
-> Entitlements are key value pairs that are signed in to an app and allow authentication beyond runtime factors, like UNIX user ID. Since entitlements are digitally signed, they can't be changed. Entitlements are used extensively by system apps and daemons to perform specific privileged operations that would otherwise require the process to run as root. This greatly reduces the potential for privilege escalation by a compromised system app or daemon.
+Some entitlements take effect silently at install time (e.g. Data Protection, Keychain Sharing), while others, like HealthKit, additionally require a runtime authorization prompt before the user's data can be accessed. In that case, adding the entitlement alone is not sufficient: the app also needs the corresponding purpose string in `Info.plist`.
 
-Many entitlements can be set using the "Summary" tab of the Xcode target editor. Other entitlements require editing a target's entitlements property list file or are inherited from the iOS provisioning profile used to run the app.
-
-[Entitlement Sources](https://developer.apple.com/library/archive/technotes/tn2415/_index.html#//apple_ref/doc/uid/DTS40016427-CH1-SOURCES "Entitlement Sources"):
-
-1. Entitlements embedded in a provisioning profile that is used to code sign the app, which are composed of:
-   - Capabilities defined on the Xcode project's target Capabilities tab, and/or:
-   - Enabled Services on the app's App ID which are configured on the Identifiers section of the Certificates, ID's and Profiles website.
-   - Other entitlements that are injected by the profile generation service.
-2. Entitlements from a code signing entitlements file.
-
-[Entitlement Destinations](https://developer.apple.com/library/archive/technotes/tn2415/_index.html#//apple_ref/doc/uid/DTS40016427-CH1-DESTINATIONS "Entitlement Destinations"):
-
-1. The app's signature.
-2. The app's embedded provisioning profile.
-
-The [Apple Developer Documentation](https://developer.apple.com/library/archive/technotes/tn2415/_index.html#//apple_ref/doc/uid/DTS40016427-CH1-APPENTITLEMENTS "Inspect the entitlements of a built app") also explains:
-
-- During code signing, the entitlements corresponding to the app's enabled Capabilities/Services are transferred to the app's signature from the provisioning profile Xcode chose to sign the app.
-- The provisioning profile is embedded into the app bundle during the build (`embedded.mobileprovision`).
-- Entitlements from the "Code Signing Entitlements" section in Xcode's "Build Settings" tab are transferred to the app's signature.
-
-For example, if you want to set the "Default Data Protection" capability, you would need to go to the **Capabilities** tab in Xcode and enable **Data Protection**. This is directly written by Xcode to the `<appname>.entitlements` file as the `com.apple.developer.default-data-protection` entitlement with default value `NSFileProtectionComplete`. In the IPA we might find this in the `embedded.mobileprovision` as:
+In practice, entitlements end up in the app from two places: from the Xcode "Signing & Capabilities" tab (which writes them to the `.entitlements` file and the provisioning profile), or added directly to the `.entitlements` file by the developer. Either way, they are embedded in `embedded.mobileprovision` inside the IPA and signed into the binary. For example, enabling Data Protection in Xcode writes:
 
 ```xml
 <key>Entitlements</key>
@@ -109,21 +61,11 @@ For example, if you want to set the "Default Data Protection" capability, you wo
 </dict>
 ```
 
-For other capabilities such as HealthKit, the user has to be asked for permission, therefore it is not enough to add the entitlements, special keys and strings have to be added to the `Info.plist` file of the app.
+It is always good practice to check all entitlements present in an app, as it may request more than it needs and thereby expose sensitive data or cross-app attack surface.
 
-## Purpose Strings in the Info.plist File
+### Code Signing Entitlements File
 
-[_Purpose strings_](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc#3037322 "Provide a Purpose String") or _usage description strings_ are custom texts that are offered to users in the system's permission request alert when requesting permission to access protected data or resources.
-
-<img src="Images/Chapters/0x06h/permission_request_alert.png" width="400px" />
-
-If linking on or after iOS 10, developers are required to include purpose strings in their app's [`Info.plist`](https://developer.apple.com/library/archive/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/ExpectedAppBehaviors/ExpectedAppBehaviors.html#//apple_ref/doc/uid/TP40007072-CH3-SW5 "The Information Property List File") file. Otherwise, if the app attempts to access protected data or resources without having provided the corresponding purpose string, [the access will fail and the app might even crash](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc "Accessing Protected Resources").
-
-For an overview of the currently supported _purpose string Info.plist keys_, use Apple's [Bundle Resources](https://developer.apple.com/documentation/bundleresources/information_property_list) documentation together with the protected-resource API documentation for the framework under review. Examples of current keys include `NSPhotoLibraryAddUsageDescription`, `NSLocationAlwaysAndWhenInUseUsageDescription`, and `NSBluetoothAlwaysUsageDescription`.
-
-## Code Signing Entitlements File
-
-Certain capabilities require a [code signing entitlements file](https://developer.apple.com/library/archive/technotes/tn2415/_index.html#//apple_ref/doc/uid/DTS40016427-CH1-ENTITLEMENTSFILE "Code Signing Entitlements files") (`<appname>.entitlements`). It is automatically generated by Xcode but may be manually edited and/or extended by the developer as well.
+Certain capabilities require a code signing entitlements file (`<appname>.entitlements`). It is automatically generated by Xcode but may be manually edited and/or extended by the developer as well.
 
 Here is an example of entitlements file of the [open source app Telegram](https://github.com/peter-iakovlev/Telegram-iOS/blob/77ee5c4dabdd6eb5f1e2ff76219edf7e18b45c00/Telegram-iOS/Telegram-iOS-AppStoreLLC.entitlements#L23 "Telegram-iOS-AppStoreLLC.entitlements Line 23") including the [App Groups entitlement](https://developer.apple.com/documentation/foundation/com_apple_security_application-groups "App Groups entitlement") (`application-groups`):
 
@@ -144,7 +86,27 @@ Here is an example of entitlements file of the [open source app Telegram](https:
 
 The entitlement outlined above does not require any additional permissions from the user. However, it is always a good practice to check all entitlements, as the app might overask the user in terms of permissions and thereby leak information.
 
-As documented at [Apple Developer Documentation](https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html#//apple_ref/doc/uid/TP40011195-CH4-SW19 "Adding an App to an App Group"), the App Groups entitlement is required to share information between different apps through IPC or a shared file container, which means that data can be shared on the device directly between the apps.
-This entitlement is also required if an app extension requires to [share information with its containing app](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html "Sharing Data with Your Containing App").
+The App Groups entitlement is required to share information between different apps through IPC or a shared file container, which means that data can be shared on the device directly between the apps. This entitlement is also required if an app extension requires to [share information with its containing app](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html "Sharing Data with Your Containing App").
 
 Depending on the data to-be-shared it might be more appropriate to share it using another method such as through a backend where this data could be potentially verified, avoiding tampering by e.g. the user themselves.
+
+## Xcode Capabilities
+
+[Xcode Capabilities](https://developer.apple.com/documentation/Xcode/capabilities) are features/services you enable for your app that require entitlements and provisioning profile configuration, such as Push Notifications, iCloud, In-App Purchase, Apple Pay, Sign in with Apple, Game Center, etc. They are configured in Xcode's "Signing & Capabilities" tab and generate entitlements in the app's `.entitlements` file. When reviewing an IPA, these are visible as entitlements in `embedded.mobileprovision` and the app binary.
+
+!!! "note"
+    The terms "capabilities" and "entitlements" are often used interchangeably but refer to different things: *Capabilities* is the Xcode UI concept (the toggle you enable); *entitlements* are the resulting key-value pairs in the signed artifact. When reviewing an IPA, you are always looking at entitlements, as the Xcode capabilities that produced them are not visible in the build output.
+
+## Required Device Capabilities
+
+[`UIRequiredDeviceCapabilities`](https://developer.apple.com/documentation/bundleresources/information-property-list/uirequireddevicecapabilities) (in `Info.plist`) tells the App Store what hardware or software features the device must have to run your app at all. Examples: `arkit`, `camera-flash`, `gps`, `nfc`, `gyroscope`, `metal`, etc. It is used to filter out incompatible devices on the App Store, so users on devices lacking those capabilities simply won't see or be able to install your app. See Apple's [Required Device Capabilities](https://developer.apple.com/support/required-device-capabilities/) page for the full list of supported values.
+
+Unlike entitlements, required device capabilities do not confer any right or access to protected resources. Additional configuration steps might be required depending on each capability.
+
+For example, an app such as [NFC TagInfo by NXP](https://itunes.apple.com/us/app/nfc-taginfo-by-nxp/id1246143596 "NFC TagInfo by NXP") is completely dependent on NFC to work, so it includes `nfc` in its `UIRequiredDeviceCapabilities`. This means that users on devices without NFC (e.g. iPhone 6) won't even see the app on the App Store, while users on compatible devices (e.g. iPhone 7 and later) can install it and use its features.
+
+If BLE is a core feature of the app, there are several layers to consider:
+
+- The `bluetooth-le` device capability can be set in `UIRequiredDeviceCapabilities` to restrict non-BLE capable devices from downloading the app.
+- App capabilities like `bluetooth-peripheral` or `bluetooth-central` (both `UIBackgroundModes`) should be added if [BLE background processing](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html "Core Bluetooth Background Processing for iOS Apps") is required.
+- The `NSBluetoothAlwaysUsageDescription` purpose string is still required, as the user must actively grant permission at runtime.
