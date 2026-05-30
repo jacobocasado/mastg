@@ -44,11 +44,6 @@ The output should contain one of the following:
 
 The test case fails if the hook executes successfully and returns the expected data, indicating the app lacks runtime integrity verification.
 
-The test case passes if the hooking attempt fails due to the app's defensive response (e.g., session terminates unexpectedly, hook callbacks never execute, or the process exits).
-
-!!! note
-    Even if the test case passes, it might still be possible to bypass the app's defensive response. @MASTG-KNOW-0087 describes common reverse engineering tool detection techniques and their limitations.
-
 **Expected False Negatives:**
 
 This test may produce false negatives if the selected hooks or traces do not cover the app's security-sensitive code paths, if the exercised flows do not trigger operations that process sensitive data, or if the app's runtime hook detection logic is implemented in a way that evades the instrumentation used in this test (for example, through obfuscation, dynamic loading, native code, anti-instrumentation techniques, or checks that run before the hooks are installed). In such cases, the absence of findings does not guarantee that the app has effective runtime hook detection, and additional manual reverse engineering or custom instrumentation may be required to identify and analyze runtime hook detection mechanisms.
