@@ -7,14 +7,7 @@ best-practices: [MASTG-BEST-0048]
 
 The presence of tools, frameworks and apps commonly used by reverse engineers may indicate an attempt to reverse engineer the app. Some of these tools can only run on a jailbroken device, while others force the app into debugging mode or depend on starting a background service on the mobile phone. Therefore, there are different ways that an app may implement to detect a reverse engineering attack and react to it, e.g. by terminating itself.
 
-You can detect popular reverse engineering tools that have been installed in an unmodified form by looking for associated application packages, files, processes, or other tool-specific modifications and artifacts. In the following examples, we'll discuss different ways to detect the Frida instrumentation framework, which is used extensively in this guide and also in the real world. Other tools, such as ElleKit, can be detected similarly. Note that injection, hooking and DBI (Dynamic Binary Instrumentation) tools can often be detected implicitly, through runtime integrity checks, which are discussed below.
-
-**Bypass:**
-
-The following steps should guide you when bypassing detection of reverse engineering tools:
-
-1. Patch the anti reverse engineering functionality. Disable the unwanted behavior by patching the binary through usage of @MASTG-TOOL-0073/@MASTG-TOOL-0098 or @MASTG-TOOL-0033.
-2. Use @MASTG-TOOL-0039 or @MASTG-TOOL-0139 to hook file system APIs on the Objective-C/Swift or native layers. Return a handle to the original file, not the modified file.
+You can detect popular reverse engineering tools that have been installed in an unmodified form by looking for associated application packages, files, processes, or other tool-specific modifications and artifacts. In the following examples, we'll discuss different ways to detect the Frida instrumentation framework, which is used extensively in this guide and also in the real world. Other tools, such as ElleKit, can be detected similarly. Note that injection, hooking and DBI (Dynamic Binary Instrumentation) tools can often be detected implicitly, through runtime integrity checks, which are discussed below. @MASTG-TECH-0x04 describes how to bypass reverse engineering tool detection using static patching and dynamic hooks.
 
 ## Frida Detection
 
