@@ -52,3 +52,5 @@ Please remember that this table is far from exhaustive. For example, two other p
 - detecting [trampolines](https://en.wikipedia.org/wiki/Trampoline_%28computing%29 "Trampolines") (see ["Prevent bypassing of SSL certificate pinning in iOS applications"](https://www.guardsquare.com/en/blog/iOS-SSL-certificate-pinning-bypassing "Prevent bypassing of SSL certificate pinning in iOS applications") for further explanation and sample code for detection of trampolines in an iOS app)
 
 Both would help to detect ElleKit or Frida's Interceptor but, for example, won't be effective against Frida's Stalker. Remember that the success of each of these detection methods will depend on whether you're using a jailbroken device, the specific version of the jailbreak and method and/or the version of the tool itself. At the end, this is part of the cat and mouse game of protecting data being processed on an uncontrolled environment (the end user's device).
+
+@MASTG-TECH-0095 describes how to hook methods with Frida on iOS. Understanding these hooking mechanisms is essential for evaluating the effectiveness of the detection methods discussed in this document.
