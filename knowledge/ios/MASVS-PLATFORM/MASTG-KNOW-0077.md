@@ -23,6 +23,12 @@ When collecting or simply handling (e.g. caching) sensitive data, an app should 
 
 As you can see, using app capabilities and permissions mostly involve handling personal data, therefore being a matter of protecting the user's privacy. See the articles ["Protecting the User's Privacy"](https://developer.apple.com/documentation/uikit/protecting-the-user-s-privacy) and ["Requesting Access to Protected Resources"](https://developer.apple.com/documentation/uikit/requesting-access-to-protected-resources) in Apple Developer Documentation for more details.
 
+There is a _visual_ way to inspect the status of some app permissions when using the iPhone/iPad by opening "Settings" and scrolling down until you find the app you're interested in. When clicking on it, this will open the "ALLOW APP_NAME TO ACCESS" screen. However, not all permissions might be displayed yet. You will have to trigger them in order to be listed on that screen.
+
+<img src="Images/Chapters/0x06h/settings_allow_screen.png" width="100%" />
+
+For example, when an app requests "Location" access, the entry was not being listed until we triggered the permission dialogue for the first time. Once we did it, no matter if we allowed the access or not, the "Location" entry will be displayed.
+
 ## Permission Model Overview
 
 Current iOS releases combine multiple layers that are easy to confuse during review:
