@@ -13,15 +13,7 @@ knowledge: [MASTG-KNOW-0077]
 
 If an iOS app enables entitlements or capabilities that it does not need, it may gain unnecessary access to protected services or additional channels for sharing personal data outside the default sandbox model. This test checks whether the app's signed entitlements and embedded provisioning profile only enable the privacy-relevant capabilities that are required for the app's actual features.
 
-## Steps
-
-1. Use @MASTG-TECH-0058 to extract the app bundle, main binary, and `embedded.mobileprovision` if it is present.
-2. Use @MASTG-TECH-0111 to extract the entitlements embedded in the signed app and list any capability-related keys.
-3. Review the extracted entitlements and provisioning-profile entitlements against the app's documented features, declared purpose strings, and data-sharing model.
-
-## Observation
-
-The output should contain the entitlements enabled for the signed app and, when available, the matching entries from the embedded provisioning profile. Privacy-relevant examples include:
+Privacy-relevant examples include:
 
 - `com.apple.security.application-groups`
 - `com.apple.developer.icloud-container-identifiers`
@@ -30,6 +22,18 @@ The output should contain the entitlements enabled for the signed app and, when 
 - `com.apple.developer.associated-domains`
 - `com.apple.developer.networking.multicast`
 - `com.apple.developer.siri`
+
+Refer to @MASTG-KNOW-0077 for a broader discussion of iOS permissions, entitlements, and privacy-preserving alternatives.
+
+## Steps
+
+1. Use @MASTG-TECH-0058 to unzip the app package.
+2. Use @MASTG-TECH-0111 to extract entitlements from the main binary.
+3. Review the extracted entitlements and provisioning-profile entitlements against the app's documented features, declared purpose strings, and data-sharing model.
+
+## Observation
+
+The output should contain the entitlements embedded in the app.
 
 ## Evaluation
 
