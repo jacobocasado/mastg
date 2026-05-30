@@ -1,42 +1,41 @@
-// SOURCE: Based on the original MASTG-TEST-0069 dynamic analysis approach
-
 // Hook authorization status methods for various iOS frameworks
 // This script traces permission-related API calls at runtime
 
 console.log("\n[*] Starting Permission Authorization Status Tracing...\n");
 
-// Hook CLLocationManager authorization status
+const printBacktrace = (context, maxLines = 8) => {
+    console.log("\nBacktrace:");
+    let backtrace = Thread.backtrace(context, Backtracer.ACCURATE)
+        .map(DebugSymbol.fromAddress);
+
+    for (let i = 0; i < Math.min(maxLines, backtrace.length); i++) {
+        console.log(backtrace[i]);
+    }
+}
+
+// Hook CLLocationManager.requestWhenInUseAuthorization (instance method, void return).
+// Note: CLLocationManager.authorizationStatus is NOT used because the Swift compiler
+// dispatches it directly into the dyld shared cache, bypassing ObjC objc_msgSend.
 if (ObjC.available) {
     try {
-        Interceptor.attach(ObjC.classes.CLLocationManager["+ authorizationStatus"].implementation, {
+        Interceptor.attach(ObjC.classes.CLLocationManager["- requestWhenInUseAuthorization"].implementation, {
             onEnter: function(args) {
-                console.log("\n[+] CLLocationManager.authorizationStatus called");
-            },
-            onLeave: function(retval) {
-                const status = retval.toInt32();
-                const statusMap = {
-                    0: "notDetermined",
-                    1: "restricted",
-                    2: "denied",
-                    3: "authorizedAlways",
-                    4: "authorizedWhenInUse"
-                };
-                console.log("    Return value: " + status + " (" + (statusMap[status] || "unknown") + ")");
-                console.log("\nBacktrace:");
-                console.log(Thread.backtrace(this.context, Backtracer.ACCURATE)
-                    .map(DebugSymbol.fromAddress).slice(0, 5).join("\n"));
+                console.log("\n[+] CLLocationManager.requestWhenInUseAuthorization called");
+                printBacktrace(this.context);
             }
         });
-        console.log("[*] Hooked CLLocationManager.authorizationStatus");
+        console.log("[*] Hooked CLLocationManager.requestWhenInUseAuthorization");
     } catch (e) {
         console.log("[-] Failed to hook CLLocationManager: " + e);
     }
 
-    // Hook PHPhotoLibrary authorization status
+    // Hook PHPhotoLibrary.authorizationStatusForAccessLevel: (iOS 14+).
+    // authorizationStatus(for:) in Swift maps to this selector.
     try {
-        Interceptor.attach(ObjC.classes.PHPhotoLibrary["+ authorizationStatus"].implementation, {
+        Interceptor.attach(ObjC.classes.PHPhotoLibrary["+ authorizationStatusForAccessLevel:"].implementation, {
             onEnter: function(args) {
-                console.log("\n[+] PHPhotoLibrary.authorizationStatus called");
+                console.log("\n[+] PHPhotoLibrary.authorizationStatusForAccessLevel called");
+                printBacktrace(this.context);
             },
             onLeave: function(retval) {
                 const status = retval.toInt32();
@@ -50,7 +49,7 @@ if (ObjC.available) {
                 console.log("    Return value: " + status + " (" + (statusMap[status] || "unknown") + ")");
             }
         });
-        console.log("[*] Hooked PHPhotoLibrary.authorizationStatus");
+        console.log("[*] Hooked PHPhotoLibrary.authorizationStatusForAccessLevel");
     } catch (e) {
         console.log("[-] Failed to hook PHPhotoLibrary: " + e);
     }
@@ -60,6 +59,7 @@ if (ObjC.available) {
         Interceptor.attach(ObjC.classes.CNContactStore["+ authorizationStatusForEntityType:"].implementation, {
             onEnter: function(args) {
                 console.log("\n[+] CNContactStore.authorizationStatusForEntityType called");
+                printBacktrace(this.context);
             },
             onLeave: function(retval) {
                 const status = retval.toInt32();
