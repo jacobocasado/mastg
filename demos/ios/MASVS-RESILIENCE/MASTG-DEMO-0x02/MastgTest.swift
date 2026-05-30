@@ -61,7 +61,7 @@ class MastgTest {
     }
 
     private static func detectHooking() -> Bool {
-        let ports: [in_port_t] = [27042, 27043]
+        let ports: [in_port_t] = [27042]
         return ports.contains(where: respondsToDBusAuth)
     }
 
