@@ -12,7 +12,7 @@ kind: pass
 This sample encrypts and decrypts a sensitive API key using CommonCrypto's `CCCrypt`. Unlike the unprotected variant in @MASTG-DEMO-0114, this version checks whether a Frida control endpoint is reachable on the device before performing sensitive cryptographic operations. The detection logic attempts to connect to `127.0.0.1` on Frida's default local port (`27042`), which is commonly exposed by `frida-server` on jailbroken/rooted iOS devices, and sends a D-Bus `AUTH` probe. If the endpoint responds like a D-Bus service, the app treats it as a Frida runtime artifact and terminates before any cryptographic operations are performed.
 
 !!! note "Environment"
-    This demo was tested on an iPhone running iOS 16.7.10 (jailbroken with Dopamine 2.4.9) using Xcode 26.2.9.
+    This demo was built using Xcode 26.2.9 and tested on an iPhone running iOS 16.7.10 (jailbroken with Dopamine 2.4.9).
 
 !!! note
     This is a series of correlated tests.

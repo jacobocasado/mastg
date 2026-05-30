@@ -14,7 +14,7 @@ This sample uses the same code as @MASTG-DEMO-0115, which encrypts and decrypts 
 See @MASTG-KNOW-0087 for more context on bypassing runtime detection mechanisms.
 
 !!! note "Environment"
-    This demo was tested on an iPhone running iOS 16.7.10 (jailbroken with Dopamine 2.4.9) using Xcode 26.2.9.
+    This demo was built using Xcode 26.2.9 and tested on an iPhone running iOS 16.7.10 (jailbroken with Dopamine 2.4.9).
 
 !!! note
     This is a series of correlated tests.
