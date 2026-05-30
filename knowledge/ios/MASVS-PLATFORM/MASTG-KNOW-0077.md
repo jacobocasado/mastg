@@ -29,14 +29,14 @@ Even though Apple urges to protect the privacy of the user and to be [very clear
 
 Verifying the use of some permissions such as Camera, Photos, Calendar Data, Motion, Contacts or Speech Recognition should be pretty straightforward as it should be obvious if the app requires them to fulfill its tasks. Let's consider the following examples regarding the Photos permission, which, if granted, gives the app access to all user photos in the "Camera Roll" (the iOS default system-wide location for storing photos):
 
-- The typical QR Code scanning app obviously requires the camera to function but might be requesting the photos permission as well. If storage is explicitly required, and depending on the sensitivity of the pictures being taken, these apps might better opt to use the app sandbox storage to avoid other apps (having the photos permission) to access them. See the chapter ["Data Storage on iOS"](../../../Document/0x06d-Testing-Data-Storage.md) for more information regarding storage of sensitive data.
+- The typical QR Code scanning app obviously requires the camera to function but might be requesting the photos permission as well. If storage is explicitly required, and depending on the sensitivity of the pictures being taken, these apps might better opt to use the app sandbox storage to avoid other apps (having the photos permission) to access them.
 - Some apps require photo uploads (e.g. for profile pictures). Recent versions of iOS introduce new APIs such as [`UIImagePickerController`](https://developer.apple.com/documentation/uikit/uiimagepickercontroller "UIImagePickerController") (iOS 11+) and its modern [replacement](https://developer.apple.com/videos/play/wwdc2020/10652/ "replacement") [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller "PHPickerViewController") (iOS 14+). These APIs run on a separate process from your app and by using them, the app gets read-only access exclusively to the images selected by the user instead of to the whole "Camera Roll". This is considered a best practice to avoid requesting unnecessary permissions.
 
 Verifying other permissions like Bluetooth or Location require a deeper source code inspection. They may be required for the app to properly function but the data being handled by those tasks might not be properly protected.
 
 When collecting or simply handling (e.g. caching) sensitive data, an app should provide proper mechanisms to give the user control over it, e.g. to be able to revoke access or to delete it. However, sensitive data might not only be stored or cached but also sent over the network. In both cases, it has to be ensured that the app properly follows the appropriate best practices, which in this case involve implementing proper data protection and transport security. More information on how to protect this kind of data can be found in the chapter "Network APIs".
 
-As you can see, using app capabilities and permissions mostly involve handling personal data, therefore being a matter of protecting the user's privacy. See the articles ["Protecting the User's Privacy"](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy "Protecting the User\'s Privacy") and ["Accessing Protected Resources"](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/accessing_protected_resources?language=objc "Accessing Protected Resources") in Apple Developer Documentation for more details.
+As you can see, using app capabilities and permissions mostly involve handling personal data, therefore being a matter of protecting the user's privacy. See the articles ["Protecting the User's Privacy"](https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy) and ["Accessing Protected Resources"](https://developer.apple.com/documentation/uikit/requesting-access-to-protected-resources) in Apple Developer Documentation for more details.
 
 ## Modern iOS Permission Model
 
@@ -44,43 +44,25 @@ Current iOS releases combine multiple layers that are easy to confuse during rev
 
 - purpose strings in `Info.plist`, which explain protected-resource access to the user,
 - signed entitlements and capabilities, which enable access to specific platform services or cross-app data sharing, and
-- newer privacy metadata such as [privacy manifests](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files), which complement but do not replace either of the above.
+- runtime authorization APIs, which request user permission for specific data types or operations.
 
 When reviewing app permissions, inspect all of these layers together. A feature may require a purpose string, an entitlement, both, or neither depending on which API the app uses.
 
 Apple increasingly provides user-selected or reduced-scope alternatives to broad library access. For example, photo selection flows can often use [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) or [`PhotosPicker`](https://developer.apple.com/documentation/photosui/photospicker), and many location-driven features can work with [`when in use`](https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services) access instead of persistent background access.
 
-## Purpose Strings and Entitlements in Practice
+## Xcode Capabilities
 
-The deprecated test @MASTG-TEST-0069 covered four areas that still matter during assessment:
+[Xcode Capabilities](https://developer.apple.com/documentation/Xcode/capabilities) are features/services you enable for your app that require entitlements and provisioning profile configuration. For example, things like Push Notifications, iCloud, In-App Purchase, Apple Pay, Sign in with Apple, Game Center, etc. These are about what your app is allowed to do on Apple's infrastructure, and they're configured in Xcode's "Signing & Capabilities" tab. They generate entitlements in the app's `.entitlements` file.
 
-- purpose strings in `Info.plist`,
-- the app's signed entitlements,
-- the embedded provisioning profile when present, and
-- the actual code paths that use the protected resource or capability.
+## Required Device Capabilities
 
-The dedicated v2 tests split these concerns so each one can stay focused:
+[`UIRequiredDeviceCapabilities`](https://developer.apple.com/documentation/bundleresources/information-property-list/uirequireddevicecapabilities) (in Info.plist) tells the App Store what hardware or software features the device must have to run your app at all. Examples: `arkit`, `camera-flash`, `gps`, `nfc`, `gyroscope`, `metal`, etc. It's used to filter out incompatible devices on the App Store, so users on devices lacking those capabilities simply won't see or be able to install your app.
 
-- @MASTG-TEST-0x01 for `Info.plist` purpose strings,
-- @MASTG-TEST-0x02 for runtime authorization APIs, and
-- @MASTG-TEST-0x03 for entitlements and related capabilities.
+You can verify which devices support a given capability by checking Apple's [Required Device Capabilities](https://developer.apple.com/support/required-device-capabilities/) page.
 
-## Device Capabilities
+For example, an app such as ["NFC Tag Reader"](https://itunes.apple.com/us/app/nfc-taginfo-by-nxp/id1246143596 "NFC TagInfo by NXP") is completely dependent on NFC to work, so it includes `nfc` in its `UIRequiredDeviceCapabilities`. This means that users on devices without NFC (e.g. iPhone 6) won't even see the app on the App Store, while users on compatible devices (e.g. iPhone 7 and later) can install it and use its features.
 
-Device capabilities are used by the App Store to ensure that only compatible devices are listed and therefore are allowed to download the app. They are specified in the `Info.plist` file of the app under the [`UIRequiredDeviceCapabilities`](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/plist/info/UIRequiredDeviceCapabilities "UIRequiredDeviceCapabilities") key.
-
-```xml
-<key>UIRequiredDeviceCapabilities</key>
-<array>
-    <string>arm64</string>
-</array>
-```
-
-> Typically you'll find the `arm64` capability, meaning that the app is compiled for the arm64 instruction set.
-
-For example, an app might be completely dependent on NFC to work (e.g. a ["NFC Tag Reader"](https://itunes.apple.com/us/app/nfc-taginfo-by-nxp/id1246143596 "NFC TagInfo by NXP") app). According to the [archived iOS Device Compatibility Reference](https://developer.apple.com/library/archive/documentation/DeviceInformation/Reference/iOSDeviceCompatibility/DeviceCompatibilityMatrix/DeviceCompatibilityMatrix.html "iOS Device Compatibility Matrix"), NFC is only available starting on the iPhone 7 (and iOS 11). A developer might want to exclude all incompatible devices by setting the `nfc` device capability.
-
-Regarding testing, you can consider `UIRequiredDeviceCapabilities` as a mere indication that the app is using some specific resources. Unlike the entitlements related to app capabilities, device capabilities do not confer any right or access to protected resources. Additional configuration steps might be required for that, which are very specific to each capability.
+Unlike entitlements, required device capabilities do not confer any right or access to protected resources. Additional configuration steps might be required for that, which are very specific to each capability.
 
 For example, if BLE is a core feature of the app, Apple's [Core Bluetooth Programming Guide](https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothOverview/CoreBluetoothOverview.html#//apple_ref/doc/uid/TP40013257-CH2-SW1 "Core Bluetooth Overview") explains the different things to be considered:
 
