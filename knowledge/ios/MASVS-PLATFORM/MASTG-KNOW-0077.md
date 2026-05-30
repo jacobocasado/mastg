@@ -10,6 +10,8 @@ All third-party iOS apps run under the non-privileged `mobile` user and are sand
 
 A practical consequence of this model is that not all "permissions" are visible to or granted by the user. Some are purely developer-side configuration that takes effect at install time (e.g. enabling Data Protection or Keychain Sharing via entitlements), while others require an explicit user prompt at runtime. Resources that require a [runtime authorization prompt](https://developer.apple.com/documentation/uikit/requesting-access-to-protected-resources "Requesting access to protected resources") include camera, microphone, location, contacts, calendar, photos, health, Bluetooth, motion, and speech recognition, among others.
 
+Because the user can grant or revoke access at any time in Settings, apps typically check the current authorization status before accessing a protected resource. Each framework exposes a dedicated API for this, for example [`CLLocationManager.authorizationStatus`](https://developer.apple.com/documentation/corelocation/cllocationmanager/authorizationstatus) for location, [`AVCaptureDevice.authorizationStatus(for:)`](https://developer.apple.com/documentation/avfoundation/avcapturedevice/authorizationstatus(for:)) for camera and microphone, [`CNContactStore.authorizationStatus(for:)`](https://developer.apple.com/documentation/contacts/cncontactstore/authorizationstatus(for:)) for contacts, [`PHPhotoLibrary.authorizationStatus(for:)`](https://developer.apple.com/documentation/photokit/phphotolibrary/authorizationstatus(for:)) for photos, and [`CBManager.authorization`](https://developer.apple.com/documentation/corebluetooth/cbmanager/authorization) for Bluetooth. These are the same APIs you trace at runtime to confirm which resources an app actually reaches.
+
 Even though Apple urges developers to protect user privacy and to be [very clear on how to ask permissions](https://developer.apple.com/design/human-interface-guidelines/privacy#Requesting-permission "Requesting Permission"), it can still be the case that an app requests too many of them for non-obvious reasons.
 
 Verifying the use of some permissions such as Camera, Photos, Calendar Data, Motion, Contacts or Speech Recognition should be pretty straightforward as it should be obvious if the app requires them to fulfill its tasks. Let's consider the following examples regarding the Photos permission, which, if granted, gives the app access to all user photos in the "Camera Roll" (the iOS default system-wide location for storing photos):
@@ -36,6 +38,7 @@ Current iOS releases combine multiple layers that are easy to confuse during rev
 - **Usage description strings** (purpose strings) in `Info.plist`, which explain protected-resource access to the user and are required before the system will show an authorization prompt.
 - **Entitlements**, signed key-value pairs that enable access to specific platform services or cross-app data sharing.
 - **Authorization requests** at runtime, where the system prompts the user to grant or deny access to a specific resource.
+
 When reviewing app permissions, inspect all of these layers together. A feature may require a usage description, an entitlement, both, or neither depending on which API the app uses.
 
 Apple increasingly provides user-selected or reduced-scope alternatives to broad library access. For example, photo selection flows can often use [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) or [`PhotosPicker`](https://developer.apple.com/documentation/photosui/photospicker), and many location-driven features can work with [`when in use`](https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services) access instead of persistent background access.
@@ -56,16 +59,19 @@ For an overview of the currently supported _purpose string Info.plist keys_, use
 
 Some entitlements take effect silently at install time (e.g. Data Protection, Keychain Sharing), while others additionally require a runtime authorization prompt before the user's data can be accessed. HealthKit is a clear example of this layered model: [setting up HealthKit](https://developer.apple.com/documentation/HealthKit/setting-up-healthkit) requires enabling the HealthKit capability in Xcode (which adds the `com.apple.developer.healthkit` entitlement), adding `NSHealthShareUsageDescription` and/or `NSHealthUpdateUsageDescription` purpose strings to `Info.plist`, and then requesting authorization at runtime via `HKHealthStore`. Adding the entitlement alone is not sufficient.
 
-In practice, entitlements end up in the app from two places: from the Xcode "Signing & Capabilities" tab (which writes them to the `.entitlements` file and the provisioning profile), or added directly to the `.entitlements` file by the developer. Either way, they are embedded in `embedded.mobileprovision` inside the IPA and signed into the binary. For example, enabling Data Protection in Xcode writes:
+In practice, entitlements end up in the app from two places: the Xcode "Signing & Capabilities" tab (which writes them to the `.entitlements` file and merges them into the provisioning profile), or directly into the `.entitlements` file by the developer. At build time they are signed into the app binary's code signature, which is the most reliable place to read them back from a distributed app (see @MASTG-TECH-0111). For example, enabling Data Protection in Xcode writes:
 
 ```xml
-<key>Entitlements</key>
-<dict>
-    ...
-    <key>com.apple.developer.default-data-protection</key>
-    <string>NSFileProtectionComplete</string>
-</dict>
+<key>com.apple.developer.default-data-protection</key>
+<string>NSFileProtectionComplete</string>
 ```
+
+The `embedded.mobileprovision` file is another place where entitlements can appear (nested under a top-level `<key>Entitlements</key>` dictionary), but it is only present when the app is signed with a provisioning profile, that is, in development, ad-hoc, enterprise, and App Store device builds. It is absent in several common situations:
+
+- **Simulator builds**, which are not signed with a provisioning profile.
+- **Pseudo-signed or ad-hoc-signed builds** produced by tooling such as @MASTG-TOOL-0111, where entitlements are written directly into the binary's code signature without a profile.
+
+For this reason, extracting entitlements from the app binary (@MASTG-TECH-0111) works in more cases than relying on `embedded.mobileprovision`. When the profile is present, you can additionally inspect it (it is [Cryptographic Message Syntax](https://en.wikipedia.org/wiki/Cryptographic_Message_Syntax)-encoded, not a plain plist) to confirm the entitlements that were granted at signing time.
 
 It is always good practice to check all entitlements present in an app, as it may request more than it needs and thereby expose sensitive data or cross-app attack surface.
 
