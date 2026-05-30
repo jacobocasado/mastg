@@ -1,5 +1,4 @@
 #!/bin/bash
-# Extract and display purpose strings from Info.plist
-grep -E "Usage.*Description|NS.*UsageDescription" Info.plist | grep -v "^--" > output.txt
-# Alternative using plutil if available:
-# plutil -p Info.plist | grep -i "usage" >> output.txt
+# Print the purpose strings (keys and their user-facing explanations) from Info.plist.
+# plutil -p renders the plist in a readable form (see @MASTG-TECH-0138).
+plutil -p Info.plist | grep -i "UsageDescription" > output.txt

@@ -1,4 +1,4 @@
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <key>NSContactsUsageDescription</key>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <key>NSCameraUsageDescription</key>
+  "NSCameraUsageDescription" => "We need camera access to take photos."
+  "NSContactsUsageDescription" => "We need access to your contacts to help you connect with friends."
+  "NSLocationWhenInUseUsageDescription" => "We need your location to provide nearby services."
+  "NSPhotoLibraryUsageDescription" => "We need access to your photos to let you share images."
