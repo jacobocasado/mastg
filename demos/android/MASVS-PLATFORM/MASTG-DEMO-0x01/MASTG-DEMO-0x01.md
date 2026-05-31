@@ -65,7 +65,7 @@ adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$Sec
 The secret screen appears without any PIN prompt, confirming the authentication bypass.
 
 
-An external app can start `SecretActivity` directly, but that does not automatically let the external app read the activity’s UI contents or steal the displayed data programmatically. Android does not normally return another activity’s screen text to the caller.
+An external app can start `SecretActivity` directly, but that does not automatically let the external app read the activity's UI contents or steal the displayed data programmatically. Android does not normally return another activity's screen text to the caller.
 
 The security issue is that the protected screen becomes reachable without completing the PIN challenge. This can still expose sensitive data to anyone using the device, to screen capture or accessibility based threats, or to any flow where the attacker can trick the user into opening the activity. If the activity also returns data through results, sends broadcasts, writes files, accepts attacker controlled extras, or performs account actions on launch, the impact could be higher.
 
