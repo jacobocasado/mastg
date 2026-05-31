@@ -1,0 +1,4 @@
+Exported activity: org.owasp.mastestapp.MainActivity
+Exported activity: org.owasp.mastestapp.MastgTest.SecretActivity
+Exported activity: androidx.compose.ui.tooling.PreviewActivity
+Exported activity: androidx.activity.ComponentActivity

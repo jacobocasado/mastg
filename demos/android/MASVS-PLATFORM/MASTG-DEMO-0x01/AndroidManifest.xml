@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.owasp.mastestapp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <application android:label="MASTestApp">
+    <uses-permission android:name="android.permission.INTERNET" />
 
-        <!-- Login screen: the intended entry point -->
-        <activity android:name=".MainLoginActivity" android:exported="true">
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MASTestApp"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.MASTestApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- FAIL: [MASTG-TEST-0x01] Exported via its intent filter and reachable
-             without authentication, so it can be started directly to bypass login. -->
-        <activity android:name=".PasswordListActivity">
-            <intent-filter>
-                <action android:name="org.owasp.mastestapp.SHOW_PASSWORDS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
+        <activity
+            android:name="org.owasp.mastestapp.MastgTest$PinEntryActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Material.Light" />
+        <activity
+            android:name="org.owasp.mastestapp.MastgTest$SecretActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Light" />
     </application>
+
 </manifest>
