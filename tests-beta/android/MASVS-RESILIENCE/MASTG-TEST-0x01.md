@@ -1,7 +1,7 @@
 ---
 platform: android
 title: References to Obfuscation Mechanisms in the Java/Kotlin Layer
-id: MASTG-TEST-0x51-1
+id: MASTG-TEST-0x01
 type: [static]
 weakness: MASWE-0089
 best-practices: [MASTG-BEST-0029]

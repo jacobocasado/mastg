@@ -1,9 +1,9 @@
 ---
 platform: android
 title: Testing for Obfuscation in Native Libraries
-id: MASTG-DEMO-0x52
+id: MASTG-DEMO-0x02
 code: [kotlin, cpp]
-test: MASTG-TEST-0x51-2
+test: MASTG-TEST-0x02
 tools: [MASTG-TOOL-0018, MASTG-TOOL-0028]
 kind: fail
 ---

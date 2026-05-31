@@ -1,7 +1,7 @@
 ---
 platform: android
 title: References to Obfuscation Mechanisms in Native Libraries
-id: MASTG-TEST-0x51-2
+id: MASTG-TEST-0x02
 type: [static]
 weakness: MASWE-0089
 best-practices: [MASTG-BEST-0029]

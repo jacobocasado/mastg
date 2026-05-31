@@ -57,7 +57,7 @@ public final class MastgTest {
             String str2 = (String) next;
             if (str2 != null) {
                 String str3 = "Detected root manager package '" + str2 + "'. The app closes when root-related packages are found.";
-                Log.w("MASTG-DEMO-0x51", str3);
+                Log.w("MASTG-DEMO-0x01", str3);
                 iVar.a(m.f4493g, str3);
                 Activity activity = context instanceof Activity ? (Activity) context : null;
                 if (activity != null) {

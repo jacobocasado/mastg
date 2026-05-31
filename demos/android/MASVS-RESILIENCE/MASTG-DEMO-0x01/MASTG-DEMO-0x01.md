@@ -1,9 +1,9 @@
 ---
 platform: android
 title: Testing for Obfuscation in the Java layer
-id: MASTG-DEMO-0x51
+id: MASTG-DEMO-0x01
 code: [kotlin]
-test: MASTG-TEST-0x51-1
+test: MASTG-TEST-0x01
 tools: []
 kind: fail
 ---
