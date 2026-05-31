@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.owasp.mastestapp">
+
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <application android:label="MASTestApp">
+
+        <!-- FAIL: [MASTG-TEST-0x03] Exported via its intent filter with no
+             android:permission, so any app can deliver "theBroadcast" and trigger it. -->
+        <receiver
+            android:name=".PasswordResetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.owasp.mastestapp.RESET_PASSWORD" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>

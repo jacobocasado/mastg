@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.owasp.mastestapp">
+
+    <application android:label="MASTestApp">
+
+        <!-- FAIL: [MASTG-TEST-0x02] Exported with no android:permission, so any app
+             can bind to it and invoke the password-change operation. -->
+        <service
+            android:name=".AuthService"
+            android:exported="true"
+            android:process=":remote" />
+
+    </application>
+</manifest>

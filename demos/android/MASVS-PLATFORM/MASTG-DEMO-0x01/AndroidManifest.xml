@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.owasp.mastestapp">
+
+    <application android:label="MASTestApp">
+
+        <!-- Login screen: the intended entry point -->
+        <activity android:name=".MainLoginActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- FAIL: [MASTG-TEST-0x01] Exported via its intent filter and reachable
+             without authentication, so it can be started directly to bypass login. -->
+        <activity android:name=".PasswordListActivity">
+            <intent-filter>
+                <action android:name="org.owasp.mastestapp.SHOW_PASSWORDS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>
