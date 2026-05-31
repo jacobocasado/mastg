@@ -17,6 +17,15 @@ If an exported activity performs or grants access to sensitive functionality, an
 
 This test checks whether the app exposes sensitive functionality through exported activities.
 
+**Example Attack Scenario:**
+
+Suppose a banking app protects its account screen behind a login activity but also declares an account-details activity that is exported (for example, because it declares an `<intent-filter>` without setting `android:exported="false"`).
+
+1. An attacker reverse engineers the app and finds the exported account-details activity (see @MASTG-TECH-0x01).
+2. The attacker writes a malicious app that calls `startActivity` with an explicit intent targeting that activity by its component name.
+3. The account-details activity starts directly, without going through the login activity.
+4. The victim's account data is displayed to the attacker's app context, bypassing authentication entirely.
+
 ## Steps
 
 1. Use @MASTG-TECH-0013 to reverse engineer the app.

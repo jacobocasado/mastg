@@ -17,6 +17,15 @@ If an exported receiver performs sensitive functionality in `onReceive`, another
 
 This test checks whether the app exposes sensitive functionality through exported broadcast receivers.
 
+**Example Attack Scenario:**
+
+Suppose a banking app declares a broadcast receiver that resets the user's password based on extras in the received intent, and the receiver is exported with no `android:permission`.
+
+1. An attacker reverse engineers the app and finds the exported receiver, the action it listens for, and the extras it reads (see @MASTG-TECH-0x03).
+2. The attacker writes a malicious app that sends a broadcast targeting the receiver explicitly, with attacker-chosen extras.
+3. The receiver acts on the unvalidated extras and resets the password (and may disclose the old one to the log).
+4. The attacker takes over the account without any interaction from the victim.
+
 ## Steps
 
 1. Use @MASTG-TECH-0013 to reverse engineer the app.
