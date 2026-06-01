@@ -14,9 +14,9 @@ The code snippet below shows sample code that accesses protected resources requi
 
 ## Steps
 
-1. Unzip the app package and locate the `Info.plist` file (@MASTG-TECH-0058), which is located in `./Payload/MASTestApp.app/Info.plist`.
-2. Convert the `Info.plist` to XML format if needed (@MASTG-TECH-0138).
-3. Run `run.sh` to extract purpose strings.
+1. Use @MASTG-TECH-0058 to unzip the app package.
+2. Use @MASTG-TECH-0153 to retrieve `./Payload/MASTestApp.app/Info.plist` and save it as `Info.plist` in this demo directory.
+3. Use @MASTG-TECH-0154 to inspect the purpose strings by running `run.sh`.
 
 {{ run.sh }}
 
@@ -28,7 +28,7 @@ The output reveals the purpose strings declared in the app's `Info.plist` file.
 
 ## Evaluation
 
-The test fails because the app declares multiple purpose strings that may be excessive for its core functionality:
+The test case fails because the app declares multiple purpose strings that may be excessive for its core functionality:
 
 - `NSLocationWhenInUseUsageDescription`: Grants access to user location.
 - `NSContactsUsageDescription`: Grants access to the user's contacts.

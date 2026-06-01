@@ -11,13 +11,14 @@ knowledge: [MASTG-KNOW-0077]
 
 ## Overview
 
-If an iOS app declares protected-resource purpose strings that do not match its actual features, users can be prompted to grant unnecessary access to personal data such as location, contacts, photos, or health information. This test checks whether the app declares only the purpose strings it really needs and whether the strings honestly describe the corresponding feature.
+If an iOS app declares protected-resource purpose strings that do not match its actual features, users can be prompted to grant unnecessary access to personal data such as location, contacts, photos, or health information. Once granted, that access broadens the app's privacy exposure and increases the amount of sensitive data that could be collected, mishandled, or exposed if the app or one of its components is compromised. This test checks whether the app declares only the purpose strings it really needs and whether the strings honestly describe the corresponding feature.
 
 ## Steps
 
-1. Use @MASTG-TECH-0058 to extract the app bundle and locate the `Info.plist` file.
-2. Use @MASTG-TECH-0138 to convert `Info.plist` to a readable format if needed and list all `*UsageDescription` keys.
-3. Review each declared purpose string against the app's exposed features and the privacy-preserving alternatives described in @MASTG-KNOW-0077.
+1. Use @MASTG-TECH-0058 to unzip the app package.
+2. Use @MASTG-TECH-0153 to retrieve the `Info.plist` file.
+3. Use @MASTG-TECH-0154 to inspect all `*UsageDescription` keys.
+4. Review each declared purpose string against the app's exposed features and the privacy-preserving alternatives described in @MASTG-KNOW-0077.
 
 ## Observation
 
