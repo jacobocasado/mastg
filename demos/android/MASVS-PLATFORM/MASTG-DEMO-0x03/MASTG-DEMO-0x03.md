@@ -91,7 +91,7 @@ If the receiver only needs to handle broadcasts sent by the app itself (for exam
     android:exported="false" />
 ```
 
-Trying to send the broadcast again with `adb` after this change will not neccessarily produce an error, but the password will not change and the log will not show the old password, confirming that the receiver is no longer reachable from outside the app.
+Trying to send the broadcast again with `adb` after this change will not necessarily produce an error, but the password will not change and the log will not show the old password, confirming that the receiver is no longer reachable from outside the app.
 
 ```bash
 adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$PasswordResetReceiver' --es newpass hacked123
@@ -128,6 +128,6 @@ Broadcast completed: result=0
 
 With `protectionLevel="signature"`, the OS only delivers the broadcast if the sending app is signed with the same certificate. A real-world example is an enterprise remote-wipe receiver that only responds to broadcasts from the company's own device management app. Any third-party app that sends the broadcast without holding the permission is silently ignored.
 
-**Additional fix: Also remove sensitive data from logs**
+**Additional fix: Also remove sensitive data from logs:**
 
 Regardless of whether the receiver itself is protected, no credentials must be written to the app logs, which are readable by any app that holds `READ_LOGS` (granted to shell and ADB).
