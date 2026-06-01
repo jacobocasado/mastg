@@ -59,7 +59,7 @@ You can use @MASTG-TECH-0x03 with @MASTG-TOOL-0004 to deliver the broadcast and 
     ```bash
     adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$PasswordResetReceiver' --es newpass hacked123
 
-    Broadcasting: Intent { act=org.owasp.mastestapp.RESET_PASSWORD flg=0x400000 cmp=org.owasp.mastestapp/.MastgTest$PasswordResetReceiver (has extras) }                                                                                     
+    Broadcasting: Intent { act=org.owasp.mastestapp.RESET_PASSWORD flg=0x400000 cmp=org.owasp.mastestapp/.MastgTest$PasswordResetReceiver (has extras) }
     Broadcast completed: result=0
     ```
 

@@ -56,9 +56,9 @@ Use @MASTG-TECH-0x02 with `adb` to start `AuthService` directly and pass a new p
 2. Start the exported service with a new password:
 
     ```bash
-    adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123                                             
+    adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123
 
-    Starting service: Intent { cmp=org.owasp.mastestapp/.MastgTest$AuthService (has extras) } 
+    Starting service: Intent { cmp=org.owasp.mastestapp/.MastgTest$AuthService (has extras) }
     ```
 
 3. Return to the app and tap **Refresh**. The vault password now shows `hacked123`, confirming that an external caller changed it through the exported service.
