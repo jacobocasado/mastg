@@ -21,6 +21,7 @@ Use @MASTG-KNOW-0033 as reference for common native obfuscation mechanisms and i
     If the app does not include first-party native libraries, this test is not applicable.
 
 ## Steps
+
 1. Use @MASTG-TECH-0157 to extract the native libraries from the app package.
 2. Perform @MASTG-TECH-0018 to disassemble the native libraries that may contain security-relevant logic.
 3. Perform @MASTG-TECH-0024 to review the disassembled native code.
