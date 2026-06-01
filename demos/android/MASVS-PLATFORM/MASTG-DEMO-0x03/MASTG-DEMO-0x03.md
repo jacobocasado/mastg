@@ -70,3 +70,64 @@ The disclosed old password is also visible in the log:
 ```bash
 adb logcat -s MASTG-DEMO
 ```
+
+Output:
+
+```
+06-01 09:26:01.334 30881 30881 D MASTG-DEMO: Password changed from originalPass123 to hacked123
+```
+
+## Fix
+
+There are two ways to fix this, depending on whether `PasswordResetReceiver` needs to accept broadcasts from external apps.
+
+**Option 1: Set `android:exported="false"` (recommended)**
+
+If the receiver only needs to handle broadcasts sent by the app itself (for example, using `LocalBroadcastManager` or an explicit internal intent), remove external access entirely:
+
+```xml
+<receiver
+    android:name="org.owasp.mastestapp.MastgTest$PasswordResetReceiver"
+    android:exported="false" />
+```
+
+Trying to send the broadcast again with `adb` after this change will not neccessarily produce an error, but the password will not change and the log will not show the old password, confirming that the receiver is no longer reachable from outside the app.
+
+```bash
+adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$PasswordResetReceiver' --es newpass hacked123
+Broadcasting: Intent { act=org.owasp.mastestapp.RESET_PASSWORD flg=0x400000 cmp=org.owasp.mastestapp/.MastgTest$PasswordResetReceiver (has extras) }
+Broadcast completed: result=0
+```
+
+This is the correct fix for any receiver that reacts to internal app events. No other app can send a broadcast to a non-exported receiver. Since Android 8.0 (API 26), implicit broadcast receivers must be registered at runtime anyway, so most password-change or credential-reset events should be handled through explicit internal intents rather than exported static receivers.
+
+**Option 2: Keep `android:exported="true"` but require a `android:permission`**
+
+If the receiver must handle broadcasts from a trusted partner app (for example, a companion lock-screen app from the same developer that can trigger a remote wipe or credential reset), gate delivery with a custom signature-level send permission:
+
+```xml
+<!-- Declare the permission -->
+<permission
+    android:name="org.owasp.mastestapp.SEND_PASSWORD_RESET"
+    android:protectionLevel="signature" />
+
+<!-- Require it on the receiver -->
+<receiver
+    android:name="org.owasp.mastestapp.MastgTest$PasswordResetReceiver"
+    android:exported="true"
+    android:permission="org.owasp.mastestapp.SEND_PASSWORD_RESET" />
+```
+
+Trying to send the broadcast again with `adb` after this change will also not produce an error, but it won't have any effect:
+
+```bash
+adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$PasswordResetReceiver' --es newpass hacked123
+Broadcasting: Intent { act=org.owasp.mastestapp.RESET_PASSWORD flg=0x400000 cmp=org.owasp.mastestapp/.MastgTest$PasswordResetReceiver (has extras) }
+Broadcast completed: result=0
+```
+
+With `protectionLevel="signature"`, the OS only delivers the broadcast if the sending app is signed with the same certificate. A real-world example is an enterprise remote-wipe receiver that only responds to broadcasts from the company's own device management app. Any third-party app that sends the broadcast without holding the permission is silently ignored.
+
+**Additional fix: Also remove sensitive data from logs**
+
+Regardless of whether the receiver itself is protected, no credentials must be written to the app logs, which are readable by any app that holds `READ_LOGS` (granted to shell and ADB).
