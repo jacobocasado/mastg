@@ -17,8 +17,9 @@ If an iOS app declares protected-resource purpose strings that do not match its 
 
 1. Use @MASTG-TECH-0058 to unzip the app package.
 2. Use @MASTG-TECH-0153 to retrieve the `Info.plist` file.
-3. Use @MASTG-TECH-0154 to inspect all `*UsageDescription` keys.
-4. Review each declared purpose string against the app's exposed features and the privacy-preserving alternatives described in @MASTG-KNOW-0077.
+3. Use @MASTG-TECH-0138 to convert the `Info.plist` file to a readable format if needed.
+4. Use @MASTG-TECH-0154 to inspect all `*UsageDescription` keys.
+5. Review each declared purpose string against the app's exposed features and the privacy-preserving alternatives described in @MASTG-KNOW-0077.
 
 ## Observation
 

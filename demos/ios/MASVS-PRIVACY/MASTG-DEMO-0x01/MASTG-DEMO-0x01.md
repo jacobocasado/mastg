@@ -16,7 +16,8 @@ The code snippet below shows sample code that accesses protected resources requi
 
 1. Use @MASTG-TECH-0058 to unzip the app package.
 2. Use @MASTG-TECH-0153 to retrieve `./Payload/MASTestApp.app/Info.plist` and save it as `Info.plist` in this demo directory.
-3. Use @MASTG-TECH-0154 to inspect the purpose strings by running `run.sh`.
+3. Use @MASTG-TECH-0138 to convert `Info.plist` to a readable format if needed.
+4. Use @MASTG-TECH-0154 to inspect the purpose strings by running `run.sh`.
 
 {{ run.sh }}
 
