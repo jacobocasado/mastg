@@ -125,6 +125,6 @@ Exception occurred while executing 'start':
 java.lang.SecurityException: Permission Denial: starting Intent { flg=0x10000000 xflg=0x4 cmp=org.owasp.mastestapp/.MastgTest$SecretActivity } from null (pid=29880, uid=2000) requires org.owasp.mastestapp.ACCESS_SECRET
 ```
 
-**Why not rely solely on the PIN check in the calling activity?**
+**Why not rely solely on the PIN check in the calling activity?:**
 
 Enforcing authentication only in `PinEntryActivity` and trusting that `SecretActivity` is always reached through it is a broken client-side control. Android's activity model makes no such guarantee: any exported activity can be started directly. Authentication state must be checked inside the activity that performs the sensitive operation, or the activity must not be exported.

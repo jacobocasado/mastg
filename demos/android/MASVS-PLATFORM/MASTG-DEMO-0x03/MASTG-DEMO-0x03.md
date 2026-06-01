@@ -73,7 +73,7 @@ adb logcat -s MASTG-DEMO
 
 Output:
 
-```
+```bash
 06-01 09:26:01.334 30881 30881 D MASTG-DEMO: Password changed from originalPass123 to hacked123
 ```
 
