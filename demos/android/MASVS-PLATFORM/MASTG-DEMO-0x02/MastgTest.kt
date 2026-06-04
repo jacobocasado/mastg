@@ -1,8 +1,8 @@
 // SUMMARY: This sample implements a small password vault. Tapping Start opens VaultActivity,
 // which shows the password currently stored in the app. The app also declares AuthService, an
-// exported bound service with a Messenger interface that changes the stored password without
-// checking the caller's permission. Any app can bind to it and reset the password; tapping
-// Refresh in VaultActivity then shows the new value. Inspired by the "Sieve" AuthService.
+// exported started service that changes the stored password from an intent extra in onStartCommand
+// without verifying the caller. Any app can start it and reset the password; tapping Refresh in
+// VaultActivity then shows the new value. Inspired by the "Sieve" AuthService.
 
 package org.owasp.mastestapp
 

@@ -2,7 +2,7 @@
 platform: android
 title: Exported Activities That Expose Sensitive Functionality
 id: MASTG-TEST-0x01
-type: [static, config, manual]
+type: [static, config, code, manual]
 weakness: MASWE-0x01
 best-practices: [MASTG-BEST-0x01]
 profiles: [L1, L2]
@@ -24,14 +24,14 @@ Suppose a banking app protects its account screen behind a login activity but al
 1. An attacker reverse engineers the app and finds the exported account-details activity (see @MASTG-TECH-0x01).
 2. The attacker writes a malicious app that calls `startActivity` with an explicit intent targeting that activity by its component name.
 3. The account-details activity starts directly, without going through the login activity.
-4. The victim's account data is displayed to the attacker's app context, bypassing authentication entirely.
+4. The account-details activity displays the victim's account data without requiring authentication.
 
 ## Steps
 
 1. Use @MASTG-TECH-0013 to reverse engineer the app.
 2. Use @MASTG-TECH-0117 to obtain the AndroidManifest.xml.
 3. Use @MASTG-TECH-0x01 to list the exported activities.
-4. Use @MASTG-TECH-0023 to inspect the code of each exported activity.
+4. Use @MASTG-TECH-0014 to inspect the code of each exported activity.
 
 ## Observation
 

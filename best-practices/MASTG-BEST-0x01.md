@@ -14,7 +14,6 @@ Expose an [activity](https://developer.android.com/guide/components/activities/i
 - **Validate incoming intent data.** Treat all data in an incoming `Intent` as untrusted and validate it before use.
 
 !!! warning
-
     Setting `android:exported="false"` prevents other apps from starting the activity, but components within the same app and apps sharing the same user ID can still reach it. Don't treat it as a substitute for in-app authentication checks on sensitive screens.
 
 For background on activities and the `android:exported` attribute, see @MASTG-KNOW-0x01.

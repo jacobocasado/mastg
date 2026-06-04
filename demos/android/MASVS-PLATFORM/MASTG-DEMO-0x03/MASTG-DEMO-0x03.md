@@ -57,7 +57,7 @@ You can use @MASTG-TECH-0x03 with @MASTG-TOOL-0004 to deliver the broadcast and 
 2. Send the broadcast, targeting the receiver explicitly so it's delivered on modern Android:
 
     ```bash
-    adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$PasswordResetReceiver' --es newpass hacked123
+    adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$PasswordResetReceiver' --es newpass hacked123
 
     Broadcasting: Intent { act=org.owasp.mastestapp.RESET_PASSWORD flg=0x400000 cmp=org.owasp.mastestapp/.MastgTest$PasswordResetReceiver (has extras) }
     Broadcast completed: result=0
@@ -83,7 +83,7 @@ There are two ways to fix this, depending on whether `PasswordResetReceiver` nee
 
 **Option 1: Set `android:exported="false"` (recommended)**
 
-If the receiver only needs to handle broadcasts sent by the app itself (for example, using `LocalBroadcastManager` or an explicit internal intent), remove external access entirely:
+If the receiver only needs to handle broadcasts sent by the app itself (for example, using an explicit internal intent or another in-app communication mechanism), remove external access entirely:
 
 ```xml
 <receiver
@@ -94,7 +94,7 @@ If the receiver only needs to handle broadcasts sent by the app itself (for exam
 Trying to send the broadcast again with `adb` after this change will not necessarily produce an error, but the password will not change and the log will not show the old password, confirming that the receiver is no longer reachable from outside the app.
 
 ```bash
-adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$PasswordResetReceiver' --es newpass hacked123
+adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$PasswordResetReceiver' --es newpass hacked123
 Broadcasting: Intent { act=org.owasp.mastestapp.RESET_PASSWORD flg=0x400000 cmp=org.owasp.mastestapp/.MastgTest$PasswordResetReceiver (has extras) }
 Broadcast completed: result=0
 ```
@@ -121,7 +121,7 @@ If the receiver must handle broadcasts from a trusted partner app (for example, 
 Trying to send the broadcast again with `adb` after this change will also not produce an error, but it won't have any effect:
 
 ```bash
-adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$PasswordResetReceiver' --es newpass hacked123
+adb shell am broadcast -a org.owasp.mastestapp.RESET_PASSWORD -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$PasswordResetReceiver' --es newpass hacked123
 Broadcasting: Intent { act=org.owasp.mastestapp.RESET_PASSWORD flg=0x400000 cmp=org.owasp.mastestapp/.MastgTest$PasswordResetReceiver (has extras) }
 Broadcast completed: result=0
 ```

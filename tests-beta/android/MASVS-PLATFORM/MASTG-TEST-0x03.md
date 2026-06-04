@@ -2,7 +2,7 @@
 platform: android
 title: Exported Broadcast Receivers That Expose Sensitive Functionality
 id: MASTG-TEST-0x03
-type: [static, config, manual]
+type: [static, config, code, manual]
 weakness: MASWE-0063
 best-practices: [MASTG-BEST-0x03]
 profiles: [L1, L2]
@@ -31,7 +31,7 @@ Suppose a banking app declares a broadcast receiver that resets the user's passw
 1. Use @MASTG-TECH-0013 to reverse engineer the app.
 2. Use @MASTG-TECH-0117 to obtain the AndroidManifest.xml.
 3. Use @MASTG-TECH-0x03 to list the exported broadcast receivers, including context-registered receivers found in the code.
-4. Use @MASTG-TECH-0023 to inspect the `onReceive` implementation of each exported receiver.
+4. Use @MASTG-TECH-0014 to inspect the `onReceive` implementation of each exported receiver.
 
 ## Observation
 

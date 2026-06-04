@@ -2,7 +2,7 @@
 platform: android
 title: Exported Services That Expose Sensitive Functionality
 id: MASTG-TEST-0x02
-type: [static, config, manual]
+type: [static, config, code, manual]
 weakness: MASWE-0062
 best-practices: [MASTG-BEST-0x02]
 profiles: [L1, L2]
@@ -31,7 +31,7 @@ Suppose a password-manager app uses a bound service with a `Messenger` interface
 1. Use @MASTG-TECH-0013 to reverse engineer the app.
 2. Use @MASTG-TECH-0117 to obtain the AndroidManifest.xml.
 3. Use @MASTG-TECH-0x02 to list the exported services.
-4. Use @MASTG-TECH-0023 to inspect the code of each exported service.
+4. Use @MASTG-TECH-0014 to inspect the code of each exported service.
 
 ## Observation
 

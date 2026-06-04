@@ -56,7 +56,7 @@ Use @MASTG-TECH-0x02 with `adb` to start `AuthService` directly and pass a new p
 2. Start the exported service with a new password:
 
     ```bash
-    adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123
+    adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123
 
     Starting service: Intent { cmp=org.owasp.mastestapp/.MastgTest$AuthService (has extras) }
     ```
@@ -80,7 +80,7 @@ If the service is only ever started by the app itself (the most common case for 
 Trying to start `AuthService` again with `adb` after this change will fail with an error, confirming that the service is no longer reachable from outside the app:
 
 ```bash
-adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123
+adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123
 Starting service: Intent { cmp=org.owasp.mastestapp/.MastgTest$AuthService (has extras) }
 Error: Requires permission not exported from uid 10225
 ```
@@ -105,7 +105,7 @@ If the service must accept commands from a trusted partner app (for example, a s
 Trying to start `AuthService` again with `adb` after this change will fail with a different error, confirming that the service is still exported but now requires a permission that the calling app does not have:
 
 ```bash
-adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123
+adb shell am startservice -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$AuthService' --es org.owasp.mastestapp.PASSWORD hacked123
 Starting service: Intent { cmp=org.owasp.mastestapp/.MastgTest$AuthService (has extras) }
 Error: Requires permission org.owasp.mastestapp.USE_AUTH_SERVICE
 ```
