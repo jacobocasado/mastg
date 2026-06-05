@@ -1,5 +1,5 @@
     buildTypes {
-        release {
+        debug {
             isMinifyEnabled = true
             isDebuggable = false
             proguardFiles(
