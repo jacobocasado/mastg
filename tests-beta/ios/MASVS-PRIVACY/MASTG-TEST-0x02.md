@@ -13,7 +13,7 @@ knowledge: [MASTG-KNOW-0077]
 
 This test is the dynamic counterpart to @MASTG-TEST-0x01.
 
-If an iOS app checks or requests access to protected resources in contexts that do not match its declared purpose strings or feature set, it may access personal data unexpectedly. This test verifies which authorization APIs the app actually reaches at runtime and whether those calls match the declared permissions and user-visible functionality.
+If an iOS app checks or requests access to protected resources in contexts that do not match its declared purpose strings or feature set, it may access personal data unexpectedly. This test verifies which authorization APIs the app actually reaches at runtime and whether those calls match the declared permissions and user-visible functionality. The iOS permission model, including the relationship between purpose strings and protected-resource APIs, is described in @MASTG-KNOW-0077.
 
 ## Steps
 
