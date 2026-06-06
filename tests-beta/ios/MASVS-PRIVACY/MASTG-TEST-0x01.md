@@ -11,7 +11,9 @@ knowledge: [MASTG-KNOW-0077]
 
 ## Overview
 
-If an iOS app declares protected-resource purpose strings that do not match its actual features, users can be prompted to grant unnecessary access to personal data such as location, contacts, photos, or health information. Once granted, that access broadens the app's privacy exposure and increases the amount of sensitive data that could be collected, mishandled, or exposed if the app or one of its components is compromised. This test checks whether the app declares only the purpose strings it really needs and whether the strings honestly describe the corresponding feature. The iOS permission model, including the relationship between purpose strings and protected-resource APIs, is described in @MASTG-KNOW-0077.
+If an iOS app declares protected-resource purpose strings that do not match its actual features, users can be prompted to grant unnecessary access to personal data such as location, contacts, photos, or health information. Once granted, that access broadens the app's privacy exposure and increases the amount of sensitive data that could be collected, mishandled, or exposed if the app or one of its components is compromised. This test checks whether the app declares only the purpose strings it really needs and whether the strings honestly describe the corresponding feature.
+
+Examples include `NSLocationWhenInUseUsageDescription` with `CLLocationManager.requestWhenInUseAuthorization()`, `NSCameraUsageDescription` with `AVCaptureDevice.requestAccess(for:completionHandler:)`, `NSContactsUsageDescription` with `CNContactStore.requestAccess(for:completionHandler:)`, `NSPhotoLibraryUsageDescription` with `PHPhotoLibrary.requestAuthorization(for:handler:)`, and `NSHealthShareUsageDescription` with `HKHealthStore.requestAuthorization(toShare:read:completion:)`. See @MASTG-KNOW-0077 for the relationship between purpose string keys and protected-resource APIs.
 
 ## Steps
 
@@ -23,17 +25,7 @@ If an iOS app declares protected-resource purpose strings that do not match its 
 
 ## Observation
 
-The output should contain the list of purpose strings declared by the app together with the corresponding user-facing explanation. Examples of purpose string keys and related authorization APIs include:
-
-- `NSLocationWhenInUseUsageDescription` or `NSLocationAlwaysAndWhenInUseUsageDescription` with `CLLocationManager.requestWhenInUseAuthorization()`, `CLLocationManager.requestAlwaysAuthorization()`, or `CLLocationManager.authorizationStatus()`
-- `NSCameraUsageDescription` with `AVCaptureDevice.requestAccess(for:completionHandler:)` or `AVCaptureDevice.authorizationStatus(for:)`
-- `NSMicrophoneUsageDescription` with `AVAudioApplication.requestRecordPermission(completionHandler:)`, `AVAudioApplication.recordPermission`, or `AVCaptureDevice.requestAccess(for:completionHandler:)`
-- `NSContactsUsageDescription` with `CNContactStore.requestAccess(for:completionHandler:)` or `CNContactStore.authorizationStatus(for:)`
-- `NSPhotoLibraryUsageDescription` or `NSPhotoLibraryAddUsageDescription` with `PHPhotoLibrary.requestAuthorization(for:handler:)` or `PHPhotoLibrary.authorizationStatus(for:)`
-- `NSHealthShareUsageDescription` or `NSHealthUpdateUsageDescription` with `HKHealthStore.requestAuthorization(toShare:read:completion:)`
-- `NSBluetoothAlwaysUsageDescription` with `CBManager.authorization`
-
-See @MASTG-KNOW-0077 for additional protected resources, purpose string keys, and framework APIs.
+The output should contain the purpose string keys declared by the app together with their user-facing explanations.
 
 ## Evaluation
 

@@ -13,7 +13,18 @@ knowledge: [MASTG-KNOW-0077]
 
 This test is the dynamic counterpart to @MASTG-TEST-0x01.
 
-If an iOS app checks or requests access to protected resources in contexts that do not match its declared purpose strings or feature set, it may access personal data unexpectedly. This test verifies which authorization APIs the app actually reaches at runtime and whether those calls match the declared permissions and user-visible functionality. The iOS permission model, including the relationship between purpose strings and protected-resource APIs, is described in @MASTG-KNOW-0077.
+If an iOS app checks or requests access to protected resources in contexts that do not match its declared purpose strings or feature set, it may access personal data unexpectedly. This test verifies which authorization APIs the app actually reaches at runtime and whether those calls match the declared permissions and user-visible functionality.
+
+Typical authorization APIs to monitor include:
+
+- `CLLocationManager.requestWhenInUseAuthorization()`, `CLLocationManager.requestAlwaysAuthorization()`, or `CLLocationManager.authorizationStatus()`
+- `AVCaptureDevice.requestAccess(for:completionHandler:)` or `AVCaptureDevice.authorizationStatus(for:)`
+- `CNContactStore.requestAccess(for:completionHandler:)` or `CNContactStore.authorizationStatus(for:)`
+- `PHPhotoLibrary.requestAuthorization(for:handler:)` or `PHPhotoLibrary.authorizationStatus(for:)`
+- `HKHealthStore.requestAuthorization(toShare:read:completion:)` or `HKHealthStore.authorizationStatus(for:)`
+- `CBManager.authorization`
+
+See @MASTG-KNOW-0077 for additional protected resources, purpose string keys, and framework APIs.
 
 ## Steps
 
@@ -24,22 +35,11 @@ If an iOS app checks or requests access to protected resources in contexts that 
 
 ## Observation
 
-The output should contain a list of authorization-related methods that were called during app usage. Examples include:
-
-- `CLLocationManager.requestWhenInUseAuthorization()`, `CLLocationManager.requestAlwaysAuthorization()`, or `CLLocationManager.authorizationStatus()`
-- `AVCaptureDevice.requestAccess(for:completionHandler:)` or `AVCaptureDevice.authorizationStatus(for:)`
-- `CNContactStore.requestAccess(for:completionHandler:)` or `CNContactStore.authorizationStatus(for:)`
-- `PHPhotoLibrary.requestAuthorization(for:handler:)` or `PHPhotoLibrary.authorizationStatus(for:)`
-- `HKHealthStore.requestAuthorization(toShare:read:completion:)` or `HKHealthStore.authorizationStatus(for:)`
-- `CBManager.authorization`
-
-For each observed call, record:
+The output should contain a list of authorization-related methods that were called during app usage. For each observed call, record:
 
 - Method names and classes
 - Return values (authorization status)
 - Call stack (backtrace) to understand the context
-
-See @MASTG-KNOW-0077 for additional protected resources, purpose string keys, and framework APIs.
 
 ## Evaluation
 
