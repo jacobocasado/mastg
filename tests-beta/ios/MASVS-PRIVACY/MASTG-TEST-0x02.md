@@ -57,4 +57,3 @@ Use the observed backtraces to inspect the relevant code and determine:
 - whether the traced authorization calls lead to actual access to the protected resource,
 - whether the surrounding feature genuinely requires that access, and
 - whether the app could use a narrower or user-selected alternative instead.
-

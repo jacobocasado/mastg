@@ -53,4 +53,3 @@ Examples include:
 - The app is signed with the HealthKit entitlement but does not reach `HKHealthStore` APIs or HealthKit data types in any relevant flow.
 - The app is signed with App Groups but does not use shared container APIs or suite defaults.
 - The app is signed with iCloud container entitlements but does not use CloudKit, ubiquitous containers, or iCloud key-value storage.
-
