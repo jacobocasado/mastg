@@ -13,7 +13,7 @@ knowledge: [MASTG-KNOW-0077]
 
 If an iOS app enables entitlements or capabilities that it does not need, it may gain unnecessary access to protected services or additional channels for sharing personal data outside the default sandbox model. This test checks whether the entitlements signed into the app only enable privacy-relevant capabilities that are required for the app's actual features.
 
-Capabilities configured in Xcode are signed into the app as entitlements, but the entitlement itself is not a runtime API call. The associated runtime surface depends on the service: HealthKit uses `HKHealthStore` and HealthKit data types, App Groups use shared containers or suite defaults, and Associated Domains reach the app through system-delivered activities.
+Capabilities configured in Xcode are signed into the app as entitlements, but the entitlement itself is not a runtime API call. The associated runtime surface depends on the service: `HealthKit` uses `HKHealthStore` and `HealthKit` data types, App Groups use shared containers or suite defaults, and Associated Domains reach the app through system-delivered activities.
 
 Privacy-relevant examples include:
 
@@ -47,7 +47,3 @@ Pay special attention to entitlements that:
 - allow data sharing across apps or extensions, for example App Groups or iCloud containers,
 - unlock access to sensitive user data or system services, for example HealthKit, HomeKit, or Siri-related capabilities, or
 - expose additional external interfaces, for example Associated Domains or multicast networking.
-
-**Further Validation Required:**
-
-Map each flagged entitlement to its associated capability and runtime surface as described in @MASTG-KNOW-0077, then inspect the target configuration and code paths that use those APIs or entry points with @MASTG-TECH-0076. For example, a HealthKit entitlement maps to `HKHealthStore` calls and HealthKit data types, while App Groups map to shared container access or `UserDefaults(suiteName:)`.

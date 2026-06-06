@@ -11,6 +11,8 @@ knowledge: [MASTG-KNOW-0077]
 
 ## Overview
 
+This test is the dynamic counterpart to @MASTG-TEST-0x03.
+
 If an iOS app is signed with privacy-relevant entitlements but does not use the framework APIs, shared containers, or system entry points enabled by those entitlements, the app may carry unnecessary capability exposure.
 
 This test verifies whether the app reaches entitlement-backed APIs at runtime and whether that runtime behavior supports the entitlements declared in the app's code signature.
@@ -44,7 +46,7 @@ The output should contain a list of entitlement-backed APIs or system entry poin
 
 ## Evaluation
 
-The test case fails if the app is signed with a privacy-relevant entitlement and runtime analysis, together with static review of the associated code paths, shows that the app does not use the APIs or entry points that require that entitlement.
+The test case fails if the app is signed with a privacy-relevant entitlement and runtime analysis shows that the app does not use the APIs or entry points that require that entitlement.
 
 Examples include:
 
@@ -52,6 +54,3 @@ Examples include:
 - The app is signed with App Groups but does not use shared container APIs or suite defaults.
 - The app is signed with iCloud container entitlements but does not use CloudKit, ubiquitous containers, or iCloud key-value storage.
 
-**Further Validation Required:**
-
-Do not treat the absence of a trace during one execution as proof that an entitlement is unused. Optional flows, dormant code, entitlement-backed app extensions, and region-specific features may require deeper static review and additional runtime coverage.

@@ -8,7 +8,7 @@ test: MASTG-TEST-0x03
 
 ## Sample
 
-This sample uses the same app as @MASTG-DEMO-0x01. The app binary is signed with the additional `com.apple.developer.healthkit` entitlement, which allows the app to request user authorization for HealthKit access. The entitlement does not by itself prove that the app has accessed health data, because HealthKit access still requires runtime authorization for specific data types.
+This sample uses the same app as @MASTG-DEMO-0x01. The app binary is signed with the `com.apple.developer.healthkit` entitlement, which allows the app to request user authorization for HealthKit access. This dummy app does not need the information provided by such entitlement for its functionality. 
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
@@ -31,6 +31,8 @@ The output shows the entitlements embedded in the app:
 
 ## Evaluation
 
-The test case fails because the app is signed with the `com.apple.developer.healthkit` entitlement, which may be excessive for the sample's shown functionality. The sample app does not present any health, fitness, or wellness feature that would justify enabling HealthKit.
+The test case fails because the app is signed with the `com.apple.developer.healthkit` entitlement, which is for the sample's shown functionality. The sample app does not present any health, fitness, or wellness feature that would justify enabling HealthKit.
 
-This static entitlement finding should be evaluated against the app's stated functionality. Runtime use of the entitlement-backed APIs is covered separately in @MASTG-DEMO-0x04.
+!!! note
+    Each entitlement should be evaluated against the app's stated functionality. If the app is a simple utility that doesn't need location, contacts, or photos, the related entitlements would be considered excessive and represent a privacy concern.
+

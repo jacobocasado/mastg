@@ -29,7 +29,7 @@ See @MASTG-KNOW-0077 for the mapping between protected resources, purpose string
 ## Steps
 
 1. Use @MASTG-TECH-0056 to install the app.
-2. Use @MASTG-TECH-0095 to hook the relevant APIs.
+2. Use @MASTG-TECH-0095 to hook the relevant API calls.
 3. Exercise the app extensively to trigger as many flows as possible and enter sensitive data wherever you can.
 
 ## Observation
@@ -52,10 +52,9 @@ Examples include:
 
 **Further Validation Required:**
 
-Use the observed backtraces to inspect the relevant code with @MASTG-TECH-0076 and determine:
+Use the observed backtraces to inspect the relevant code and determine:
 
 - whether the traced authorization calls lead to actual access to the protected resource,
 - whether the surrounding feature genuinely requires that access, and
 - whether the app could use a narrower or user-selected alternative instead.
 
-Do not treat the absence of a trace during one execution as proof that a declared permission is unused. Optional flows, dormant code, and region-specific features may require deeper static review.

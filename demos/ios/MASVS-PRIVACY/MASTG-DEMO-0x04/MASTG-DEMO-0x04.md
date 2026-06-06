@@ -10,7 +10,7 @@ test: MASTG-TEST-0x04
 
 This sample uses the same app as @MASTG-DEMO-0x01. The app is signed with the `com.apple.developer.healthkit` entitlement, but the Swift code does not import HealthKit, instantiate `HKHealthStore`, or request access to HealthKit data types.
 
-The static entitlement extraction in @MASTG-DEMO-0x03 shows what the app declares in its code signature. This runtime demo traces representative HealthKit APIs associated with that entitlement while exercising the app.
+The static entitlement extraction in @MASTG-DEMO-0x03 shows what the app declares in its code signature. This runtime demo traces representative HealthKit APIs associated with that entitlement while exercising the app and verifies if the related APIs are called.
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
@@ -34,6 +34,4 @@ The output shows the HealthKit runtime hooks or class lookup result captured whi
 
 ## Evaluation
 
-The test case fails because the app is signed with the `com.apple.developer.healthkit` entitlement, but the exercised runtime flow does not show HealthKit API use such as `HKHealthStore`.
-
-A single runtime trace cannot prove that an entitlement is unused in every possible flow of a real app. Confirm absence of runtime traces with static review of the code paths associated with the entitlement, whenever possible.
+The test case fails because the app is signed with the `com.apple.developer.healthkit` entitlement, but the exercised runtime flow does not show any HealthKit API use such as `HKHealthStore`.

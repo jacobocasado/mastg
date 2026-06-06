@@ -11,37 +11,37 @@
 [+] CLLocationManager.requestWhenInUseAuthorization called
 
 Backtrace:
-0x102d113c8
-0x102d12df8
-0x1d8e05358
-0x1d9536624
-0x1d95014e8
-0x1d87c55f0
-0x1d8d9cd94
-0x1d8da2800
+0x102cc4068 MASTestApp.debug.dylib!static MastgTest.mastgTest(completion:)
+0x102cc5cf0 MASTestApp.debug.dylib!closure #1 in closure #1 in closure #1 in ContentView.body.getter
+0x1bf3ff35c SwiftUI!0x7d735c (0x18ac6f35c)
+0x1bf3ff844 SwiftUI!0x7d7844 (0x18ac6f844)
+0x1bf3ff76c SwiftUI!0x7d776c (0x18ac6f76c)
+0x1bece904c SwiftUI!0xc104c (0x18a55904c)
+0x1bec5b2cc SwiftUI!0x332cc (0x18a4cb2cc)
+0x1bece904c SwiftUI!0xc104c (0x18a55904c)
 
 [+] CNContactStore.authorizationStatusForEntityType called
 
 Backtrace:
-0x102d113e4
-0x102d12df8
-0x1d8e05358
-0x1d9536624
-0x1d95014e8
-0x1d87c55f0
-0x1d8d9cd94
-0x1d8da2800
+0x102cc4084 MASTestApp.debug.dylib!static MastgTest.mastgTest(completion:)
+0x102cc5cf0 MASTestApp.debug.dylib!closure #1 in closure #1 in closure #1 in ContentView.body.getter
+0x1bf3ff35c SwiftUI!0x7d735c (0x18ac6f35c)
+0x1bf3ff844 SwiftUI!0x7d7844 (0x18ac6f844)
+0x1bf3ff76c SwiftUI!0x7d776c (0x18ac6f76c)
+0x1bece904c SwiftUI!0xc104c (0x18a55904c)
+0x1bec5b2cc SwiftUI!0x332cc (0x18a4cb2cc)
+0x1bece904c SwiftUI!0xc104c (0x18a55904c)
     Return value: 0 (notDetermined)
 
 [+] PHPhotoLibrary.authorizationStatusForAccessLevel called
 
 Backtrace:
-0x102d11410
-0x102d12df8
-0x1d8e05358
-0x1d9536624
-0x1d95014e8
-0x1d87c55f0
-0x1d8d9cd94
-0x1d8da2800
+0x102cc40b0 MASTestApp.debug.dylib!static MastgTest.mastgTest(completion:)
+0x102cc5cf0 MASTestApp.debug.dylib!closure #1 in closure #1 in closure #1 in ContentView.body.getter
+0x1bf3ff35c SwiftUI!0x7d735c (0x18ac6f35c)
+0x1bf3ff844 SwiftUI!0x7d7844 (0x18ac6f844)
+0x1bf3ff76c SwiftUI!0x7d776c (0x18ac6f76c)
+0x1bece904c SwiftUI!0xc104c (0x18a55904c)
+0x1bec5b2cc SwiftUI!0x332cc (0x18a4cb2cc)
+0x1bece904c SwiftUI!0xc104c (0x18a55904c)
     Return value: 0 (notDetermined)

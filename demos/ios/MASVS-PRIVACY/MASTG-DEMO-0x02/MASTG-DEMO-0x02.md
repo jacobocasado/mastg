@@ -8,9 +8,9 @@ test: MASTG-TEST-0x02
 
 ## Sample
 
-This sample uses the same code as @MASTG-DEMO-0x01. The app declares purpose strings for location, contacts, photos, and camera in `Info.plist`. The app reaches authorization-related APIs for location, contacts, and photos when the **Start** button is tapped.
+This sample uses the same app as @MASTG-DEMO-0x01. The app declares purpose strings for location, contacts, photos, and camera in `Info.plist`. The app reaches authorization-related APIs for location, contacts, and photos when the **Start** button is tapped. In this sample, `NSCameraUsageDescription` is declared but no camera authorization API is triggered.
 
-This runtime analysis complements the static `Info.plist` review from @MASTG-DEMO-0x01: purpose strings show what the app declares, while the runtime analysis shows which authorization APIs are exercised in this run. In this sample, `NSCameraUsageDescription` is declared but no camera authorization API is triggered.
+This runtime analysis complements the static `Info.plist` review from @MASTG-DEMO-0x01: purpose strings show what the app declares, while the runtime analysis shows which authorization APIs are exercised in this run. 
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
@@ -38,7 +38,7 @@ The trace shows:
 
 ## Evaluation
 
-The test case fails because the app reaches protected-resource authorization APIs that must be cross-referenced with its declared purpose strings and actual features.
+The test case fails because the app declares purpose strings but no related authorization API is triggered at runtime.
 
 Compare these runtime calls with the purpose strings extracted in @MASTG-DEMO-0x01:
 
@@ -46,4 +46,3 @@ Compare these runtime calls with the purpose strings extracted in @MASTG-DEMO-0x
 - The location API called is `requestWhenInUseAuthorization`, which matches the declared `NSLocationWhenInUseUsageDescription`. If the app had called `requestAlwaysAuthorization` instead, the stricter `NSLocationAlwaysAndWhenInUseUsageDescription` would be required.
 - `NSCameraUsageDescription` is declared in `Info.plist` (see @MASTG-DEMO-0x01) but no camera authorization API is reached in this run. A declared permission that is not exercised in the tested flow is an indicator of a potentially unnecessary permission.
 
-A single run cannot prove that the camera permission is unused, since optional or dormant flows may exercise it later. Confirm the finding with static review as described in @MASTG-TEST-0x02 "Further Validation Required" guidance before concluding the permission is unnecessary.

@@ -6,7 +6,6 @@ INPUT="${2:-entitlements_reversed.plist}"
 OUTPUT="${3:-output.txt}"
 
 # Extract the entitlements from the app's main binary (see @MASTG-TECH-0111).
-# Pseudo-signed builds may not include embedded.mobileprovision.
 rabin2 -OC "$APP_BINARY" > "$INPUT"
 
 if [[ ! -f "$INPUT" ]]; then

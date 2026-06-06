@@ -8,7 +8,7 @@ test: MASTG-TEST-0x01
 
 ## Sample
 
-This showcases how to identify protected-resource declarations by inspecting purpose strings. The `Info.plist` file of the app declares multiple usage descriptions that iOS uses when the app requests access to protected resources.
+This sample app declares several purpose strings in its `Info.plist` file that are excessive for its core functionality (the app is a dummy app that does not need the user location, health or contacts information, access to the photo library or access to the device camera for its functionality).
 
 {{ MastgTest.swift # Info.plist }}
 
@@ -29,11 +29,12 @@ The output reveals the purpose strings declared in the app's `Info.plist` file.
 
 ## Evaluation
 
-The test case fails because the app declares multiple purpose strings that may be excessive for its core functionality:
+The test case fails because the app declares multiple purpose strings that are excessive for its core functionality:
 
 - `NSLocationWhenInUseUsageDescription`: Grants access to user location.
 - `NSContactsUsageDescription`: Grants access to the user's contacts.
 - `NSPhotoLibraryUsageDescription`: Grants access to the photo library.
 - `NSCameraUsageDescription`: Grants access to the device camera.
 
-Each permission should be evaluated against the app's stated functionality. If the app is a simple utility that doesn't need location, contacts, or photos, these permissions would be considered excessive and represent a privacy concern.
+!!! note
+    Each permission should be evaluated against the app's stated functionality. If the app is a simple utility that doesn't need location, contacts, or photos, these permissions would be considered excessive and represent a privacy concern.
