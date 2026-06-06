@@ -29,9 +29,8 @@ Refer to @MASTG-KNOW-0077 for a broader discussion of iOS permissions, entitleme
 
 1. Use @MASTG-TECH-0058 to unzip the app package.
 2. Use @MASTG-TECH-0111 to extract the entitlements from the main binary.
-3. Review the extracted entitlements against the app's documented features, declared purpose strings, and data-sharing model.
 
-> The entitlements signed into the app binary are the reliable source for this test, because they are present regardless of how the app was built or signed. The `embedded.mobileprovision` file can carry the same entitlements, but it only exists in apps signed with a provisioning profile (development, ad-hoc, enterprise, and App Store device builds). It is absent in simulator builds and in pseudo-signed builds (for example, when the binary is signed with `ldid`). See @MASTG-KNOW-0077 for details.
+> The entitlements signed into the app binary are the reliable source, because they are present regardless of how the app was built or signed. The `embedded.mobileprovision` file can carry the same entitlements, but it only exists when the packaged app includes a provisioning profile, such as development, ad-hoc, enterprise, or App Store submission builds before App Store processing. It is absent in simulator builds, App Store-distributed apps, and pseudo-signed builds (for example, when the binary is signed with `ldid`).
 
 ## Observation
 

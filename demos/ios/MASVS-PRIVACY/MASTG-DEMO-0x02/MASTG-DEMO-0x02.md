@@ -8,7 +8,9 @@ test: MASTG-TEST-0x02
 
 ## Sample
 
-This sample uses the same code as @MASTG-DEMO-0x01, which declares multiple protected-resource purpose strings in `Info.plist` and reaches authorization-related APIs for location, contacts, and photos. This demo uses Frida to trace those authorization APIs at runtime and compare them with the declared purpose strings.
+This sample uses the same code as @MASTG-DEMO-0x01. The app declares purpose strings for location, contacts, photos, and camera in `Info.plist`. The app reaches authorization-related APIs for location, contacts, and photos when the **Start** button is tapped.
+
+This runtime view complements the static `Info.plist` review from @MASTG-DEMO-0x01: purpose strings show what the app declares, while the runtime trace shows which authorization APIs are exercised in this run. In this sample, `NSCameraUsageDescription` is declared but no camera authorization API is triggered, which can be considered as an excessive permission and represent a privacy concern.
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
@@ -44,4 +46,4 @@ Compare these runtime calls with the purpose strings extracted in @MASTG-DEMO-0x
 - The location API called is `requestWhenInUseAuthorization`, which matches the declared `NSLocationWhenInUseUsageDescription`. If the app had called `requestAlwaysAuthorization` instead, the stricter `NSLocationAlwaysAndWhenInUseUsageDescription` would be required.
 - `NSCameraUsageDescription` is declared in `Info.plist` (see @MASTG-DEMO-0x01) but no camera authorization API is reached at runtime. A declared permission that is never exercised is an indicator of a potentially unnecessary permission.
 
-A single run cannot prove that the camera permission is unused, since optional or dormant flows may exercise it later. Confirm the finding with static review as described in the test's "Further Validation Required" guidance before concluding the permission is unnecessary.
+A single run cannot prove that the camera permission is unused, since optional or dormant flows may exercise it later. Confirm the finding with static review as described in @MASTG-TEST-0x02 "Further Validation Required" guidance before concluding the permission is unnecessary.
