@@ -17,9 +17,10 @@ If an iOS app checks or requests access to protected resources in contexts that 
 
 ## Steps
 
-1. Use @MASTG-TEST-0x01 to identify the purpose strings declared by the app.
-2. Use @MASTG-TECH-0095 to hook the authorization and permission-request APIs associated with those purpose strings.
-3. Exercise the app's relevant features and record which authorization APIs are called, their return values, and the backtraces of relevant calls.
+1. Use @MASTG-TECH-0056 to install the app.
+2. Use @MASTG-TECH-0095 to hook the relevant APIs.
+3. Exercise the app extensively to trigger as many flows as possible and enter sensitive data wherever you can.
+4. Compare the observed authorization APIs with the app's declared purpose strings and user-visible functionality.
 
 ## Observation
 
