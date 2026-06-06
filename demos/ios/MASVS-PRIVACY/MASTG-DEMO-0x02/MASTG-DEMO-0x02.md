@@ -8,7 +8,7 @@ test: MASTG-TEST-0x02
 
 ## Sample
 
-This demo uses the same sample as the static purpose-string demo in this folder.
+This sample uses the same code as @MASTG-DEMO-0x01, which declares multiple protected-resource purpose strings in `Info.plist` and reaches authorization-related APIs for location, contacts, and photos. This demo uses Frida to trace those authorization APIs at runtime and compare them with the declared purpose strings.
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
