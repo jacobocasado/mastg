@@ -8,7 +8,7 @@ test: MASTG-TEST-0x01
 
 ## Sample
 
-This showcases how to identify the access to protected resources by an app by identifying purpose strings. The `Info.plist` file of the app declares multiple usage descriptions that the app uses to request permissions.
+This showcases how to identify protected-resource declarations by inspecting purpose strings. The `Info.plist` file of the app declares multiple usage descriptions that iOS uses when the app requests access to protected resources.
 
 {{ MastgTest.swift # Info.plist }}
 

@@ -1,5 +1,5 @@
 ---
-title: References to Privacy-Relevant Entitlements
+title: Privacy-Relevant Entitlements in the App Code Signature
 platform: ios
 id: MASTG-TEST-0x03
 type: [static, package, manual]
@@ -11,7 +11,9 @@ knowledge: [MASTG-KNOW-0077]
 
 ## Overview
 
-If an iOS app enables entitlements or capabilities that it does not need, it may gain unnecessary access to protected services or additional channels for sharing personal data outside the default sandbox model. This test checks whether the entitlements signed into the app only enable the privacy-relevant capabilities that are required for the app's actual features.
+If an iOS app enables entitlements or capabilities that it does not need, it may gain unnecessary access to protected services or additional channels for sharing personal data outside the default sandbox model. This test checks whether the entitlements signed into the app only enable privacy-relevant capabilities that are required for the app's actual features.
+
+Capabilities configured in Xcode are signed into the app as entitlements, but the entitlement itself is not a runtime API call. The associated runtime surface depends on the service: HealthKit uses `HKHealthStore` and HealthKit data types, App Groups use shared containers or suite defaults, and Associated Domains reach the app through system-delivered activities.
 
 Privacy-relevant examples include:
 
@@ -23,7 +25,7 @@ Privacy-relevant examples include:
 - `com.apple.developer.networking.multicast`
 - `com.apple.developer.siri`
 
-Refer to @MASTG-KNOW-0077 for a broader discussion of iOS permissions, entitlements, and privacy-preserving alternatives.
+See @MASTG-KNOW-0077 for the relationship between Xcode capabilities, signed entitlements, and the framework APIs or entry points that use the corresponding service.
 
 ## Steps
 
@@ -34,7 +36,7 @@ Refer to @MASTG-KNOW-0077 for a broader discussion of iOS permissions, entitleme
 
 ## Observation
 
-The output should contain the entitlements embedded in the app.
+The output should contain the entitlements embedded in the app's code signature.
 
 ## Evaluation
 
@@ -48,4 +50,4 @@ Pay special attention to entitlements that:
 
 **Further Validation Required:**
 
-Inspect the code paths and target configuration associated with each flagged entitlement to confirm whether the entitlement is actively used and whether the resulting data flow is necessary and appropriately constrained.
+Map each flagged entitlement to its associated capability and runtime surface as described in @MASTG-KNOW-0077, then inspect the target configuration and code paths that use those APIs or entry points with @MASTG-TECH-0076. For example, a HealthKit entitlement maps to `HKHealthStore` calls and HealthKit data types, while App Groups map to shared container access or `UserDefaults(suiteName:)`.

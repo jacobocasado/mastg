@@ -1,5 +1,5 @@
 ---
-title: Purpose Strings in Info.plist
+title: Protected Resource Purpose Strings in Info.plist
 platform: ios
 id: MASTG-TEST-0x01
 type: [static, config, manual]
@@ -13,7 +13,7 @@ knowledge: [MASTG-KNOW-0077]
 
 If an iOS app declares protected-resource purpose strings that do not match its actual features, users can be prompted to grant unnecessary access to personal data such as location, contacts, photos, or health information. Once granted, that access broadens the app's privacy exposure and increases the amount of sensitive data that could be collected, mishandled, or exposed if the app or one of its components is compromised. This test checks whether the app declares only the purpose strings it really needs and whether the strings honestly describe the corresponding feature.
 
-Examples include `NSLocationWhenInUseUsageDescription` with `CLLocationManager.requestWhenInUseAuthorization()`, `NSCameraUsageDescription` with `AVCaptureDevice.requestAccess(for:completionHandler:)`, `NSContactsUsageDescription` with `CNContactStore.requestAccess(for:completionHandler:)`, `NSPhotoLibraryUsageDescription` with `PHPhotoLibrary.requestAuthorization(for:handler:)`, and `NSHealthShareUsageDescription` with `HKHealthStore.requestAuthorization(toShare:read:completion:)`. See @MASTG-KNOW-0077 for the relationship between purpose string keys and protected-resource APIs.
+Examples include `NSLocationWhenInUseUsageDescription` with `CLLocationManager.requestWhenInUseAuthorization()`, `NSCameraUsageDescription` with `AVCaptureDevice.requestAccess(for:completionHandler:)`, `NSContactsUsageDescription` with `CNContactStore.requestAccess(for:completionHandler:)`, `NSPhotoLibraryUsageDescription` with `PHPhotoLibrary.requestAuthorization(for:handler:)`, and `NSHealthShareUsageDescription` with `HKHealthStore.requestAuthorization(toShare:read:completion:)`. See @MASTG-KNOW-0077 for the mapping between purpose string keys and framework APIs that request or check protected-resource access.
 
 ## Steps
 
@@ -34,7 +34,7 @@ Consider the following when evaluating:
 
 - Does the permission align with the app's stated purpose? For example, a flashlight app requesting `NSContactsUsageDescription` is suspicious.
 - Does the purpose string provide a clear and honest explanation to the user instead of a generic or misleading message?
-- Could the app use a narrower alternative instead? For example, prefer [`PHPickerViewController`](https://developer.apple.com/documentation/photokit/phpickerviewcontroller) or [`PhotosPicker`](https://developer.apple.com/documentation/photosui/photospicker) over broad photo library access when the user only needs to select specific photos.
+- Could the app use a narrower alternative instead? For example, prefer [`PHPickerViewController`](https://developer.apple.com/documentation/photosui/phpickerviewcontroller) or [`PhotosPicker`](https://developer.apple.com/documentation/photosui/photospicker) over broad photo library access when the user only needs to select specific photos.
 
 Also consider the sensitivity of the requested data:
 

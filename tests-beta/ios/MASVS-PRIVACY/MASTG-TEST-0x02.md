@@ -13,7 +13,7 @@ knowledge: [MASTG-KNOW-0077]
 
 This test is the dynamic counterpart to @MASTG-TEST-0x01.
 
-If an iOS app checks or requests access to protected resources in contexts that do not match its declared purpose strings or feature set, it may access personal data unexpectedly. This test verifies which authorization APIs the app actually reaches at runtime and whether those calls match the declared permissions and user-visible functionality.
+If an iOS app checks or requests access to protected resources in contexts that do not match its declared purpose strings or feature set, it may access personal data unexpectedly. This test verifies which authorization APIs the app actually reaches at runtime and whether those calls match the declared purpose strings and user-visible functionality.
 
 Typical authorization APIs to monitor include:
 
@@ -24,7 +24,7 @@ Typical authorization APIs to monitor include:
 - `HKHealthStore.requestAuthorization(toShare:read:completion:)` or `HKHealthStore.authorizationStatus(for:)`
 - `CBManager.authorization`
 
-See @MASTG-KNOW-0077 for additional protected resources, purpose string keys, and framework APIs.
+See @MASTG-KNOW-0077 for the mapping between protected resources, purpose string keys, and framework APIs.
 
 ## Steps
 
@@ -54,7 +54,7 @@ Examples include:
 
 Use the observed backtraces to inspect the relevant code with @MASTG-TECH-0076 and determine:
 
-- whether the traced authorization calls lead to actual access to the protected data or capability,
+- whether the traced authorization calls lead to actual access to the protected resource,
 - whether the surrounding feature genuinely requires that access, and
 - whether the app could use a narrower or user-selected alternative instead.
 
