@@ -8,7 +8,7 @@ test: MASTG-TEST-0x03
 
 ## Sample
 
-This sample uses the same app as @MASTG-DEMO-0x01. The app binary is signed with the `com.apple.developer.healthkit` entitlement, which allows the app to request user authorization for HealthKit access. This dummy app does not need the information provided by such entitlement for its functionality. 
+This sample uses the same app as @MASTG-DEMO-0x01. The app binary is signed with the `com.apple.developer.healthkit` entitlement, which allows the app to request user authorization for HealthKit access. This dummy app does not need the information provided by such entitlement for its functionality.
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
@@ -35,4 +35,3 @@ The test case fails because the app is signed with the `com.apple.developer.heal
 
 !!! note
     Each entitlement should be evaluated against the app's stated functionality. If the app is a simple utility that doesn't need location, contacts, or photos, the related entitlements would be considered excessive and represent a privacy concern.
-
