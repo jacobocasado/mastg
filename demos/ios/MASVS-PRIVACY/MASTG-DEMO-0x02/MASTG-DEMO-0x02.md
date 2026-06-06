@@ -10,7 +10,7 @@ test: MASTG-TEST-0x02
 
 This sample uses the same app as @MASTG-DEMO-0x01. The app declares purpose strings for location, contacts, photos, and camera in `Info.plist`. The app reaches authorization-related APIs for location, contacts, and photos when the **Start** button is tapped. In this sample, `NSCameraUsageDescription` is declared but no camera authorization API is triggered.
 
-This runtime analysis complements the static `Info.plist` review from @MASTG-DEMO-0x01: purpose strings show what the app declares, while the runtime analysis shows which authorization APIs are exercised in this run. 
+This runtime analysis complements the static `Info.plist` review from @MASTG-DEMO-0x01: purpose strings show what the app declares, while the runtime analysis shows which authorization APIs are exercised in this run.
 
 {{ ../MASTG-DEMO-0x01/MastgTest.swift }}
 
@@ -45,4 +45,3 @@ Compare these runtime calls with the purpose strings extracted in @MASTG-DEMO-0x
 - `CLLocationManager.requestWhenInUseAuthorization` (location), `CNContactStore.authorizationStatusForEntityType` (contacts), and `PHPhotoLibrary.authorizationStatusForAccessLevel` (photos) are all reached at runtime, so those purpose strings map to code that actually runs.
 - The location API called is `requestWhenInUseAuthorization`, which matches the declared `NSLocationWhenInUseUsageDescription`. If the app had called `requestAlwaysAuthorization` instead, the stricter `NSLocationAlwaysAndWhenInUseUsageDescription` would be required.
 - `NSCameraUsageDescription` is declared in `Info.plist` (see @MASTG-DEMO-0x01) but no camera authorization API is reached in this run. A declared permission that is not exercised in the tested flow is an indicator of a potentially unnecessary permission.
-
