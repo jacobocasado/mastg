@@ -23,21 +23,17 @@ If an iOS app declares protected-resource purpose strings that do not match its 
 
 ## Observation
 
-The output should contain the list of purpose strings declared by the app together with the corresponding user-facing explanation. Common keys include:
+The output should contain the list of purpose strings declared by the app together with the corresponding user-facing explanation. Examples of purpose string keys and related authorization APIs include:
 
-- `NSCameraUsageDescription`
-- `NSMicrophoneUsageDescription`
-- `NSPhotoLibraryAddUsageDescription`
-- `NSPhotoLibraryUsageDescription`
-- `NSLocationWhenInUseUsageDescription`
-- `NSLocationAlwaysAndWhenInUseUsageDescription`
-- `NSContactsUsageDescription`
-- `NSCalendarsUsageDescription`
-- `NSHealthShareUsageDescription`
-- `NSHealthUpdateUsageDescription`
-- `NSMotionUsageDescription`
-- `NSBluetoothAlwaysUsageDescription`
-- `NSFaceIDUsageDescription`
+- `NSLocationWhenInUseUsageDescription` or `NSLocationAlwaysAndWhenInUseUsageDescription` with `CLLocationManager.requestWhenInUseAuthorization()`, `CLLocationManager.requestAlwaysAuthorization()`, or `CLLocationManager.authorizationStatus()`
+- `NSCameraUsageDescription` with `AVCaptureDevice.requestAccess(for:completionHandler:)` or `AVCaptureDevice.authorizationStatus(for:)`
+- `NSMicrophoneUsageDescription` with `AVAudioApplication.requestRecordPermission(completionHandler:)`, `AVAudioApplication.recordPermission`, or `AVCaptureDevice.requestAccess(for:completionHandler:)`
+- `NSContactsUsageDescription` with `CNContactStore.requestAccess(for:completionHandler:)` or `CNContactStore.authorizationStatus(for:)`
+- `NSPhotoLibraryUsageDescription` or `NSPhotoLibraryAddUsageDescription` with `PHPhotoLibrary.requestAuthorization(for:handler:)` or `PHPhotoLibrary.authorizationStatus(for:)`
+- `NSHealthShareUsageDescription` or `NSHealthUpdateUsageDescription` with `HKHealthStore.requestAuthorization(toShare:read:completion:)`
+- `NSBluetoothAlwaysUsageDescription` with `CBManager.authorization`
+
+See @MASTG-KNOW-0077 for additional protected resources, purpose string keys, and framework APIs.
 
 ## Evaluation
 
