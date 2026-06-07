@@ -16,7 +16,7 @@ When reverse engineering the application, the DEX bytecode is decompiled into hu
 
 Obfuscation at this layer changes names, literals, control flow, or code loading behavior to reduce how much information the decompiled output reveals and increase the effort required to recover program logic.
 
-Common open-source obfuscators that apply some of the techniques below are [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization), [ProGuard](https://github.com/Guardsquare/proguard), and [dProtect](https://obfuscator.re/dprotect/).
+Common open-source obfuscators that apply some of the techniques below are [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization), @MASTG-TOOL-0022, and @MASTG-TOOL-0x01.
 
 ### Identifier Renaming
 
@@ -32,7 +32,13 @@ The following example shows how identifier renaming can be enabled in a release 
 android {
     buildTypes {
         release {
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
             minifyEnabled true
+
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -41,6 +47,8 @@ android {
     }
 }
 ```
+
+The file `proguard-rules.pro` is where you define custom ProGuard rules. With the flag `-keep` you can keep certain code that is not being removed by R8, which might otherwise produce errors. For example:
 
 ```pro
 -keep class com.example.api.PublicApi { *; }
