@@ -6,20 +6,20 @@ type: [static, config, code, manual]
 weakness: MASWE-0x01
 best-practices: [MASTG-BEST-0x01]
 profiles: [L1, L2]
-knowledge: [MASTG-KNOW-0x01, MASTG-KNOW-0020]
+knowledge: [MASTG-KNOW-0x01, MASTG-KNOW-0017, MASTG-KNOW-0020]
 ---
 
 ## Overview
 
-Android apps declare [activities](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x01.md) in the `AndroidManifest.xml` file. An activity becomes reachable by any other app on the device when it sets `android:exported="true"` or declares an `<intent-filter>` without setting `android:exported="false"`. See @MASTG-KNOW-0x01 for details on the `android:exported` attribute and @MASTG-KNOW-0020 for the IPC model.
+Android apps declare [activities](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x01.md) in the `AndroidManifest.xml` file. An activity can be launched by components of other apps when it is exported, for example by setting [`android:exported="true"`](https://developer.android.com/guide/topics/manifest/activity-element#exported). Access can still be restricted with [`android:permission`](https://developer.android.com/guide/topics/manifest/activity-element#prmsn), and [apps targeting Android 12 (API level 31) or higher](https://developer.android.com/about/versions/12/behavior-changes-12#exported) must explicitly declare `android:exported` on activities with intent filters. See @MASTG-KNOW-0x01 for details on activities, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android, which contains activities and other Android components.
 
-If an exported activity performs or grants access to sensitive functionality, another app can start it directly with an `Intent` and reach that functionality without going through the app's intended flow. For example, an activity that displays account data or settings can be launched directly, bypassing a login screen that would normally protect it. The activity may also act on attacker-controlled data passed in the intent.
+If an exported activity that is accessible to external callers performs or grants access to sensitive functionality, another app can start it with an `Intent` and reach that functionality without going through the app's intended flow. For example, an unprotected activity that displays account data or settings can be launched directly, bypassing a login screen that would normally protect it. The activity may also act on attacker-controlled data passed in the intent.
 
 This test checks whether the app exposes sensitive functionality through exported activities.
 
 **Example Attack Scenario:**
 
-Suppose a banking app protects its account screen behind a login activity but also declares an account-details activity that is exported (for example, because it declares an `<intent-filter>` without setting `android:exported="false"`).
+Suppose a banking app protects its account screen behind a login activity but also declares an unprotected account-details activity that is exported, for example by setting `android:exported="true"` and without any limiting `android:permission`.
 
 1. An attacker reverse engineers the app and finds the exported account-details activity (see @MASTG-TECH-0x01).
 2. The attacker writes a malicious app that calls `startActivity` with an explicit intent targeting that activity by its component name.
@@ -48,4 +48,4 @@ Inspect each exported activity using @MASTG-TECH-0023 to determine whether it ex
 - Determine whether the activity displays or returns sensitive data (for example, account details, messages, or stored secrets).
 - Determine whether the activity performs a security-relevant action (for example, changing settings or credentials).
 - Determine whether starting the activity directly bypasses an authentication step, such as a login or PIN screen, that the app relies on elsewhere.
-- Determine whether the activity is protected by an appropriate `android:permission` that restricts which apps can start it.
+- Determine whether the activity is protected by an appropriate `android:permission`, and verify that the permission is effective for the intended trust boundary, for example by using a `signature` protection level or another control that is not broadly grantable to untrusted apps.

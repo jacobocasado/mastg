@@ -10,20 +10,20 @@ test: MASTG-TEST-0x01
 
 The sample app performs a login flow by using two activities. Tapping **Start** in the main screen launches `PinEntryActivity`, which prompts for a PIN (4321) before proceeding to `SecretActivity`. `SecretActivity` displays sensitive account data and is meant to be reachable only after the user passes the PIN check.
 
-However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` with no `android:permission`, so any app (or `adb`) can start `SecretActivity` directly without having to interact with `PinEntryActivity`, bypassing the PIN gate entirely.
+However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` with no limiting `android:permission`, so any app (or `adb`) can start `SecretActivity` directly without having to interact with `PinEntryActivity`, bypassing the PIN gate entirely.
 
 {{ MastgTest.kt # AndroidManifest.xml }}
 
 ## Steps
 
 1. Use @MASTG-TECH-0117 to obtain the AndroidManifest.xml.
-2. Use @MASTG-TECH-0x01 to list the exported activities.
+2. Use @MASTG-TECH-0x01 to list the exported activities and their associated `android:permission`.
 
 {{ run.sh }}
 
 ## Observation
 
-The output lists the activities declared as exported in the manifest.
+The output lists the activities declared as exported in the manifest and whether each one declares an `android:permission`.
 
 {{ output.txt }}
 
@@ -44,7 +44,7 @@ class SecretActivity : Activity() {
 }
 ```
 
-Although `PinEntryActivity` enforces a PIN before launching `SecretActivity`, the protection is client-side only. Because `SecretActivity` is exported and unprotected, any app can start it directly, bypassing `PinEntryActivity` entirely.
+Although `PinEntryActivity` enforces a PIN before launching `SecretActivity`, the protection is client-side only. Because `SecretActivity` is exported and unprotected, external callers that can address the component can start it directly, bypassing `PinEntryActivity` entirely.
 
 The output also lists other exported activities. These are triaged but not reported as vulnerable in this test case.
 
@@ -59,16 +59,16 @@ The output also lists other exported activities. These are triaged but not repor
 You can use @MASTG-TECH-0x01 to start `SecretActivity` directly and confirm that the sensitive screen is reachable without entering the PIN:
 
 ```bash
-adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest$SecretActivity'
+adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$SecretActivity'
 ```
 
 The secret screen appears without any PIN prompt, confirming the authentication bypass.
 
-An external app can start `SecretActivity` directly, but that does not automatically let the external app read the activity's UI contents or steal the displayed data programmatically. Android does not normally return another activity's screen text to the caller.
+An external app can start `SecretActivity` directly, but that does not automatically let the external app read the activity's UI contents or obtain the displayed data programmatically. Android does not normally return another activity's screen text to the caller.
 
 The security issue is that the protected screen becomes reachable without completing the PIN challenge. This can still expose sensitive data to anyone using the device, to screen capture or accessibility based threats, or to any flow where the attacker can trick the user into opening the activity. If the activity also returns data through results, sends broadcasts, writes files, accepts attacker controlled extras, or performs account actions on launch, the impact could be higher.
 
-In this sample, the finding is an authentication bypass because `SecretActivity` displays sensitive account data without verifying that the user completed the PIN challenge. The direct launch proves unauthorized access to the protected screen, even though the calling app does not automatically receive the displayed data.
+In this sample, the finding is an authentication bypass because `SecretActivity` displays sensitive account data without verifying that the user completed the PIN challenge. The direct launch proves unauthorized access to the protected screen, even though the calling app does not automatically read the displayed data.
 
 ## Fix
 
@@ -87,7 +87,7 @@ If `SecretActivity` has no legitimate reason to be started by another app, simpl
 Trying to start `SecretActivity` again with `adb` after this change will fail with an error, confirming that the activity is no longer reachable from outside the app:
 
 ```bash
-adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest$SecretActivity'
+adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$SecretActivity'
 Starting: Intent { cmp=org.owasp.mastestapp/.MastgTest$SecretActivity }
 
 Exception occurred while executing 'start':
@@ -113,12 +113,14 @@ If the activity must be reachable by a trusted partner app (for example, a compa
     android:permission="org.owasp.mastestapp.ACCESS_SECRET" />
 ```
 
-With `protectionLevel="signature"`, only apps signed with the same certificate are granted the permission automatically. A real-world example is a banking app that exposes a payment-confirmation activity to its own companion wearable app — both are signed with the bank's certificate, so only the wearable can start the activity, while any third-party app is rejected by the OS before `onCreate` is even called.
+With `protectionLevel="signature"`, only apps signed with the same certificate are granted the permission automatically. A real-world example is a banking app that exposes a payment-confirmation activity to its own companion wearable app. Both are signed with the bank's certificate, so only the wearable can start the activity, while any third-party app is rejected by the OS before `onCreate` is even called.
+
+This permission-based fix only resolves the finding if the permission cannot be obtained by untrusted apps. If the activity were protected by a broadly grantable permission, such as a custom permission with `normal` or `dangerous` protection level, the demo would still fail because untrusted apps could still obtain the permission and start the activity. See @MASTG-KNOW-0017 for Android permission protection levels.
 
 Trying to start `SecretActivity` again with `adb` after this change will fail with a different error, confirming that the activity is still exported but now requires a permission that the calling app does not have:
 
 ```bash
-adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest$SecretActivity'
+adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\$SecretActivity'
 Starting: Intent { cmp=org.owasp.mastestapp/.MastgTest$SecretActivity }
 
 Exception occurred while executing 'start':
