@@ -9,7 +9,7 @@ Use @MASTG-TOOL-0009 to scan the APK and identify the compilers, obfuscators, an
 apkid YourApp.apk
 ```
 
-APKiD inspects the DEX files inside the APK for signatures left by known compilers, obfuscators, and packers. The output lists matches per DEX file and per native library, if present. 
+APKiD inspects the DEX files inside the APK for signatures left by known compilers, obfuscators, and packers. The output lists matches per DEX file and per native library, if present.
 
 Example using @MASTG-APP-0015:
 
