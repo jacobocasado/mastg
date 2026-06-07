@@ -5,8 +5,7 @@ set -euo pipefail
 rm -rf jadx-output extracted
 mkdir -p extracted
 
-jadx -d jadx-output app-release.apk || true
-unzip -o -j app-release.apk 'lib/arm64-v8a/librootcheck.so' -d extracted > /dev/null
+unzip -o -j MASTG-DEMO-0x02.apk 'lib/arm64-v8a/librootcheck.so' -d extracted > /dev/null
 
 r2 -q -e scr.color=0 -e bin.relocs.apply=true \
   -c 'iS~dynsym,symtab,rodata,text' \

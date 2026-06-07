@@ -1,59 +1,67 @@
-3   0x000002c0   0xa8 0x000002c0   0xa8 -r-- 0x2   DYNSYM      .dynsym
-10  0x00000528   0x28 0x00000528   0x28 -r-- 0x32  PROGBITS    .rodata
-13  0x00000670  0x11c 0x00000670  0x11c -r-x 0x6   PROGBITS    .text
-16  0x00000528 0x00000528 14  15   .rodata             ascii   /system/bin/su
-17  0x00000537 0x00000537 8   9    .rodata             ascii   /sbin/su
-18  0x00000540 0x00000540 15  16   .rodata             ascii   /system/xbin/su
-0x000006d0    8    188 sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath
-┌ 188: void *sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath (JNIEnv *env, jobject thiz);
-│ `- args(x0, sp[0x40..0x50]) vars(5:sp[0x8..0x30])
-│           0x000006d0      fd7bbda9       stp x29, x30, [sp, -0x30]!
-│           0x000006d4      f50b00f9       str x21, [var_10h]
-│           0x000006d8      f44f02a9       stp x20, x19, [var_20h]
-│           0x000006dc      fd030091       mov x29, sp
-│           0x000006e0      1f2003d5       nop
-│           0x000006e4      34f2ff10       adr x20, str._system_bin_su ; section..rodata
-│                                                                      ; 0x528
-│           0x000006e8      f30300aa       mov x19, x0                 ; env
-│           0x000006ec      e00314aa       mov x0, x20
-│           0x000006f0      e1031f2a       mov w1, wzr
-│           0x000006f4      3b000094       bl sym.imp.access
-│       ┌─< 0x000006f8      00030034       cbz w0, 0x758
-│       │   0x000006fc      3d000094       bl sym.imp.__errno
-│       │   0x00000700      080040b9       ldr w8, [x0]                ; [0x528:4]=0x7379732f ; "/system/bin/su"
-│       │   0x00000704      1f350071       cmp w8, 0xd
-│      ┌──< 0x00000708      80020054       b.eq 0x758
-│      ││   0x0000070c      14000090       adrp x20, 0
-│      ││   0x00000710      94021591       add x20, x20, str._system_xbin_su ; 0x540 ; "/system/xbin/su"
-│      ││   0x00000714      f50300aa       mov x21, x0
-│      ││   0x00000718      e00314aa       mov x0, x20
-│      ││   0x0000071c      e1031f2a       mov w1, wzr
-│      ││   0x00000720      30000094       bl sym.imp.access
-│     ┌───< 0x00000724      a0010034       cbz w0, 0x758
-│     │││   0x00000728      a80240b9       ldr w8, [x21]               ; [0x528:4]=0x7379732f ; "/system/bin/su"
-│     │││   0x0000072c      1f350071       cmp w8, 0xd
-│    ┌────< 0x00000730      40010054       b.eq 0x758
-│    ││││   0x00000734      14000090       adrp x20, 0
-│    ││││   0x00000738      94de1491       add x20, x20, str._sbin_su  ; 0x537 ; "/sbin/su"
-│    ││││   0x0000073c      e1031f2a       mov w1, wzr
-│    ││││   0x00000740      e00314aa       mov x0, x20
-│    ││││   0x00000744      27000094       bl sym.imp.access
-│   ┌─────< 0x00000748      80000034       cbz w0, 0x758
-│   │││││   0x0000074c      a80240b9       ldr w8, [x21]               ; [0x528:4]=0x7379732f ; "/system/bin/su"
-│   │││││   0x00000750      1f350071       cmp w8, 0xd
-│  ┌──────< 0x00000754      21010054       b.ne 0x778
-│  ││││││   ; CODE XREFS from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x6f8(x), 0x708(x), 0x724(x), 0x730(x), 0x748(x)
-│  │└└└└└─> 0x00000758      680240f9       ldr x8, [x19]
-│  │        0x0000075c      e00313aa       mov x0, x19
-│  │        0x00000760      029d42f9       ldr x2, [x8, 0x538]
-│  │        0x00000764      e10314aa       mov x1, x20
-│  │        0x00000768      f44f42a9       ldp x20, x19, [var_20h]
-│  │        0x0000076c      f50b40f9       ldr x21, [var_10h]
-│  │        0x00000770      fd7bc3a8       ldp x29, x30, [sp], 0x30
-│  │        0x00000774      40001fd6       br x2
-│  │        ; CODE XREF from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x754(x)
-│  └──────> 0x00000778      e0031faa       mov x0, xzr
-│           0x0000077c      f44f42a9       ldp x20, x19, [var_20h]
-│           0x00000780      f50b40f9       ldr x21, [var_10h]
-│           0x00000784      fd7bc3a8       ldp x29, x30, [sp], 0x30    ; [0x178000:4]=0
-└           0x00000788      c0035fd6       ret
+3   0x000002c0   0xc0 0x000002c0   0xc0 -r-- 0x2   DYNSYM      .dynsym
+10  0x000005c8   0x28 0x000005c8   0x28 -r-- 0x32  PROGBITS    .rodata
+13  0x00000728  0x15c 0x00000728  0x15c -r-x 0x6   PROGBITS    .text
+16  0x000005c8 0x000005c8 14  15   .rodata             ascii   /system/bin/su
+17  0x000005d7 0x000005d7 8   9    .rodata             ascii   /sbin/su
+18  0x000005e0 0x000005e0 15  16   .rodata             ascii   /system/xbin/su
+0x00000788   12    200 sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath
+┌ 200: void *sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath (JNIEnv *env, jobject thiz);
+│ `- args(x0, x1) vars(10:sp[0x8..0x4c])
+│           0x00000788      ff4301d1       sub sp, sp, 0x50
+│           0x0000078c      fd7b04a9       stp x29, x30, [var_40h]
+│           0x00000790      fd030191       add x29, sp, 0x40
+│           0x00000794      a0031ff8       stur x0, [x29, -0x10]       ; env
+│           0x00000798      a1831ef8       stur x1, [x29, -0x18]       ; thiz
+│           0x0000079c      1f2003d5       nop
+│           0x000007a0      c88b0010       adr x8, 0x1918
+│           0x000007a4      e90308aa       mov x9, x8
+│           0x000007a8      e91300f9       str x9, [var_20h]
+│           0x000007ac      e90308aa       mov x9, x8
+│           0x000007b0      e90f00f9       str x9, [var_18h]
+│           0x000007b4      08610091       add x8, x8, 0x18            ; 0x1930 ; "H "
+│           0x000007b8      e80b00f9       str x8, [var_10h]
+│       ┌─< 0x000007bc      01000014       b 0x7c0
+│       │   ; CODE XREFS from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x7bc(x), 0x834(x)
+│      ┌└─> 0x000007c0      e80f40f9       ldr x8, [var_18h]
+│      ╎    0x000007c4      e90b40f9       ldr x9, [var_10h]
+│      ╎    0x000007c8      080109eb       subs x8, x8, x9
+│      ╎┌─< 0x000007cc      60030054       b.eq 0x838
+│     ┌───< 0x000007d0      01000014       b 0x7d4
+│     │╎│   ; CODE XREF from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x7d0(x)
+│     └───> 0x000007d4      e80f40f9       ldr x8, [var_18h]
+│      ╎│   0x000007d8      080140f9       ldr x8, [x8]
+│      ╎│   0x000007dc      e80700f9       str x8, [var_8h]
+│      ╎│   0x000007e0      e00740f9       ldr x0, [var_8h]
+│      ╎│   0x000007e4      e1031f2a       mov w1, wzr
+│      ╎│   0x000007e8      3e000094       bl sym.imp.access
+│      ╎│   0x000007ec      e00700b9       str w0, [var_4h]
+│      ╎│   0x000007f0      e80740b9       ldr w8, [var_4h]
+│     ┌───< 0x000007f4      e8000034       cbz w8, 0x810
+│    ┌────< 0x000007f8      01000014       b 0x7fc
+│    ││╎│   ; CODE XREF from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x7f8(x)
+│    └────> 0x000007fc      3d000094       bl sym.imp.__errno
+│     │╎│   0x00000800      080040b9       ldr w8, [x0]
+│     │╎│   0x00000804      08350071       subs w8, w8, 0xd
+│    ┌────< 0x00000808      e1000054       b.ne 0x824
+│   ┌─────< 0x0000080c      01000014       b 0x810
+│   │││╎│   ; CODE XREFS from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x7f4(x), 0x80c(x)
+│   └─└───> 0x00000810      a0035ff8       ldur x0, [x29, -0x10]
+│    │ ╎│   0x00000814      e10740f9       ldr x1, [var_8h]
+│    │ ╎│   0x00000818      3a000094       bl fcn.00000900
+│    │ ╎│   0x0000081c      a0831ff8       stur x0, [x29, -8]
+│    │┌───< 0x00000820      08000014       b 0x840
+│    ││╎│   ; CODE XREF from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x808(x)
+│   ┌└────> 0x00000824      01000014       b 0x828
+│   │ │╎│   ; CODE XREF from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x824(x)
+│   └─────> 0x00000828      e80f40f9       ldr x8, [var_18h]
+│     │╎│   0x0000082c      08210091       add x8, x8, 8
+│     │╎│   0x00000830      e80f00f9       str x8, [var_18h]
+│     │└──< 0x00000834      e3ffff17       b 0x7c0
+│     │ │   ; CODE XREF from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x7cc(x)
+│     │ └─> 0x00000838      bf831ff8       stur xzr, [x29, -8]
+│     │ ┌─< 0x0000083c      01000014       b 0x840
+│     │ │   ; CODE XREFS from sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath @ 0x820(x), 0x83c(x)
+│     └─└─> 0x00000840      a0835ff8       ldur x0, [x29, -8]
+│           0x00000844      fd7b44a9       ldp x29, x30, [var_40h]
+│           0x00000848      ff430191       add sp, sp, 0x50            ; 0x178000
+└           0x0000084c      c0035fd6       ret
