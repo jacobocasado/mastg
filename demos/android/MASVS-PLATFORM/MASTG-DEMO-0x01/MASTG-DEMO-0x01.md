@@ -8,7 +8,9 @@ test: MASTG-TEST-0x01
 
 ## Sample
 
-The sample implements a two-activity login flow. Tapping **Start** in the main screen launches `PinEntryActivity`, which prompts for a PIN (4321) before proceeding to `SecretActivity`. `SecretActivity` displays sensitive account data and is meant to be reachable only after the user passes the PIN check. However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` with no `android:permission`, so any app (or `adb`) can start `SecretActivity` directly, bypassing the PIN gate entirely.
+The sample app performs a login flow by using two activities. Tapping **Start** in the main screen launches `PinEntryActivity`, which prompts for a PIN (4321) before proceeding to `SecretActivity`. `SecretActivity` displays sensitive account data and is meant to be reachable only after the user passes the PIN check.
+
+However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` with no `android:permission`, so any app (or `adb`) can start `SecretActivity` directly without having to interact with `PinEntryActivity`, bypassing the PIN gate entirely.
 
 {{ MastgTest.kt # AndroidManifest.xml }}
 
@@ -16,8 +18,6 @@ The sample implements a two-activity login flow. Tapping **Start** in the main s
 
 1. Use @MASTG-TECH-0117 to obtain the AndroidManifest.xml.
 2. Use @MASTG-TECH-0x01 to list the exported activities.
-
-The `run.sh` script lists the exported activities declared in the manifest.
 
 {{ run.sh }}
 
@@ -59,7 +59,7 @@ The output also lists other exported activities. These are triaged but not repor
 You can use @MASTG-TECH-0x01 to start `SecretActivity` directly and confirm that the sensitive screen is reachable without entering the PIN:
 
 ```bash
-adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$SecretActivity'
+adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest$SecretActivity'
 ```
 
 The secret screen appears without any PIN prompt, confirming the authentication bypass.
@@ -87,7 +87,7 @@ If `SecretActivity` has no legitimate reason to be started by another app, simpl
 Trying to start `SecretActivity` again with `adb` after this change will fail with an error, confirming that the activity is no longer reachable from outside the app:
 
 ```bash
-adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$SecretActivity'
+adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest$SecretActivity'
 Starting: Intent { cmp=org.owasp.mastestapp/.MastgTest$SecretActivity }
 
 Exception occurred while executing 'start':
@@ -118,7 +118,7 @@ With `protectionLevel="signature"`, only apps signed with the same certificate a
 Trying to start `SecretActivity` again with `adb` after this change will fail with a different error, confirming that the activity is still exported but now requires a permission that the calling app does not have:
 
 ```bash
-adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest\\$SecretActivity'
+adb shell am start -n 'org.owasp.mastestapp/org.owasp.mastestapp.MastgTest$SecretActivity'
 Starting: Intent { cmp=org.owasp.mastestapp/.MastgTest$SecretActivity }
 
 Exception occurred while executing 'start':
