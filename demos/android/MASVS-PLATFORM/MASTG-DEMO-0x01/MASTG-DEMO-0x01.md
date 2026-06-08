@@ -1,5 +1,5 @@
 ---
-title: Authentication Bypass Through an Exported Activity
+title: Authentication Bypass Through an Exported Activity With No Permissions Declared
 platform: android
 id: MASTG-DEMO-0x01
 code: [kotlin]
@@ -10,7 +10,7 @@ test: MASTG-TEST-0x01
 
 The sample app performs a login flow by using two activities. Tapping **Start** in the main screen launches `PinEntryActivity`, which prompts for a PIN (4321) before proceeding to `SecretActivity`. `SecretActivity` displays sensitive account data and is meant to be reachable only after the user passes the PIN check.
 
-However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` with no limiting `android:permission`, so any app (or `adb`) can start `SecretActivity` directly without having to interact with `PinEntryActivity`, bypassing the PIN gate entirely.
+However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` with `android:permission` that protects the activity from being launched from third-party apps (or `adb`), that can start `SecretActivity` directly without having to interact with `PinEntryActivity`, bypassing the PIN gate entirely.
 
 {{ MastgTest.kt # AndroidManifest.xml }}
 
@@ -23,15 +23,22 @@ However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` w
 
 ## Observation
 
-The output lists the activities declared as exported in the manifest and whether each one declares an `android:permission`.
+The output reveals the exported activities and their associated permissions.
 
 {{ output.txt }}
 
-`SecretActivity` is exported (`android:exported="true"`) and declares no `android:permission`. `PinEntryActivity` is not exported (`android:exported="false"`) and can only be reached through the app's own flow.
+The exported activities are:
+
+- `org.owasp.mastestapp.MainActivity`, without any associated.
+- `org.owasp.mastestapp.MastgTest.SecretActivity`, without any associated permissions.
+- `androidx.compose.ui.tooling.PreviewActivity`, without any associated permissions.
+- `androidx.activity.ComponentActivity`, without any associated permissions.
 
 ## Evaluation
 
-The test case fails because `SecretActivity` exposes sensitive functionality and is exported without any permission protection.
+The test case fails because `SecretActivity` exposes sensitive functionality and is exported (`android:exported="true"`) without any permission protection. Because `SecretActivity` is exported and unprotected, external callers that can address the component can start it directly, bypassing `PinEntryActivity` entirely.
+
+Although `PinEntryActivity` enforces a PIN before launching `SecretActivity`, the protection is client-side only.
 
 The activity displays account data in `onCreate` without checking whether the user completed the PIN challenge:
 
@@ -43,8 +50,6 @@ class SecretActivity : Activity() {
     }
 }
 ```
-
-Although `PinEntryActivity` enforces a PIN before launching `SecretActivity`, the protection is client-side only. Because `SecretActivity` is exported and unprotected, external callers that can address the component can start it directly, bypassing `PinEntryActivity` entirely.
 
 The output also lists other exported activities. These are triaged but not reported as vulnerable in this test case.
 

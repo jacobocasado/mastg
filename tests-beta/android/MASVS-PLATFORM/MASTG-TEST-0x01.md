@@ -15,7 +15,7 @@ Android apps declare [activities](../../../knowledge/android/MASVS-PLATFORM/MAST
 
 Exported activities can be protected by declaring [`android:permission`](https://developer.android.com/guide/topics/manifest/activity-element#prmsn) with specific protection levels such as `signature`, which prevents apps that do not hold the required permission, such as third-party apps outside the intended trust boundary, from starting them. See @MASTG-KNOW-0x01 for details on activities, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android.
 
-If an exported activity does not define `android:permission` with a proper protection level and performs or grants access to sensitive functionality, another third-party app can start it with an `Intent` and reach that functionality without going through the app's intended flow.
+If an exported activity does not define `android:permission` with a proper protection level and performs or grants access to sensitive functionality, another third-party app outside the intended trust boundary can start it with an `Intent` and reach that functionality without going through the app's intended flow.
 
 This test checks whether the app exposes sensitive functionality through exported and unprotected activities.
 
