@@ -17,7 +17,7 @@ However, `SecretActivity` is declared as exported in the `AndroidManifest.xml` w
 ## Steps
 
 1. Use @MASTG-TECH-0117 to obtain the AndroidManifest.xml.
-2. Use @MASTG-TECH-0x01 to list the exported activities and their associated `android:permission`.
+2. Use @MASTG-TECH-0x01 to list the exported activities and their associated `android:permission` by running `run.sh`.
 
 {{ run.sh }}
 
@@ -29,7 +29,7 @@ The output reveals the exported activities and their associated permissions.
 
 The exported activities are:
 
-- `org.owasp.mastestapp.MainActivity`, without any associated.
+- `org.owasp.mastestapp.MainActivity`, without any associated permissions.
 - `org.owasp.mastestapp.MastgTest.SecretActivity`, without any associated permissions.
 - `androidx.compose.ui.tooling.PreviewActivity`, without any associated permissions.
 - `androidx.activity.ComponentActivity`, without any associated permissions.
