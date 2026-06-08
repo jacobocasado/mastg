@@ -1,6 +1,6 @@
 ---
 platform: android
-title: Exported Activities That Expose Sensitive Functionality
+title: Exported And Unprotected Activities That Expose Sensitive Functionality
 id: MASTG-TEST-0x01
 type: [static, config, code, manual]
 weakness: MASWE-0x01
@@ -11,11 +11,13 @@ knowledge: [MASTG-KNOW-0x01, MASTG-KNOW-0017, MASTG-KNOW-0020]
 
 ## Overview
 
-Android apps declare [activities](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x01.md) in the `AndroidManifest.xml` file. An activity can be launched by components of other apps when it is exported, for example by setting [`android:exported="true"`](https://developer.android.com/guide/topics/manifest/activity-element#exported). Access can still be restricted with [`android:permission`](https://developer.android.com/guide/topics/manifest/activity-element#prmsn), and [apps targeting Android 12 (API level 31) or higher](https://developer.android.com/about/versions/12/behavior-changes-12#exported) must explicitly declare `android:exported` on activities with intent filters. See @MASTG-KNOW-0x01 for details on activities, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android, which contains activities and other Android components.
+Android apps declare [activities](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x01.md) in the `AndroidManifest.xml` file. An activity can be launched by components of other apps when it is exported, for example by setting [`android:exported="true"`](https://developer.android.com/guide/topics/manifest/activity-element#exported). Apps targeting Android 12 (API level 31) or higher must explicitly declare `android:exported` on activities with intent filters. 
 
-If an exported activity that is accessible to external callers performs or grants access to sensitive functionality, another app can start it with an `Intent` and reach that functionality without going through the app's intended flow. For example, an unprotected activity that displays account data or settings can be launched directly, bypassing a login screen that would normally protect it. The activity may also act on attacker-controlled data passed in the intent.
+Exported activities can be protected by declaring [`android:permission`](https://developer.android.com/guide/topics/manifest/activity-element#prmsn) with specific protection levels such as `signature`, which prevents apps that do not hold the required permission, such as third-party apps outside the intended trust boundary, from starting them. See @MASTG-KNOW-0x01 for details on activities, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android.
 
-This test checks whether the app exposes sensitive functionality through exported activities.
+If an exported activity does not define `android:permission` with a proper protection level and performs or grants access to sensitive functionality, another third-party app can start it with an `Intent` and reach that functionality without going through the app's intended flow.
+
+This test checks whether the app exposes sensitive functionality through exported and unprotected activities.
 
 **Example Attack Scenario:**
 
@@ -30,7 +32,7 @@ Suppose a banking app protects its account screen behind a login activity but al
 
 1. Use @MASTG-TECH-0013 to reverse engineer the app.
 2. Use @MASTG-TECH-0117 to obtain the AndroidManifest.xml.
-3. Use @MASTG-TECH-0x01 to list the exported activities.
+3. Use @MASTG-TECH-0x01 to list the exported activities and their associated `android:permission`.
 4. Use @MASTG-TECH-0014 to inspect the code of each exported activity.
 
 ## Observation
