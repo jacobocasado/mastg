@@ -11,7 +11,7 @@ knowledge: [MASTG-KNOW-0x01, MASTG-KNOW-0017, MASTG-KNOW-0020]
 
 ## Overview
 
-Android apps declare [activities](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x01.md) in the `AndroidManifest.xml` file. An activity can be launched by components of other apps when it is exported, for example by setting [`android:exported="true"`](https://developer.android.com/guide/topics/manifest/activity-element#exported). Apps targeting Android 12 (API level 31) or higher must explicitly declare `android:exported` on activities with intent filters. 
+Android apps declare [activities](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x01.md) in the `AndroidManifest.xml` file. An activity can be launched by components of other apps when it is exported, for example by setting [`android:exported="true"`](https://developer.android.com/guide/topics/manifest/activity-element#exported). Apps targeting Android 12 (API level 31) or higher must explicitly declare `android:exported` on activities with intent filters.
 
 Exported activities can be protected by declaring [`android:permission`](https://developer.android.com/guide/topics/manifest/activity-element#prmsn) with specific protection levels such as `signature`, which prevents apps that do not hold the required permission, such as third-party apps outside the intended trust boundary, from starting them. See @MASTG-KNOW-0x01 for details on activities, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android.
 
@@ -41,7 +41,7 @@ The output should contain a list of exported activities and the relevant parts o
 
 ## Evaluation
 
-The test case fails if any exported activity exposes sensitive functionality, for example by displaying sensitive data, performing a security-relevant action, or allowing a caller to bypass authentication.
+The test case fails if any exported activity is not protected by an appropriate `android:permission` that restricts which apps can start it and exposes or performs sensitive functionality, for example by displaying sensitive data, performing a security-relevant action, or allowing a caller to bypass authentication.
 
 **Further Validation Required:**
 
