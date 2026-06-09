@@ -15,13 +15,13 @@ Declared permissions are part of the activity's access control. An exported acti
 
 Interpret `android:exported` together with the component's intent filters, target SDK, Android version, and associated permission. On apps targeting Android 11 or below, any activity that declares an [`<intent-filter>`](https://developer.android.com/guide/topics/manifest/intent-filter-element) and does not set `android:exported="false"` can become reachable by other apps. Apps targeting Android 12 (API level 31) or higher must explicitly declare `android:exported` on activities with intent filters, or the app fails to install.
 
-For example, with the manifest extracted to standard XML, you can list activity and activity-alias declarations with:
+For example, with the manifest extracted to standard XML, you can list each `<activity>` and `<activity-alias>` element with its element type (`activity` or `activity-alias`), `android:name` (the name of the activity or alias), `android:exported` (whether it is exported), `android:permission` (the permission required to start it), and number of intent filters:
 
 ```bash
 xmlstarlet sel -t -m "//activity | //activity-alias" -v "name()" -o " name=" -v "@android:name" -o " exported=" -v "@android:exported" -o " permission=" -v "@android:permission" -o " intent_filters=" -v "count(intent-filter)" -n AndroidManifest.xml
 ```
 
-Interpret missing `android:exported` values together with the component's intent filters, target SDK, and Android version. Activity aliases have their own `android:exported`, `android:permission`, and intent filters, so review them separately from the target activity.
+Note that activity aliases have their own `android:exported`, `android:permission`, and intent filters, so review them separately from the target activity.
 
 ## Using @MASTG-TOOL-0124
 
