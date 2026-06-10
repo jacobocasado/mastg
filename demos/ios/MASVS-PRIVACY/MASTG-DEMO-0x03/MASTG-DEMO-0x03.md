@@ -17,16 +17,13 @@ This runtime demo traces representative HealthKit APIs associated with the `com.
 ## Steps
 
 1. Use @MASTG-TOOL-0129 with its `-OC` option to extract the entitlements from the signed app bundle and save the output as `entitlements_reversed.plist`.
-
-{{ run.sh }}
-
 2. Install the app on a device (@MASTG-TECH-0056).
 3. Make sure you have @MASTG-TOOL-0039 installed on your machine and the frida-server running on the device.
 4. Run `run_frida.sh` to spawn the app with Frida.
 5. Tap the **Start** button to exercise the sample flow.
 6. Stop the script by pressing `Ctrl+C`.
 
-{{ script.js # run_frida.sh }}
+{{ run.sh # script.js # run_frida.sh }}
 
 ## Observation
 

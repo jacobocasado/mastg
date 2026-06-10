@@ -46,7 +46,7 @@ if (ObjC.available) {
     }
 
     // CLLocationManager.stopUpdatingLocation (instance method).
-    // Marks the end of the covert capture window (called when the countdown ends).
+    // Marks the end of the capture window (called when the countdown ends).
     try {
         Interceptor.attach(ObjC.classes.CLLocationManager["- stopUpdatingLocation"].implementation, {
             onEnter(args) {
