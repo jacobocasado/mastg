@@ -22,9 +22,6 @@ The `Info.plist` declares a single purpose string, `NSLocationWhenInUseUsageDesc
 2. Use @MASTG-TECH-0153 to retrieve `./Payload/MASTestApp.app/Info.plist` and save it as `Info.plist` in this demo directory.
 3. Use @MASTG-TECH-0138 to convert `Info.plist` to a readable format if needed.
 4. Use @MASTG-TECH-0154 to inspect the purpose strings by running `run.sh`.
-
-{{ run.sh }}
-
 5. Install the app on a device using @MASTG-TECH-0056.
 6. Make sure @MASTG-TOOL-0039 is installed on your machine and `frida-server` is running on the device.
 7. Run `run_frida.sh` to spawn the app with Frida (@MASTG-TECH-0095).

@@ -1,7 +1,7 @@
 // Hook the location authorization and collection APIs at runtime.
 // This script traces (1) the permission request that displays the
 // NSLocationWhenInUseUsageDescription purpose string, (2) the start of GPS collection,
-// and (3) the stop, which marks the end of the covert capture window.
+// and (3) the stop, which marks the end of the capture window.
 
 console.log("\n[*] Starting Location Access Tracing...\n");
 
