@@ -1,4 +1,1 @@
-  "NSCameraUsageDescription" => "We need camera access to take photos."
-  "NSContactsUsageDescription" => "We need access to your contacts to help you connect with friends."
-  "NSLocationWhenInUseUsageDescription" => "We need your location to provide nearby services."
-  "NSPhotoLibraryUsageDescription" => "We need access to your photos to let you share images."
+  "NSLocationWhenInUseUsageDescription" => "We use your location to show you nearby content and recommendations."

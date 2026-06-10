@@ -1,6 +1,6 @@
 ---
 platform: ios
-title: Unjustified Access to User Data due to Excessive Purpose Strings
+title: Runtime Location Capture with a Deceptive Purpose String
 id: MASTG-DEMO-0x01
 code: [swift, xml]
 test: MASTG-TEST-0x02
@@ -8,11 +8,11 @@ test: MASTG-TEST-0x02
 
 ## Sample
 
-The app declares purpose strings for location, contacts, photos, and camera in `Info.plist`. When the **Start** button is tapped, the app reaches authorization related APIs for location, contacts, and photos.
+The app shows a 3-second countdown popup when the **Start** button is tapped. That is the only user-visible feature: there is no map, no search, and no other location-based functionality anywhere in the UI.
 
-Although this is a dummy app, the location, contacts, and photos calls are part of the sample's intended behavior. They represent the protected resource functionality that the **Start** flow is designed to demonstrate. Therefore, those purpose strings are considered justified for this sample because the declared resources are actually used by the app flow.
+Despite that, the app requests location access and collects coarse location coordinates (kilometer-level accuracy) in the background for the full duration of the countdown. When the countdown ends, the coordinates are written to `location_capture.txt` in the app's Documents directory. The user sees a "3s Timer started" popup with no mention of location at any point.
 
-The issue is `NSCameraUsageDescription`: the app declares a camera purpose string, but no camera authorization or access API is triggered. This creates unjustified protected resource exposure because the app declares that it may request camera access even though the sample has no camera related functionality. The declaration alone does not grant camera access.
+The `Info.plist` declares a single purpose string, `NSLocationWhenInUseUsageDescription`, with the text "We use your location to show you nearby content and recommendations." This is **deceptive**: it describes a feature that does not exist in the app, and the purpose string shown in the system prompt is inconsistent with the only observable behavior (a countdown).
 
 {{ MastgTest.swift # Info.plist }}
 
@@ -27,45 +27,36 @@ The issue is `NSCameraUsageDescription`: the app declares a camera purpose strin
 
 5. Install the app on a device using @MASTG-TECH-0056.
 6. Make sure @MASTG-TOOL-0039 is installed on your machine and `frida-server` is running on the device.
-7. Run `run_frida.sh` to spawn the app with Frida.
-8. Tap the **Start** button to trigger the authorization checks.
+7. Run `run_frida.sh` to spawn the app with Frida (@MASTG-TECH-0095).
+8. Tap the **Start** button to trigger the countdown and observe the location access in the background.
 9. Stop the script by pressing `Ctrl+C`.
 
 {{ run_frida.sh # script.js }}
 
 ## Observation
 
-The output reveals the purpose strings declared in the app's `Info.plist` file.
+The output reveals the purpose string declared in the app's `Info.plist` file.
 
 {{ output_purpose_strings.txt }}
 
-The purpose strings declared in `Info.plist` are:
+The only declared purpose string is:
 
 - `NSLocationWhenInUseUsageDescription`
-- `NSContactsUsageDescription`
-- `NSPhotoLibraryUsageDescription`
-- `NSCameraUsageDescription`
 
-The Frida script output reveals the protected resource APIs reached at runtime.
+The Frida script output reveals the location APIs reached at runtime while the countdown runs.
 
 {{ output_frida.txt }}
 
-The runtime trace shows calls to:
+The runtime trace shows that tapping **Start**:
 
-- `CLLocationManager.requestWhenInUseAuthorization`
-- `CNContactStore.authorizationStatusForEntityType`
-- `PHPhotoLibrary.authorizationStatusForAccessLevel`
+1. Calls `CLLocationManager.requestWhenInUseAuthorization`, which displays `NSLocationWhenInUseUsageDescription` to the user. The backtrace links the call to `LocationCapture.init()`, invoked via `LocationCapture.__allocating_init()` from `MastgTest.mastgTest(completion:)`.
+2. Calls `CLLocationManager.startUpdatingLocation` once the user grants permission. The backtrace originates in `LocationCapture.locationManagerDidChangeAuthorization(_:)`, called by CoreLocation after authorization is granted, confirming that coarse location collection begins immediately.
+3. Calls `CLLocationManager.stopUpdatingLocation` when the countdown ends. The backtrace shows `LocationCapture.stop()` called from `closure #1 in closure #1 in static MastgTest.mastgTest(completion:)`, which is the `onFinish` block invoked by UIKit (`-[UIPresentationController transitionDidFinish:]`) when the countdown alert's dismiss animation completes.
 
 ## Evaluation
 
-The test case fails because the app declares `NSCameraUsageDescription` without a reasonable connection to the app's demonstrated functionality. The **Start** flow exercises location, contacts, and photos, but it does not request, check, or access the camera.
+The test case fails because the declared purpose string is deceptive. It tells the user that location is used to show nearby content and recommendations, but the app does not provide any nearby content, recommendations, map, search, or other location-based feature.
 
-The location, contacts, and photos purpose strings are justified in this sample because they match APIs reached by the intended app flow:
+The only user-visible feature is a 3-second countdown popup. The runtime trace confirms that location authorization and collection APIs are reached during that countdown flow, so the purpose string is not merely unused or stale. It is shown for reachable location access that is inconsistent with the app's observable behavior.
 
-- `NSLocationWhenInUseUsageDescription` matches `CLLocationManager.requestWhenInUseAuthorization`.
-- `NSContactsUsageDescription` matches `CNContactStore.authorizationStatusForEntityType`.
-- `NSPhotoLibraryUsageDescription` matches `PHPhotoLibrary.authorizationStatusForAccessLevel`.
-
-The camera purpose string is not justified: `NSCameraUsageDescription` is declared in `Info.plist` but no camera related runtime API or related user visible feature is observed.
-
-Declaring `NSCameraUsageDescription` does not grant camera access by itself. The app would still need to call a camera related API and the user would still need to grant access. The issue is that the app declares a privacy sensitive capability that is not tied to any observed or user visible camera feature.
+The user must still grant location permission before the app can access the protected resource. However, the issue remains valid because the authorization prompt is based on an inaccurate explanation, and the observed location access is not justified by the app's visible functionality.

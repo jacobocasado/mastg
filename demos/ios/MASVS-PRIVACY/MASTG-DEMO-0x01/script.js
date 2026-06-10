@@ -1,81 +1,64 @@
-// Hook authorization status methods for various iOS frameworks
-// This script traces permission-related API calls at runtime
+// Hook the location authorization and collection APIs at runtime.
+// This script traces (1) the permission request that displays the
+// NSLocationWhenInUseUsageDescription purpose string, (2) the start of GPS collection,
+// and (3) the stop, which marks the end of the covert capture window.
 
-console.log("\n[*] Starting Permission Authorization Status Tracing...\n");
+console.log("\n[*] Starting Location Access Tracing...\n");
 
 const printBacktrace = (context, maxLines = 8) => {
     console.log("\nBacktrace:");
     let backtrace = Thread.backtrace(context, Backtracer.ACCURATE)
         .map(DebugSymbol.fromAddress);
-
     for (let i = 0; i < Math.min(maxLines, backtrace.length); i++) {
         console.log(backtrace[i]);
     }
-}
+};
 
-// Hook CLLocationManager.requestWhenInUseAuthorization (instance method, void return).
-// Note: CLLocationManager.authorizationStatus is NOT used because the Swift compiler
-// dispatches it directly into the dyld shared cache, bypassing ObjC objc_msgSend.
 if (ObjC.available) {
+    // CLLocationManager.requestWhenInUseAuthorization (instance method).
+    // Displays NSLocationWhenInUseUsageDescription to the user when status is notDetermined.
     try {
         Interceptor.attach(ObjC.classes.CLLocationManager["- requestWhenInUseAuthorization"].implementation, {
-            onEnter: function(args) {
+            onEnter(args) {
                 console.log("\n[+] CLLocationManager.requestWhenInUseAuthorization called");
+                console.log("    Purpose string key: NSLocationWhenInUseUsageDescription");
                 printBacktrace(this.context);
             }
         });
         console.log("[*] Hooked CLLocationManager.requestWhenInUseAuthorization");
     } catch (e) {
-        console.log("[-] Failed to hook CLLocationManager: " + e);
+        console.log("[-] Failed to hook requestWhenInUseAuthorization: " + e);
     }
 
-    // Hook PHPhotoLibrary.authorizationStatusForAccessLevel: (iOS 14+).
-    // authorizationStatus(for:) in Swift maps to this selector.
+    // CLLocationManager.startUpdatingLocation (instance method).
+    // Reaching this confirms the app actively collects GPS coordinates.
     try {
-        Interceptor.attach(ObjC.classes.PHPhotoLibrary["+ authorizationStatusForAccessLevel:"].implementation, {
-            onEnter: function(args) {
-                console.log("\n[+] PHPhotoLibrary.authorizationStatusForAccessLevel called");
+        Interceptor.attach(ObjC.classes.CLLocationManager["- startUpdatingLocation"].implementation, {
+            onEnter(args) {
+                console.log("\n[+] CLLocationManager.startUpdatingLocation called");
+                console.log("    GPS coordinate collection has started.");
                 printBacktrace(this.context);
-            },
-            onLeave: function(retval) {
-                const status = retval.toInt32();
-                const statusMap = {
-                    0: "notDetermined",
-                    1: "restricted",
-                    2: "denied",
-                    3: "authorized",
-                    4: "limited"
-                };
-                console.log("    Return value: " + status + " (" + (statusMap[status] || "unknown") + ")");
             }
         });
-        console.log("[*] Hooked PHPhotoLibrary.authorizationStatusForAccessLevel");
+        console.log("[*] Hooked CLLocationManager.startUpdatingLocation");
     } catch (e) {
-        console.log("[-] Failed to hook PHPhotoLibrary: " + e);
+        console.log("[-] Failed to hook startUpdatingLocation: " + e);
     }
 
-    // Hook CNContactStore authorization status
+    // CLLocationManager.stopUpdatingLocation (instance method).
+    // Marks the end of the covert capture window (called when the countdown ends).
     try {
-        Interceptor.attach(ObjC.classes.CNContactStore["+ authorizationStatusForEntityType:"].implementation, {
-            onEnter: function(args) {
-                console.log("\n[+] CNContactStore.authorizationStatusForEntityType called");
+        Interceptor.attach(ObjC.classes.CLLocationManager["- stopUpdatingLocation"].implementation, {
+            onEnter(args) {
+                console.log("\n[+] CLLocationManager.stopUpdatingLocation called");
+                console.log("    GPS coordinate collection has stopped.");
                 printBacktrace(this.context);
-            },
-            onLeave: function(retval) {
-                const status = retval.toInt32();
-                const statusMap = {
-                    0: "notDetermined",
-                    1: "restricted",
-                    2: "denied",
-                    3: "authorized"
-                };
-                console.log("    Return value: " + status + " (" + (statusMap[status] || "unknown") + ")");
             }
         });
-        console.log("[*] Hooked CNContactStore.authorizationStatusForEntityType");
+        console.log("[*] Hooked CLLocationManager.stopUpdatingLocation");
     } catch (e) {
-        console.log("[-] Failed to hook CNContactStore: " + e);
+        console.log("[-] Failed to hook stopUpdatingLocation: " + e);
     }
 }
 
-console.log("\n[*] Hooks installed. Interact with the app to trigger permission checks.\n");
+console.log("\n[*] Hooks installed. Tap the Start button to trigger the countdown and location capture.\n");
