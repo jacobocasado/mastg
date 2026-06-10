@@ -50,4 +50,9 @@ Inspect each exported activity using @MASTG-TECH-0023 to determine whether it ex
 - Determine whether the activity displays or returns sensitive data (for example, account details, messages, or stored secrets).
 - Determine whether the activity performs a security-relevant action (for example, changing settings or credentials).
 - Determine whether starting the activity directly bypasses an authentication step, such as a login or PIN screen, that the app relies on elsewhere.
-- Determine whether the activity is protected by an appropriate `android:permission`, and verify that the permission is effective for the intended trust boundary, for example by using a `signature` protection level or another control that is not broadly grantable to untrusted apps.
+
+Then determine whether external access to the activity is appropriately restricted for the functionality it exposes and the app's intended trust boundary:
+
+- Determine whether the activity has a legitimate reason to be started by third-party apps. If it doesn't, it shouldn't be exported.
+- If external access is required, determine whether the activity is protected by an appropriate `android:permission` or an equivalent access control. Appropriate means the control matches the sensitivity of the activity and the set of apps that should be allowed to start it.
+- Verify that the permission is effective for that trust boundary, for example by using a `signature` protection level or another control that is not broadly grantable to untrusted apps.

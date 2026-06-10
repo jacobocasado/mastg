@@ -48,5 +48,11 @@ The test case fails if any exported service is not protected by an appropriate `
 Inspect each exported service using @MASTG-TECH-0023 to determine whether it exposes sensitive functionality:
 
 - Determine whether the service returns sensitive data or performs a security-relevant action (for example, changing a password or PIN) in response to a request.
-- Determine whether the service verifies the caller's permission at runtime (for example, with `checkCallingPermission` or `enforceCallingPermission`) before processing the request.
-- Determine whether the service is protected by an appropriate `android:permission`, and verify that the permission is effective for the intended trust boundary, for example by using a `signature` protection level or another control that is not broadly grantable to untrusted apps.
+- Determine whether the service exposes a started-service or bound-service interface that lets callers trigger sensitive operations or access sensitive data.
+
+Then determine whether external access to the service is appropriately restricted for the functionality it exposes and the app's intended trust boundary:
+
+- Determine whether the service has a legitimate reason to accept start or bind requests from third-party apps. If it doesn't, it shouldn't be exported.
+- If external access is required, determine whether the service is protected by an appropriate `android:permission` or an equivalent access control. Appropriate means the control matches the sensitivity of the service operation and the set of apps that should be allowed to start or bind to it.
+- Verify that the permission is effective for that trust boundary, for example by using a `signature` protection level or another control that is not broadly grantable to untrusted apps.
+- Determine whether the service verifies the caller's permission at runtime (for example, with `checkCallingPermission` or `enforceCallingPermission`) before processing sensitive requests.
