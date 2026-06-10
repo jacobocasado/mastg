@@ -46,7 +46,7 @@ override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 }
 ```
 
-Although `VaultActivity` only displays the password after the user opens the app, the protection is client-side only.
+`VaultActivity` does not protect the underlying exported service; access control must be enforced at the `AuthService` boundary.
 
 ### Confirm the Exposure
 

@@ -38,7 +38,7 @@ The exported activities are:
 
 The test case fails because `SecretActivity` exposes sensitive functionality and is exported (`android:exported="true"`) without any permission protection. Because `SecretActivity` is exported and unprotected, external callers that can address the component can start it directly, bypassing `PinEntryActivity` entirely.
 
-Although `PinEntryActivity` enforces a PIN before launching `SecretActivity`, the protection is client-side only.
+`PinEntryActivity` does not protect the underlying exported activity; access control must be enforced at the `SecretActivity` boundary.
 
 The activity displays account data in `onCreate` without checking whether the user completed the PIN challenge:
 
