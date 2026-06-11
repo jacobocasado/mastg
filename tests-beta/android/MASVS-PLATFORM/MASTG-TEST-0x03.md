@@ -11,11 +11,7 @@ knowledge: [MASTG-KNOW-0x03, MASTG-KNOW-0017, MASTG-KNOW-0020]
 
 ## Overview
 
-Android apps declare [broadcast receivers](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x03.md) in the `AndroidManifest.xml` file or register them at runtime with `Context.registerReceiver`. A receiver can receive broadcasts from components of other apps when it is exported, for example by setting [`android:exported="true"`](https://developer.android.com/guide/topics/manifest/receiver-element#exported). Apps targeting Android 12 (API level 31) or higher must explicitly declare `android:exported` on receivers with intent filters.
-
-Exported receivers can be protected by declaring [`android:permission`](https://developer.android.com/guide/topics/manifest/receiver-element#prmsn) with specific protection levels such as `signature`, which prevents apps that do not hold the required permission, such as third-party apps outside the intended trust boundary, from sending broadcasts to them. See @MASTG-KNOW-0x03 for details on broadcast receivers, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android.
-
-If an exported receiver does not define `android:permission` with a proper protection level and performs or grants access to sensitive functionality, another third-party app outside the intended trust boundary can send a broadcast to it and invoke that functionality.
+If an exported receiver does not define [`android:permission`](https://developer.android.com/guide/topics/manifest/receiver-element#prmsn) with a proper protection level and performs or grants access to sensitive functionality, another third-party app outside the intended trust boundary can send a broadcast to it and invoke that functionality. See @MASTG-KNOW-0x03 for details on broadcast receivers, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android.
 
 This test checks whether the app exposes sensitive functionality through exported and unprotected broadcast receivers.
 

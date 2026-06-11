@@ -11,11 +11,7 @@ knowledge: [MASTG-KNOW-0x02, MASTG-KNOW-0017, MASTG-KNOW-0020]
 
 ## Overview
 
-Android apps declare [services](../../../knowledge/android/MASVS-PLATFORM/MASTG-KNOW-0x02.md) in the `AndroidManifest.xml` file. A service can be started or bound to by components of other apps when it is exported, for example by setting [`android:exported="true"`](https://developer.android.com/guide/topics/manifest/service-element#exported). Apps targeting Android 12 (API level 31) or higher must explicitly declare `android:exported` on services with intent filters.
-
-Exported services can be protected by declaring [`android:permission`](https://developer.android.com/guide/topics/manifest/service-element#prmsn) with specific protection levels such as `signature`, which prevents apps that do not hold the required permission, such as third-party apps outside the intended trust boundary, from starting or binding to them. See @MASTG-KNOW-0x02 for details on services, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android.
-
-If an exported service does not define `android:permission` with a proper protection level and performs or grants access to sensitive functionality, another third-party app outside the intended trust boundary can start or bind to it and invoke that functionality.
+If an exported service does not define [`android:permission`](https://developer.android.com/guide/topics/manifest/service-element#prmsn) with a proper protection level and performs or grants access to sensitive functionality, another third-party app outside the intended trust boundary can start or bind to it and invoke that functionality. See @MASTG-KNOW-0x02 for details on services, @MASTG-KNOW-0017 for permissions and protection levels, and @MASTG-KNOW-0020 for the IPC model of Android.
 
 This test checks whether the app exposes sensitive functionality through exported and unprotected services.
 
