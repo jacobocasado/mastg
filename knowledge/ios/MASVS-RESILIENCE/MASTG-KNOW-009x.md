@@ -10,7 +10,7 @@ In the context of anti-reversing, the goal of emulator and virtual device detect
 
 Virtual devices are environments that virtualize the hardware and operating system expected by iOS apps compiled for physical devices. Unlike the iOS Simulator, they can run iOS device binaries because they preserve the relevant iOS architecture and runtime environment.
 
-Since its release, [Corellium](https://www.corellium.com/) (commercial tool) has made iOS virtualization available, [setting itself apart from the iOS simulator](https://www.corellium.com/compare/ios-simulator "Corellium vs Apple\'s iOS Simulator").
+Since its release, @MASTG-TOOL-0108 (commercial tool) has made iOS virtualization available, [setting itself apart from the iOS simulator](https://www.corellium.com/compare/ios-simulator "Corellium vs Apple\'s iOS Simulator").
 
 Corellium claims that their virtual devices run on a proprietary hypervisor **and are not emulators**, which means that the iOS architecture is maintained and iOS apps can run in Corellium virtual devices, enabling reverse engineering of iOS apps using these virtual devices.
 
