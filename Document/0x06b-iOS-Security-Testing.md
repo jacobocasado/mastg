@@ -64,11 +64,11 @@ You should have a jailbroken iPhone or iPad for running tests. These devices all
 
 ### Testing on the iOS Simulator
 
-Unlike the Android emulator, which fully emulates the hardware of an actual Android device, the iOS Simulator offers a higher-level _simulation_ of an iOS device. Most importantly, emulator binaries are compiled to x86 or ARM-based architecture for the macOS operating system, whereas apps compiled for a physical device are compiled for the ARM-based iOS operating system. This means that apps compiled for a real device can't run in the simulator.
+Unlike the Android emulator, which fully emulates the hardware of an actual Android device, the iOS Simulator offers a higher-level _simulation_ of an iOS device. Binaries for the Simulator are compiled to x86 or ARM-based architecture for the underlying macOS operating system running the Simulator, whereas apps compiled for a physical device are compiled for the ARM-based iOS operating system. This means that apps compiled for a real device can't run in the Simulator.
 
 ### Testing on an iOS virtual device
 
-@MASTG-TOOL-0108 is the only publicly available iOS virtual device. It is an enterprise SaaS solution with a per user license model and does not offer community licenses.
+Virtual devices allow running apps compiled for a real device. @MASTG-TOOL-0108 is the only publicly available iOS virtual device. It is an enterprise SaaS solution with a per user license model and does not offer community licenses.
 
 ### Getting Privileged Access
 

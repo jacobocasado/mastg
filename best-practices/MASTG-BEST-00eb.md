@@ -3,7 +3,7 @@ title: Hardening Against Virtual Devices (iOS)
 alias: hardening-against-virtual-devices-ios
 id: MASTG-BEST-00eb
 platform: ios
-knowledge: [MASTG-KNOW-0088, MASTG-KNOW-0087, MASTG-KNOW-0089]
+knowledge: [MASTG-KNOW-009x, MASTG-KNOW-0088, MASTG-KNOW-0087, MASTG-KNOW-0089]
 ---
 
 iOS virtual devices (like [Corellium](https://www.corellium.com/)) can be detected in the app by performing in-app checks (@MASTG-KNOW-009x).

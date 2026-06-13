@@ -1,6 +1,6 @@
 ---
-platform: iOS
-title: Testing Virtual Device Checks 
+platform: ios
+title: Runtime Use of Virtual Device Detection Techniques
 id: MASTG-TEST-0x92
 type: [dynamic]
 weakness: MASWE-0099
@@ -11,23 +11,27 @@ knowledge: [MASTG-KNOW-009x]
 
 ## Overview
 
-This test verifies that the app implements checks to detect the presence of an iOS virtual device (like Corellium) and that it executes such checks at runtime. The verifications are made at runtime, via runtime method hooking.
+This test verifies if the app implements checks to detect the presence of an iOS virtual device (like @MASTG-TOOL-0108) by attempting to hook into common virtual device detection mechanisms.
 
-See @MASTG-KNOW-009x for a detailed overview about virtual device detection indicators and patterns performed by applications.
+See @MASTG-KNOW-009x for a detailed overview about virtual device detection mechanisms and patterns performed by applications.
 
-Note that this test verifies that the app performs the checks, and does not verify the behavior of the app when the indicators are triggered.
+!!! note "Out of Scope"
+    This test does not cover robustness or effectiveness of these mechanisms, which can be very difficult to assess through automated testing alone and may require manual reverse engineering and custom instrumentation. See @MASTG-BEST-00eb for best practices on implementing virtual device detection effectively.
 
 ## Steps
 
-1. Start the device.
-2. Use @MASTG-TECH-0056 to install the app in the device.
-3. Use runtime method hooking (see @MASTG-TECH-0039) to trace system and API calls related to virtual device detection (see @MASTG-KNOW-009x for a detailed list of indicators).
-4. Capture the output, including any abrupt session termination events or errors.
+1. Use @MASTG-TECH-0056 to install the app.
+2. Use @MASTG-TECH-0095 to hook the relevant API calls.
+3. Exercise the app extensively to trigger as many flows as possible and enter sensitive data wherever you can.
 
 ## Observation
 
-The output should contain evidence of virtual device detection checks being triggered at runtime.
+The output should contain any instances of virtual device detection checks, along with the methods or APIs that were hooked.
 
 ## Evaluation
 
-The test case fails if the output does not show any evidence of virtual device detection checks being triggered at runtime by the application.
+The test case fails if no instances of virtual device detection checks are observed.
+
+**Expected False Negatives:**
+
+This test may produce false negatives if the app uses virtual device detection mechanisms that are not covered by the hooks or traces used, or if the virtual device detection logic is implemented in a way that evades detection (for example, through obfuscation, dynamic code loading, or anti-instrumentation techniques). In such cases, the absence of findings does not guarantee the absence of virtual device detection, and additional manual reverse engineering or custom instrumentation may be required to identify and analyze virtual device detection mechanisms.
