@@ -80,5 +80,3 @@ function hookStatSymbol(symbolName) {
 }
 
 hookStatSymbol("stat");
-hookStatSymbol("stat64");
-hookStatSymbol("stat$INODE64");

@@ -1,4 +1,3 @@
-[skip] stat$INODE64 not found
 sysctlbyname("hw.machine") => iPhone10,6
 Backtrace:
 0x1c2ac4368 CoreFoundation!___CFGetProductName_block_invoke
