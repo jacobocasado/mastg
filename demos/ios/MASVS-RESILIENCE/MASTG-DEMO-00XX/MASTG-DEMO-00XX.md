@@ -9,15 +9,15 @@ kind: pass
 
 ## Sample
 
-The snippet below shows sample code that performs common virtual device indicator checks and reports the queried values and final verdict in the UI (see @MASTG-KNOW-009x for more information about common virtual device checks and values).
+The snippet below shows sample code that performs virtual device indicator checks and logs the queried values and matches against common virtual device values (see @MASTG-KNOW-009x for more information about common virtual device checks and values).
 
-The checks cover several categories: device properties, hardware capability, and virtualization-engine file presence.
+The checks query device properties and the Apple Metal GPU availability as mechanisms to detect all kinds of virtual devices, and a specific check for the @MASTG-TOOL-0108 virtual device.
 
-Notes about the checks performed:
+!!! note
+    The sample avoids NFC and Bluetooth checks because they can require additional entitlements, usage descriptions, or user-controlled state, which would make the demo less deterministic.
 
-- The sample avoids NFC and Bluetooth checks because they can require additional entitlements, usage descriptions, or user-controlled state, which would make the demo less deterministic.
-- The sample avoids App Attest checks because they require server-side validation, which breaks the self-contained requirement for MASTG demos.
-- The sample checks `/usr/libexec/corelliumd` as a strong Corellium indicator. This file isn't expected on standard physical iOS devices.
+!!! note
+    The sample avoids App Attest checks because they require server-side validation, which breaks the self-contained requirement for MASTG demos.
 
 {{ MastgTest.swift }}
 
@@ -41,11 +41,11 @@ The runtime trace shows that tapping the **Start** button triggers the following
 
 - `sysctlbyname("hw.machine")` is called and returns `iPhone10,6`. The trace shows one early framework-level call from CoreFoundation and one app-level call from `VirtualDeviceDetector.currentMachineIdentifier()`, confirming that the sample queries the runtime device model.
 - `MTLCreateSystemDefaultDevice()` is called from `VirtualDeviceDetector.metalIndicator()` and returns `available`, confirming that the sample checks for Metal GPU availability.
-- `stat("/usr/libexec/corelliumd")` is called from `VirtualDeviceDetector.corelliumDaemonExists()` and returns `missing`, confirming that the sample checks for the Corellium daemon file and that this indicator wasn't present on the tested device.
+- `stat("/usr/libexec/corelliumd")` is called from `VirtualDeviceDetector.corelliumDaemonExists()` and returns `missing`, confirming that the sample checks for the specific @MASTG-TOOL-0108 virtual device daemon file.
 
 ## Evaluation
 
-The test passes because the output confirms the app implements virtual device detection checks that were triggered at runtime:
+The test passes because the output confirms the app implements virtual device detection checks at runtime:
 
 - **`sysctlbyname("hw.machine")` call for device property checks:**
     - The app queries the device model identifier.
