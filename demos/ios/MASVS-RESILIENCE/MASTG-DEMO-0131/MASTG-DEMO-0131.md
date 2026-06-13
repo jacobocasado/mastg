@@ -2,14 +2,14 @@
 title: Detecting Virtual Device Detection Checks with Frida
 platform: ios
 code: [swift]
-id: MASTG-DEMO-00XX
-test: MASTG-TEST-0x92
+id: MASTG-DEMO-0131
+test: MASTG-TEST-0367
 kind: pass
 ---
 
 ## Sample
 
-The snippet below shows sample code that performs virtual device indicator checks and logs the queried values and matches against common virtual device values (see @MASTG-KNOW-009x for more information about common virtual device checks and values).
+The snippet below shows sample code that performs virtual device indicator checks and logs the queried values and matches against common virtual device values (see @MASTG-KNOW-0135 for more information about common virtual device checks and values).
 
 The checks query device properties and the Apple Metal GPU availability as mechanisms to detect all kinds of virtual devices, and a specific check for the @MASTG-TOOL-0108 virtual device.
 
@@ -55,4 +55,4 @@ The test passes because the output confirms the app implements virtual device de
     - The app checks whether a Metal GPU is available.
 
 - **`stat("/usr/libexec/corelliumd")` call for virtualization-engine file checks:**
-    - The app checks for the @MASTG-TOOL-108 (virtual device) daemon file.
+    - The app checks for the @MASTG-TOOL-0108 (virtual device) daemon file.

@@ -15,7 +15,7 @@ As discussed in the section [Testing on the iOS Simulator](../../../Document/0x0
 Therefore, apps from App Store (and overall, apps compiled for iOS physical devices) do not need to detect the presence of an iOS Simulator as they can't be installed or executed in such platform.
 
 !!! note
-  Do not misunderstand the iOS Simulator and virtual devices. Apps from App Store can run in virtual devices as they are devices that emulate the complete architecture of the physical devices. For more information on virtual devices, check @MASTG-KNOW-009x.
+  Do not misunderstand the iOS Simulator and virtual devices. Apps from App Store can run in virtual devices as they are devices that emulate the complete architecture of the physical devices. For more information on virtual devices, check @MASTG-KNOW-0135.
 
 Although apps from App Store cannot be executed in an iOS Simulator, there are several indicators that can be used by the app to know if the device in question is an iOS Simulator.
 

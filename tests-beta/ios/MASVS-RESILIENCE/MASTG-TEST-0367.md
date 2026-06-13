@@ -1,22 +1,22 @@
 ---
 platform: ios
 title: Runtime Use of Virtual Device Detection Techniques
-id: MASTG-TEST-0x92
+id: MASTG-TEST-0367
 type: [dynamic]
 weakness: MASWE-0099
-best-practices: [MASTG-BEST-00eb]
+best-practices: [MASTG-BEST-0053]
 profiles: [R]
-knowledge: [MASTG-KNOW-009x]
+knowledge: [MASTG-KNOW-0135]
 ---
 
 ## Overview
 
 This test verifies if the app implements checks to detect the presence of an iOS virtual device (like @MASTG-TOOL-0108) by attempting to hook into common virtual device detection mechanisms.
 
-See @MASTG-KNOW-009x for a detailed overview about virtual device detection mechanisms and patterns performed by applications.
+See @MASTG-KNOW-0135 for a detailed overview about virtual device detection mechanisms and patterns performed by applications.
 
 !!! note "Out of Scope"
-    This test does not cover robustness or effectiveness of these mechanisms, which can be very difficult to assess through automated testing alone and may require manual reverse engineering and custom instrumentation. See @MASTG-BEST-00eb for best practices on implementing virtual device detection effectively.
+    This test does not cover robustness or effectiveness of these mechanisms, which can be very difficult to assess through automated testing alone and may require manual reverse engineering and custom instrumentation. See @MASTG-BEST-0053 for best practices on implementing virtual device detection effectively.
 
 ## Steps
 

@@ -60,7 +60,7 @@ private struct VirtualDeviceDetector {
             reason = "The reported model can be cross-checked against the hardware capabilities observed at runtime."
         }
 
-        // PASS: [MASTG-TEST-0x92] The app queries hw.machine through sysctlbyname as a virtual-device indicator.
+        // PASS: [MASTG-TEST-0367] The app queries hw.machine through sysctlbyname as a virtual-device indicator.
         return IndicatorResult(
             order: 1,
             name: "hw.machine",
@@ -71,7 +71,7 @@ private struct VirtualDeviceDetector {
     }
 
     private func metalIndicator() -> IndicatorResult {
-        // PASS: [MASTG-TEST-0x92] The app checks whether a Metal GPU is available.
+        // PASS: [MASTG-TEST-0367] The app checks whether a Metal GPU is available.
         if MTLCreateSystemDefaultDevice() != nil {
             return IndicatorResult(
                 order: 2,
@@ -92,7 +92,7 @@ private struct VirtualDeviceDetector {
     }
 
     private func corelliumIndicator() -> IndicatorResult {
-        // PASS: [MASTG-TEST-0x92] The app checks for the Corellium daemon file.
+        // PASS: [MASTG-TEST-0367] The app checks for the Corellium daemon file.
         if corelliumDaemonExists() {
             return IndicatorResult(
                 order: 3,
