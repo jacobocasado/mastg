@@ -1,15 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 set -euo pipefail
 
-rm -rf jadx-output extracted
-mkdir -p extracted
-
-unzip -o -j MASTG-DEMO-0x02.apk 'lib/arm64-v8a/librootcheck.so' -d extracted > /dev/null
-
-r2 -q -e scr.color=0 -e bin.relocs.apply=true \
-  -c 'iS~dynsym,symtab,rodata,text' \
-  -c 'izz~su' \
-  -c 'afl~Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath' \
-  -c 'pdf @ sym.Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath' \
-  -A extracted/librootcheck.so > output.txt
+r2 -q -i root_detection.r2 -A librootcheck.so > output.txt

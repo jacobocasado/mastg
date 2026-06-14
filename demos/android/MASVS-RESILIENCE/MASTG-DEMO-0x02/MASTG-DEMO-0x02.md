@@ -19,29 +19,27 @@ The app is not obfuscated at the Java/Kotlin layer, and the native library is in
 
 ## Steps
 
-1. Use `unzip` to extract the native libraries. In this case `lib/arm64-v8a/librootcheck.so`.
+1. Use `unzip` to extract the native libraries. In this case, we extracted `lib/arm64-v8a/librootcheck.so` from the APK.
 2. Use @MASTG-TOOL-0028 to disassemble `librootcheck.so`.
-3. Use @MASTG-TECH-0024 to inspect the disassembled native code to identify sections (`iS~dynsym,symtab,rodata,text`) and strings (`izz~su`) that may be relevant for root detection. We also analyze the function `Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath` to understand the root detection logic implemented in the native library.
+3. Use @MASTG-TECH-0024 to inspect the disassembled native code and search for strings referencing typical root indicators, such as `su`.
 
-{{ run.sh }}
+{{ root_detection.r2 # run.sh }}
+
+> **Note:** Filtering strings with `izz~su` is a simplification used here for demonstration purposes. In a real-world scenario, the set of root-related strings and paths to look for is broader. Refer to @MASTG-KNOW-0027 for a comprehensive list of root detection indicators.
 
 ## Observation
 
-The output contains the relevant locations in the extracted native library that show the monitored `su` paths and the native function that performs the checks.
+The output contains all the strings containing `su` paths found in `.rodata`.
 
 {{ output.txt }}
 
 ## Evaluation
 
-The test case fails because when performing reverse engineering on the native library it is possible to identify and understand the security-relevant root detection logic with little effort.
+The test case fails because the native library can be reverse engineered with little effort and the security-relevant root detection logic remains easy to identify.
 
-In `output.txt`:
+The output reveals the paths `/system/bin/su`, `/sbin/su`, and `/system/xbin/su` stored as plaintext in `.rodata`, showing that the root detection indicators are not encoded or encrypted. Finding these strings alone is sufficient to demonstrate the test failure: they tell an attacker exactly what artifacts the library is looking for.
 
-- Lines 4 to 6 still reveal the monitored root-related paths `/system/bin/su`, `/sbin/su`, and `/system/xbin/su`, so the strings are not encoded or encrypted.
-- Lines 7 to 20 show the disassembled `Java_org_owasp_mastestapp_MastgTest_findRootArtifactPath` function.
-- Lines 20 to 44 show repeated calls to `sym.imp.access` and comparisons against `0xd`.
-
-This means that the reverse-engineered native code still makes it straightforward to identify that the app is checking common `su` paths and closing the app when one of them is found.
+> **Note:** For the purpose of this demo we stop here. In a real assessment you would go further and trace where these strings are used — for example by following cross-references or pivoting through file-access imports like `access()` — to fully map the detection logic and understand how the result is returned to the Java/Kotlin layer.
 
 **Additional Context**:
 
