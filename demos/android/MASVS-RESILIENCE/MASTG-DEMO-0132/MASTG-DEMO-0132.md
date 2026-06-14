@@ -11,7 +11,7 @@ kind: fail
 
 The sample code demonstrates an Android app that performs a root detection routine implemented in the Java/Kotlin layer. The app checks whether well-known root manager packages are installed on the device.
 
-{{ MastgTest.kt}}
+{{ MastgTest.kt # AndroidManifest.xml }}
 
 Regardless of whether this protection mechanism is sufficient to detect root in a real-world scenario, the purpose of this demo is to show that the obfuscation applied to the Java/Kotlin layer is not enough to prevent an attacker from reverse engineering the root detection logic with reasonable effort.
 
@@ -26,8 +26,6 @@ The app is obfuscated with R8, which applies identifier renaming and some code s
 ## Observation
 
 The output contains the reverse-engineered Java/Kotlin code.
-
-{{ output.txt }}
 
 ## Evaluation
 
