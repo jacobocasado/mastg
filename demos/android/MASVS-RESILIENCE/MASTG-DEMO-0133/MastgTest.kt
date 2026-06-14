@@ -7,7 +7,7 @@ import android.util.Log
 // SUMMARY: This sample demonstrates a native root detection routine based on common su binary paths.
 class MastgTest(private val context: Context) {
 
-    // FAIL: [MASTG-TEST-0x51-2] Due to weak code obfuscation, the root detection logic remains identifiable in the decompiled library.
+    // FAIL: [MASTG-TEST-0369] Due to weak code obfuscation, the root detection logic remains identifiable in the decompiled library.
     val shouldRunInMainThread = true
 
     fun mastgTest(): String {
@@ -18,7 +18,7 @@ class MastgTest(private val context: Context) {
 
             if (detectedPath != null) {
                 val message = "Detected root artifact path '$detectedPath' and triggered the root-detection branch. The test fails because this security-relevant native logic remains identifiable through exported JNI symbols, cleartext su paths, and disassembly despite basic obfuscation."
-                Log.w("MASTG-DEMO-0x02", message)
+                Log.w("MASTG-DEMO-0133", message)
                 results.add(Status.FAIL, message)
                 closeApp()
             } else {

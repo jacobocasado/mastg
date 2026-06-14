@@ -32,7 +32,7 @@ public final class MastgTest {
             String strFindRootArtifactPath = findRootArtifactPath();
             if (strFindRootArtifactPath != null) {
                 String str = "Detected root artifact path '" + strFindRootArtifactPath + "'. The app closes when a monitored su path is found.";
-                Log.w("MASTG-DEMO-0x02", str);
+                Log.w("MASTG-DEMO-0133", str);
                 demoResults.add(Status.FAIL, str);
                 closeApp();
             } else {

@@ -16,7 +16,7 @@ When reverse engineering the application, the DEX bytecode is decompiled into hu
 
 Obfuscation at this layer changes names, literals, control flow, or code loading behavior to reduce how much information the decompiled output reveals and increase the effort required to recover program logic.
 
-Common open-source obfuscators that apply some of the techniques below are [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization), @MASTG-TOOL-0022, and @MASTG-TOOL-0x01.
+Common open-source obfuscators that apply some of the techniques below are [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization), @MASTG-TOOL-0022, and @MASTG-TOOL-0153.
 
 ### Identifier Renaming
 

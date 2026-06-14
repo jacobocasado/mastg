@@ -1,9 +1,9 @@
 ---
 platform: android
 title: Root Detection Logic in Native Layer with Insufficient Obfuscation
-id: MASTG-DEMO-0x02
+id: MASTG-DEMO-0133
 code: [kotlin, cpp]
-test: MASTG-TEST-0x02
+test: MASTG-TEST-0369
 kind: fail
 ---
 

@@ -1,9 +1,9 @@
 ---
 platform: android
 title: Root Detection Logic in Java/Kotlin Layer Only Protected by Identifier Renaming
-id: MASTG-DEMO-0x01
+id: MASTG-DEMO-0132
 code: [kotlin]
-test: MASTG-TEST-0x01
+test: MASTG-TEST-0368
 kind: fail
 ---
 
