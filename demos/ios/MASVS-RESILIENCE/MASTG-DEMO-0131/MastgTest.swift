@@ -3,7 +3,7 @@ import Metal
 import Darwin
 
 struct MastgTest {
-    // SUMMARY: This sample demonstrates iOS virtual-device detection by executing virtual device indicator checks and reporting a final verdict in the UI.
+    // SUMMARY: This sample demonstrates iOS virtual device detection by executing virtual device indicator checks and reporting a final verdict in the UI.
 
     static func mastgTest(completion: @escaping (String) -> Void) {
         completion(VirtualDeviceDetector().run())

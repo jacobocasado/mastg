@@ -9,9 +9,9 @@ kind: pass
 
 ## Sample
 
-The snippet below shows sample code that performs virtual device indicator checks and logs the queried values and matches against common virtual device values (see @MASTG-KNOW-0135 for more information about common virtual device checks and values).
+The snippet below shows sample code that performs virtual device indicator checks and reports the queried values and indicator results. See @MASTG-KNOW-0135 for more information about common virtual device checks and values.
 
-The checks query device properties and the Apple Metal GPU availability as mechanisms to detect all kinds of virtual devices, and a specific check for the @MASTG-TOOL-0108 virtual device.
+The checks query device properties and Apple Metal GPU availability as generic virtual device indicators, and also check for a specific @MASTG-TOOL-0108 virtualization artifact.
 
 !!! note
     The sample avoids NFC and Bluetooth checks because they can require additional entitlements, usage descriptions, or user-controlled state, which would make the demo less deterministic.
@@ -24,7 +24,7 @@ The checks query device properties and the Apple Metal GPU availability as mecha
 ## Steps
 
 1. Install the app on a device (@MASTG-TECH-0056).
-2. Make sure you have @MASTG-TOOL-0039 installed on your machine and frida-server running on the device.
+2. Make sure you have @MASTG-TOOL-0039 installed on your machine and `frida-server` running on the device.
 3. Run `run.sh` to spawn the app with Frida.
 4. Tap the **Start** button.
 5. Stop the script by pressing `Ctrl+C`.
@@ -33,7 +33,7 @@ The checks query device properties and the Apple Metal GPU availability as mecha
 
 ## Observation
 
-The output shows all virtual device detection API calls captured during app execution.
+The output shows the virtual device detection-related API calls captured by the Frida hooks during app execution.
 
 {{ output.txt }}
 
@@ -41,11 +41,11 @@ The runtime trace shows that tapping the **Start** button triggers the following
 
 - `sysctlbyname("hw.machine")` is called and returns `iPhone10,6`. The trace shows one early framework-level call from CoreFoundation and one app-level call from `VirtualDeviceDetector.currentMachineIdentifier()`, confirming that the sample queries the runtime device model.
 - `MTLCreateSystemDefaultDevice()` is called from `VirtualDeviceDetector.metalIndicator()` and returns `available`, confirming that the sample checks for Metal GPU availability.
-- `stat("/usr/libexec/corelliumd")` is called from `VirtualDeviceDetector.corelliumDaemonExists()` and returns `missing`, confirming that the sample checks for the specific @MASTG-TOOL-0108 virtual device daemon file.
+- `stat("/usr/libexec/corelliumd")` is called from `VirtualDeviceDetector.corelliumDaemonExists()` and returns `missing`, confirming that the sample checks for the specific @MASTG-TOOL-0108 daemon file.
 
 ## Evaluation
 
-The test passes because the output confirms the app implements virtual device detection checks at runtime:
+The test passes because the output confirms that the app implements virtual device detection checks at runtime:
 
 - **`sysctlbyname("hw.machine")` call for device property checks:**
     - The app queries the device model identifier.
@@ -54,5 +54,5 @@ The test passes because the output confirms the app implements virtual device de
 - **`MTLCreateSystemDefaultDevice()` call for hardware capability checks:**
     - The app checks whether a Metal GPU is available.
 
-- **`stat("/usr/libexec/corelliumd")` call for virtualization-engine file checks:**
-    - The app checks for the @MASTG-TOOL-0108 (virtual device) daemon file.
+- **`stat("/usr/libexec/corelliumd")` call for virtualization engine file checks:**
+    - The app checks for the @MASTG-TOOL-0108 daemon file.

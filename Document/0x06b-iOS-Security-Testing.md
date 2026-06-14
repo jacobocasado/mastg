@@ -62,9 +62,17 @@ It is also possible to get the UDID via various command line tools on macOS whil
 
 You should have a jailbroken iPhone or iPad for running tests. These devices allow root access and tool installation, making the security testing process more straightforward. If you don't have access to a jailbroken device, you can apply the workarounds described later in this chapter, but be prepared for a more difficult experience.
 
+### Testing on a Mac
+
+On Macs with Apple silicon, [compatible iPhone and iPad apps can be distributed through the Mac App Store and run directly on macOS](https://developer.apple.com/documentation/apple-silicon/running-your-ios-apps-in-macos). This environment is different from the iOS Simulator and should be detected separately.
+
+Refer to @MASTG-KNOW-0x01 for more information.
+
 ### Testing on the iOS Simulator
 
 Unlike the Android emulator, which fully emulates the hardware of an actual Android device, the iOS Simulator offers a higher-level _simulation_ of an iOS device. Binaries for the Simulator are compiled to x86 or ARM-based architecture for the underlying macOS operating system running the Simulator, whereas apps compiled for a physical device are compiled for the ARM-based iOS operating system. This means that apps compiled for a real device can't run in the Simulator.
+
+Refer to @MASTG-KNOW-0088 for more information.
 
 ### Testing on an iOS virtual device
 
