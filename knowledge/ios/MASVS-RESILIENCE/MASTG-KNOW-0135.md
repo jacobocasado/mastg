@@ -20,7 +20,7 @@ Recent research projects such as [vPhone](https://github.com/Lakr233/vphone-cli)
 Do not confuse virtual devices with:
 
     - The iOS Simulator, which runs simulator builds, while virtual devices attempt to reproduce an iOS device environment for iOS device binaries. See @MASTG-KNOW-0088.
-    - iPhone and iPad apps running on macOS, which use an official Mac App Store distribution path on Macs with Apple silicon. See @MASTG-KNOW-0x01.
+    - iPhone and iPad apps running on macOS, which use an official Mac App Store distribution path on Macs with Apple silicon. See @MASTG-KNOW-0136.
 
 !!! warning "Security Considerations"
     Virtual device detection is inherently a cat-and-mouse game. Detection methods and bypass techniques evolve continuously, and determined attackers with sufficient time and resources can circumvent these protections, for example, by hooking or patching the detection logic.

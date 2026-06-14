@@ -16,7 +16,7 @@ From a resilience perspective, an app might still want to identify this environm
 
 !!! note
     Do not confuse iPhone and iPad apps running on macOS with:
-    
+
     - The iOS Simulator, which runs simulator builds, while iPhone and iPad apps on Apple silicon Macs run through an official Mac App Store distribution path. See @MASTG-KNOW-0088.
     - Virtual devices, which attempt to reproduce an iOS device environment for iOS device binaries. See @MASTG-KNOW-0135.
 

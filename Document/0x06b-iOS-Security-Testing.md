@@ -66,7 +66,7 @@ You should have a jailbroken iPhone or iPad for running tests. These devices all
 
 On Macs with Apple silicon, [compatible iPhone and iPad apps can be distributed through the Mac App Store and run directly on macOS](https://developer.apple.com/documentation/apple-silicon/running-your-ios-apps-in-macos). This environment is different from the iOS Simulator and should be detected separately.
 
-Refer to @MASTG-KNOW-0x01 for more information.
+Refer to @MASTG-KNOW-0136 for more information.
 
 ### Testing on the iOS Simulator
 

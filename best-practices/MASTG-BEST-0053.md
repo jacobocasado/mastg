@@ -3,12 +3,12 @@ title: Hardening Against Virtual Devices
 alias: hardening-against-virtual-devices
 id: MASTG-BEST-0053
 platform: ios
-knowledge: [MASTG-KNOW-0135, MASTG-KNOW-0088, MASTG-KNOW-0x01, MASTG-KNOW-0087, MASTG-KNOW-0089]
+knowledge: [MASTG-KNOW-0135, MASTG-KNOW-0088, MASTG-KNOW-0136, MASTG-KNOW-0087, MASTG-KNOW-0089]
 ---
 
 Virtual devices, such as @MASTG-TOOL-0108 and newer research environments, allow target applications to be executed in controlled environments that may use custom system images, modified platform components, missing or simulated hardware capabilities, or instrumentation that is difficult for the app to detect. This enables advanced reverse-engineering techniques.
 
-Do not confuse virtual devices with the iOS Simulator or with iPhone and iPad apps running on macOS. The iOS Simulator runs simulator builds, while virtual devices attempt to reproduce an iOS device environment for iOS device binaries. iPhone and iPad apps running on macOS use a separate official Mac App Store distribution path on Macs with Apple silicon. See @MASTG-KNOW-0088 and @MASTG-KNOW-0x01.
+Do not confuse virtual devices with the iOS Simulator or with iPhone and iPad apps running on macOS. The iOS Simulator runs simulator builds, while virtual devices attempt to reproduce an iOS device environment for iOS device binaries. iPhone and iPad apps running on macOS use a separate official Mac App Store distribution path on Macs with Apple silicon. See @MASTG-KNOW-0088 and @MASTG-KNOW-0136.
 
 Defending against virtual devices requires a layered approach. Local checks should be treated as risk signals, not as standalone security decisions, because attackers can hook, patch, or bypass client-side logic. For sensitive functionality, combine client-side indicators with server-side validation and policy decisions.
 

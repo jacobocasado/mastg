@@ -12,7 +12,7 @@ Apple provides [Simulator through Xcode](https://developer.apple.com/documentati
 
 Therefore, apps distributed through the App Store normally do not need to detect the iOS Simulator, because App Store device builds are not Simulator builds. Apple documents that [Xcode cannot create an archive when the run destination is a simulator](https://help.apple.com/xcode/mac/current/en.lproj/devf37a1db04.html), and that iOS app archives should use a build only destination such as Generic iOS Device.
 
-However, this does not mean that iPhone and iPad App Store apps can only run on physical iOS devices. On Macs with Apple silicon, [compatible iPhone and iPad apps can be distributed through the Mac App Store and run directly on macOS](https://developer.apple.com/documentation/apple-silicon/running-your-ios-apps-in-macos). This environment is different from the iOS Simulator and should be detected separately. For more information, check @MASTG-KNOW-0x01.
+However, this does not mean that iPhone and iPad App Store apps can only run on physical iOS devices. On Macs with Apple silicon, [compatible iPhone and iPad apps can be distributed through the Mac App Store and run directly on macOS](https://developer.apple.com/documentation/apple-silicon/running-your-ios-apps-in-macos). This environment is different from the iOS Simulator and should be detected separately. For more information, check @MASTG-KNOW-0136.
 
 !!! note
     Do not confuse the iOS Simulator with virtual devices or with iPhone and iPad apps running on macOS. App Store apps cannot run in the iOS Simulator as normal device builds, but they can run in virtual devices when those environments can execute iOS device binaries. For more information on virtual devices, check @MASTG-KNOW-0135.
