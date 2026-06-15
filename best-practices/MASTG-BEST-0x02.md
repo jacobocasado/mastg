@@ -10,7 +10,7 @@ All data received from external sources (such as `Intent` extras, activity resul
 
 ## Validate the URI scheme
 
-Prefer `content://` URIs over `file://` URIs when processing externally supplied data. A `content://` URI routes access through a `ContentProvider` when opened with [`ContentResolver.openInputStream`](https://developer.android.com/reference/android/content/ContentResolver#openInputStream(android.net.Uri)), allowing provider-level access controls and URI grants to apply. A `file://` URI is resolved directly as a filesystem path using the calling app's own process identity and permissions. This means a malicious responding app can return a `file://` URI pointing at any path the calling app can access, which, depending on the permissions the app holds, may go well beyond its own private storage. See @MASTG-KNOW-0x02 for a detailed explanation of how this is exploited.
+Prefer `content://` URIs over `file://` URIs when processing externally supplied data. A `content://` URI routes access through a `ContentProvider` when opened with [`ContentResolver.openInputStream`](https://developer.android.com/reference/android/content/ContentResolver#openInputStream(android.net.Uri)), allowing provider-level access controls and URI grants to apply. A `file://` URI is resolved directly as a filesystem path using the calling app's own process identity and permissions. This means a malicious responding app can return a `file://` URI pointing at any path the calling app can access, which, depending on the permissions the app holds, may go well beyond its own private storage. See @MASTG-KNOW-0x02 for details on URI schemes in intent results.
 
 ## Sanitize Filenames Provided by External Components
 
