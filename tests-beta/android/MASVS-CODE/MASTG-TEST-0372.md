@@ -11,6 +11,8 @@ profiles: [L1, L2]
 
 ## Overview
 
+An [implicit intent](https://developer.android.com/guide/components/intents-filters) is an `Intent` that does not name a concrete target component. Instead, it declares an action, and optionally data or categories, and Android resolves it to an installed component with a matching `<intent-filter>`. See @MASTG-KNOW-0025 for background on explicit and implicit intents and intent resolution.
+
 Android apps commonly use implicit intents when they intentionally delegate an action to another app selected by the system or the user. Typical legitimate uses include opening a web page or map location with `ACTION_VIEW`, sharing content with `ACTION_SEND`, requesting a file or image with `ACTION_GET_CONTENT`, or launching a chooser when the app does not need to control which external app handles the request.
 
 The issue appears when an app uses the same mechanism for communication that is expected to stay inside the app, such as starting an internal activity or sending an app-specific action to another trusted component. In that case, intent hijacking can occur: a third-party app declares a matching `<intent-filter>` for the same action and becomes a candidate during Android's intent resolution. If the system presents a chooser, the user may select the third-party app; if only one matching handler exists or a default handler has been set, the intent may be delivered without an explicit user decision.
