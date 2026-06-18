@@ -40,4 +40,3 @@ Inspect each reported code location using @MASTG-TECH-0023:
 - Check whether another app can declare or register a matching `<intent-filter>` for the action, data, and categories.
 - For broadcasts, check whether the sender requires a permission that prevents untrusted receivers from receiving it.
 - Check whether the intent is meant for an app component or another trusted app, not a user-selected external app.
-- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction.

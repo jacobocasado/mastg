@@ -41,4 +41,3 @@ Inspect each reported code location using @MASTG-TECH-0023:
 - For broadcasts, check whether the sender requires a permission that prevents untrusted receivers from receiving it.
 - Check whether the extras contain credentials, tokens, session identifiers, one-time codes, personal data, account identifiers, internal commands, or other security-relevant data.
 - Check whether the dispatch is an intentional user-selected share/open flow, such as `ACTION_SEND` or a chooser.
-- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction.
