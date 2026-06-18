@@ -26,17 +26,17 @@ This test checks whether the app creates and dispatches implicit intents that ca
 
 ## Observation
 
-The output should contain instances where an `Intent` is populated with extras and dispatched without indicators that constrain the recipient to an explicit component, package, or trusted app boundary. Indicators of a constrained recipient include constructors that name a target class and calls such as `setPackage`, `setClass`, `setClassName`, or `setComponent` before the intent is dispatched.
+The output should contain `Intent` instances that carry extras and are dispatched without an explicit target. Explicit-target indicators include constructors that name a target class and calls such as `setPackage`, `setClass`, `setClassName`, or `setComponent` before dispatch.
 
 ## Evaluation
 
-The test case fails if the app dispatches an implicit intent carrying extras that contain sensitive or security-relevant data, and the recipient is not constrained to an explicit component, package, or trusted app boundary.
+The test case fails if the app sends sensitive or security-relevant extras in an implicit intent without an explicit target package or component.
 
 **Further Validation Required:**
 
-Inspect each reported code location using @MASTG-TECH-0023 to determine whether the extras contain sensitive data and whether external delivery is intentional:
+Inspect each reported code location using @MASTG-TECH-0023:
 
-- Determine whether the extras contain credentials, authentication tokens, session identifiers, one-time codes, personal data, account identifiers, internal commands, or other security-relevant data.
-- Determine whether the intent action is app-specific, such as an action using the app's package namespace or names such as `INTERNAL_ACTION`.
-- Determine whether the dispatch intentionally shares user-selected data with an external app, such as a standard `ACTION_SEND` or chooser flow.
-- Determine whether the intent is constrained with an explicit component, package, or equivalent recipient restriction before dispatch.
+- Check whether the extras contain credentials, tokens, session identifiers, one-time codes, personal data, account identifiers, internal commands, or other security-relevant data.
+- Check whether the dispatch is an intentional user-selected share/open flow, such as `ACTION_SEND` or a chooser.
+- Check whether the recipient is restricted with an explicit component or package before dispatch.
+- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction; any app can register the same action.

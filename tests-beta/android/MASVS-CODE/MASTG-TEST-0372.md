@@ -26,18 +26,17 @@ This test checks whether the app creates and dispatches implicit intents for int
 
 ## Observation
 
-The output should contain instances where an `Intent` is initialized and dispatched without indicators that constrain the recipient to an explicit component, package, or trusted app boundary. Indicators of a constrained recipient include constructors that name a target class and calls such as `setPackage`, `setClass`, `setClassName`, or `setComponent` before the intent is dispatched.
+The output should contain `Intent` instances dispatched without an explicit target. Explicit-target indicators include constructors that name a target class and calls such as `setPackage`, `setClass`, `setClassName`, or `setComponent` before dispatch.
 
 ## Evaluation
 
-The test case fails if the app dispatches an implicit intent without constraining the recipient with an explicit component or package, and the inspected context shows that the intent is intended for app-internal communication or another trusted component within the app's trust boundary.
+The test case fails if the app uses an implicit intent for app-internal or trusted-component communication without an explicit target package or component.
 
 **Further Validation Required:**
 
-Inspect each reported code location using @MASTG-TECH-0023 to determine whether the intent is intended to stay within the app or a trusted app boundary:
+Inspect each reported code location using @MASTG-TECH-0023:
 
-- Determine whether the intent action is app-specific, such as an action using the app's package namespace or names such as `INTERNAL_ACTION`.
-- Determine whether the action is handled by one of the app's own manifest-declared components or by code in the same app flow.
-- Determine whether the intent carries data, commands, or state changes that are only meaningful to internal components.
-- Determine whether the dispatch intentionally hands control to an external app selected by the user, such as standard actions for viewing, sharing, picking content, or opening maps.
-- Determine whether the intent is constrained with an explicit component, package, or equivalent recipient restriction before dispatch.
+- Check whether the intent is meant for an app component or another trusted app, not a user-selected external app.
+- Check whether the intent carries internal commands, state, or data.
+- Check whether the recipient is restricted with an explicit component or package before dispatch.
+- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction; any app can register the same action.
