@@ -26,17 +26,19 @@ This test checks whether the app creates and dispatches implicit intents that ca
 
 ## Observation
 
-The output should contain `Intent` instances that carry extras and are dispatched without an explicit target. Explicit-target indicators include constructors that name a target class and calls such as `setPackage`, `setClass`, `setClassName`, or `setComponent` before dispatch.
+The output should contain `Intent` dispatches that carry extras, including the action, data, categories, extra keys or values when visible, dispatch API, and any recipient restriction such as `setPackage`, `setClass`, `setClassName`, `setComponent`, or a broadcast receiver permission.
 
 ## Evaluation
 
-The test case fails if the app sends sensitive or security-relevant extras in an implicit intent without an explicit target package or component.
+The test case fails if an implicit intent carries sensitive or security-relevant extras and another app can declare or register a matching component to receive them.
 
 **Further Validation Required:**
 
 Inspect each reported code location using @MASTG-TECH-0023:
 
+- Check whether the intent has an explicit component or package.
+- Check whether another app can declare or register a matching `<intent-filter>` for the action, data, and categories.
+- For broadcasts, check whether the sender requires a permission that prevents untrusted receivers from receiving it.
 - Check whether the extras contain credentials, tokens, session identifiers, one-time codes, personal data, account identifiers, internal commands, or other security-relevant data.
 - Check whether the dispatch is an intentional user-selected share/open flow, such as `ACTION_SEND` or a chooser.
-- Check whether the recipient is restricted with an explicit component or package before dispatch.
-- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction; any app can register the same action.
+- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction.

@@ -26,17 +26,18 @@ This test checks whether the app creates and dispatches implicit intents for int
 
 ## Observation
 
-The output should contain `Intent` instances dispatched without an explicit target. Explicit-target indicators include constructors that name a target class and calls such as `setPackage`, `setClass`, `setClassName`, or `setComponent` before dispatch.
+The output should contain `Intent` dispatches, including the action, data, categories, extras when visible, dispatch API, and any recipient restriction such as `setPackage`, `setClass`, `setClassName`, `setComponent`, or a broadcast receiver permission.
 
 ## Evaluation
 
-The test case fails if the app uses an implicit intent for app-internal or trusted-component communication without an explicit target package or component.
+The test case fails if an intent used for app-internal or trusted-component communication is implicit and another app can declare or register a matching component to receive it.
 
 **Further Validation Required:**
 
 Inspect each reported code location using @MASTG-TECH-0023:
 
+- Check whether the intent has an explicit component or package.
+- Check whether another app can declare or register a matching `<intent-filter>` for the action, data, and categories.
+- For broadcasts, check whether the sender requires a permission that prevents untrusted receivers from receiving it.
 - Check whether the intent is meant for an app component or another trusted app, not a user-selected external app.
-- Check whether the intent carries internal commands, state, or data.
-- Check whether the recipient is restricted with an explicit component or package before dispatch.
-- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction; any app can register the same action.
+- Do not treat custom action strings, such as `com.example.app.INTERNAL_ACTION`, as a restriction.
