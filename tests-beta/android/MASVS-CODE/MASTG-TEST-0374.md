@@ -26,7 +26,14 @@ This test checks whether the app creates and dispatches implicit intents that ca
 
 ## Observation
 
-The output should contain `Intent` dispatches that carry extras, including the action, data, categories, extra keys or values when visible, dispatch API, and any recipient restriction such as `setPackage`, `setClass`, `setClassName`, `setComponent`, or a broadcast receiver permission.
+The output should contain `Intent` creation and dispatch sites where extras are added or propagated. For each reported dispatch, the output should include, when available:
+
+- The code location or caller.
+- The `Intent` creation pattern.
+- The action, data, type, and categories.
+- The extra keys and values, or the source of the extras when values are not statically visible.
+- The dispatch API, such as `startActivity`, `startActivityForResult`, `ActivityResultLauncher.launch`, `startService`, `bindService`, or `sendBroadcast`.
+- Any target-defining calls or dispatch restrictions visible before dispatch, such as `setPackage`, `setClass`, `setClassName`, `setComponent`, an explicit `Intent(context, Class)` constructor, or a broadcast receiver permission.
 
 ## Evaluation
 

@@ -27,7 +27,13 @@ This test dynamically checks whether data returned from an implicit intent resul
 
 ## Observation
 
-The output should contain the request intent details, returned data, hook backtraces, and the app operations reached by the returned data.
+The output should contain runtime traces of intent result handling flows. The output should include, when available:
+
+- The request intent details, such as action, data, type, categories, extras, and launch API.
+- The result callback or handler, such as `onActivityResult` or `ActivityResultCallback.onActivityResult`.
+- Returned data read by the app, such as `Intent.getData()`, `ClipData`, extras, or `ContentProvider` metadata.
+- APIs used to read returned data, such as `ContentResolver.query` or `ContentResolver.openInputStream`.
+- App operations reached after reading the returned data, including arguments and hook backtraces.
 
 ## Evaluation
 

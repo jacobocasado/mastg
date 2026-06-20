@@ -30,14 +30,11 @@ The app reads `OpenableColumns.DISPLAY_NAME` from the returned `ContentProvider`
 
 ## Observation
 
-The sample code and hook output provide the following evidence:
+The output shows runtime file API calls reached while the app handles the activity result:
 
-- Request intent: `Intent("org.owasp.mastestapp.REQUEST_FILE")` is sent with `startActivityForResult`.
-- Returned data: the selected attacker app returns `content://org.owasp.mastestapp.attacker.provider/fakeFile` and provides `../private/secret.txt` as `OpenableColumns.DISPLAY_NAME`.
-- Data source: the filename is provider-controlled metadata read through `ContentResolver.query`.
-- Security-relevant operation reached: the hook output records `java.io.File.$init` from `VulnerableActivity.onActivityResult` with base directory `/data/user/0/org.owasp.mastestapp/files/public` and filename `../private/secret.txt`.
-- Write operation reached: the hook output records `java.io.FileOutputStream.$init` with `/data/user/0/org.owasp.mastestapp/files/public/../private/secret.txt`.
-- Validation: no check is visible between reading the provider-controlled filename and constructing the destination `File`. The code does not validate the returned URI/provider, selected app, filename characters, or canonical path.
+- `java.io.File.$init` is called from `VulnerableActivity.onActivityResult` with base directory `/data/user/0/org.owasp.mastestapp/files` and filename `public`.
+- `java.io.File.$init` is called from `VulnerableActivity.onActivityResult` with base directory `/data/user/0/org.owasp.mastestapp/files/public` and filename `../private/secret.txt`.
+- `java.io.FileOutputStream.$init` is called from `VulnerableActivity.onActivityResult` with `/data/user/0/org.owasp.mastestapp/files/public/../private/secret.txt`.
 
 {{ output.json }}
 

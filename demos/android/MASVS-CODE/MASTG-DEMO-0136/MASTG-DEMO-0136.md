@@ -28,13 +28,12 @@ Let's use @MASTG-TECH-0014 with an @MASTG-TOOL-0110 rule to scan the reverse-eng
 
 ## Observation
 
-The @MASTG-TOOL-0110 output reports one `startActivity` dispatch in `MastgTest_reversed.java`:
+The output shows one `Intent` dispatch:
 
 - Intent creation: `new Intent()`.
-- Action: `org.owasp.mastestapp.INTERNAL_ACTION`.
-- Extras visible in the reported block: `user_id` and `session_token`.
-- Dispatch API: `context.startActivity(implicitIntent)`.
-- Recipient restriction: none visible before dispatch. The code does not call `setPackage`, `setClass`, `setClassName`, or `setComponent`.
+- Action assignment: `implicitIntent.setAction("org.owasp.mastestapp.INTERNAL_ACTION")`.
+- Extras added before dispatch: `user_id` and `session_token`.
+- Dispatch API: `this.context.startActivity(implicitIntent)`.
 
 {{ output.txt }}
 
@@ -42,4 +41,4 @@ The @MASTG-TOOL-0110 output reports one `startActivity` dispatch in `MastgTest_r
 
 The test case fails because the app uses an implicit intent (`org.owasp.mastestapp.INTERNAL_ACTION`) for app-internal communication with `InternalActivity`.
 
-The action is app-specific and the manifest declares `InternalActivity` as the component intended to handle it, but the dispatch does not name that component or restrict the target package. Another app can declare a matching `<intent-filter>` and become a candidate during Android intent resolution.
+The action is app-specific and the manifest declares `InternalActivity` as the component intended to handle it, but the reported dispatch does not name that component or restrict the target package. The reported block does not show a target-defining call such as `setPackage`, `setClass`, `setClassName`, `setComponent`, or an explicit `Intent(context, Class)` constructor before dispatch. Another app can declare a matching `<intent-filter>` and become a candidate during Android intent resolution.
