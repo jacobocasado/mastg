@@ -11,7 +11,7 @@ kind: fail
 
 This demo uses the same sample app as @MASTG-DEMO-0136. The app sends `user_id` and `session_token` (which are considered sensitive information) as extras in an implicit intent.
 
-Because the intent is implicit, any application that registers for the action can receive it and extract those values.
+Because the intent is implicit, any application that registers an activity with an `<intent-filter>` that matches the action can receive it and extract those values.
 
 {{ ../MASTG-DEMO-0136/MastgTest.kt # ../MASTG-DEMO-0136/MastgTest_reversed.java }}
 

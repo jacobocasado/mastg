@@ -1,7 +1,7 @@
 ---
 masvs_category: MASVS-PLATFORM
 platform: android
-title: Implicit Intents
+title: Explicit vs Implicit Intents
 ---
 
 An [`Intent`](https://developer.android.com/reference/android/content/Intent) is a messaging object used to request an action from another app component. Intents support three fundamental use cases: starting an activity, starting a service, and delivering a broadcast. See @MASTG-KNOW-0020 for the broader Android IPC model.
@@ -35,6 +35,12 @@ Key matching criteria include:
 - **Data**: the URI scheme, host, path, and MIME type must satisfy the `<data>` constraints in the filter.
 
 If resolution yields more than one matching component, Android can present a chooser or disambiguation dialog that lets the user select the target. If only one component matches, the system routes the intent directly.
+
+!!! note
+
+  If the application targets Android 14 (API level 34) or higher, implicit intents will never be sent to internal components. This feature forces developers to implement explicit intents for internal communication, as otherwise the application would not function correctly while testing.
+
+  See [Android 14 behavior changes](https://developer.android.com/about/versions/14/behavior-changes-14#safer-intents) for more info.
 
 ## Intent Filters and Component Visibility
 

@@ -9,7 +9,7 @@ kind: attack
 
 ## Sample
 
-The following attacker app registers an `<intent-filter>` for the custom action `org.owasp.mastestapp.INTERNAL_ACTION`, which @MASTG-DEMO-0136 (the victim app) sends as an implicit intent. When Android presents this app as a candidate handler and it is selected, it receives the victim app's intent and displays/logs the received extras.
+The following attacker app registers an `<intent-filter>` for the custom action `org.owasp.mastestapp.INTERNAL_ACTION`, used in the @MASTG-DEMO-0136 demo. When Android presents this app as a candidate handler and it is selected, it receives the victim app's intent and displays/logs the received extras.
 
 {{ MastgTest.kt # AndroidManifest.xml }}
 
@@ -37,7 +37,7 @@ Once selected, the attacker app receives the intent and logs the action and extr
 
 ## Evaluation
 
-The test case fails because the attacker app receives an implicit intent that @MASTG-DEMO-0136 intended for app-internal communication.
+The test case fails because the attacker app receives an implicit intent that the victim app (@MASTG-DEMO-0136) intended for app-internal communication.
 
 The log output confirms that the attacker app handled `org.owasp.mastestapp.INTERNAL_ACTION` and received the extras sent with the intent.
 

@@ -9,7 +9,7 @@ kind: attack
 
 ## Sample
 
-The following attacker app responds to the custom implicit intent `org.owasp.mastestapp.REQUEST_FILE` used in @MASTG-DEMO-0139 (the victim app). When Android resolves it as a handler, its `AttackerActivity` returns a `content://` URI pointing to its own `AttackerContentProvider`, which supplies a path-traversal string (`../private/secret.txt`) as the `DISPLAY_NAME`.
+The following attacker app responds to the custom implicit intent `org.owasp.mastestapp.REQUEST_FILE` used in the @MASTG-DEMO-0139 demo. When Android resolves it as a handler, its `AttackerActivity` returns a `content://` URI pointing to its own `AttackerContentProvider`, which supplies a path-traversal string (`../private/secret.txt`) as the `DISPLAY_NAME`.
 
 {{ MastgTest.kt # AndroidManifest.xml }}
 
