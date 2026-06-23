@@ -22,7 +22,7 @@ The intent in this sample is implicit because it relies on `setAction` without e
 
 Let's use @MASTG-TECH-0014 with an @MASTG-TOOL-0110 rule to scan the reverse-engineered code for implicit intents used for internal communication.
 
-{{ rule.yaml }}
+{{ ../../../../rules/mastg-android-implicit-intent-internal-communication.yml }}
 
 {{ run.sh }}
 

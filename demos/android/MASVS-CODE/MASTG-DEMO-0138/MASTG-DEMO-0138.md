@@ -19,7 +19,7 @@ Because the intent is implicit, any application that registers an activity with 
 
 Let's use @MASTG-TECH-0014 with an @MASTG-TOOL-0110 rule to scan the reverse-engineered code for implicit intents that carry sensitive extras.
 
-{{ rule.yaml }}
+{{ ../../../../rules/mastg-android-implicit-intent-leaking-extras.yml }}
 
 {{ run.sh }}
 
