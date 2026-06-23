@@ -1,7 +1,7 @@
 ---
 platform: ios
 title: Insufficient Obfuscation of Security-Relevant Native Code
-id: MASTG-TEST-0x93
+id: MASTG-TEST-0391
 type: [static, package, manual]
 weakness: MASWE-0089
 best-practices: [MASTG-BEST-0029]
